@@ -1,0 +1,73 @@
+<template>
+    <lightning-card class="topNav">
+		<div class="slds-page-header slds-m-top_x-small">
+			<div class="slds-media__body">
+				<h1>    
+					<div class="slds-page-header__title  slds-m-right--small slds-align-middle">
+						Add Sales Order Lines
+					</div>
+				</h1>
+			</div>
+			<div class="spinner">
+				<template if:true={isLoading}>
+					 <lightning-spinner alternative-text="Loading" variant="brand" size="large"></lightning-spinner>
+				</template>
+			</div>
+			<div class="nav_item slds-grid slds-wrap" role="list">
+				<div class="slds-col slds-size_1-of-5  slds-large-size_1-of-6 slds-p-around_x-small">
+					<lightning-Input label="Product SKU" type="search" placeholder="Search by SKU code.." value={searchKey} name="prodCode" class="prodCode" onchange={handleChangeProdCode}  onkeypress={handleKeyCodeEvent}></lightning-input>    
+				</div>
+				<div class="slds-col slds-size_1-of-5  slds-large-size_1-of-6 slds-p-around_x-small">       
+					<lightning-Input label="Quantity" value={qtyValue} name="quantity" class="prodQty" onchange={handleQuantityChange}  onkeypress={handleKeyQtyEvent}></lightning-input>   
+				</div>
+				<div class="slds-col slds-size_1-of-5 auto_adjust slds-large-size_1-of-6 slds-p-around_x-small" style="margin-top: 25px; margin-left: 10px;">
+					<lightning-button  label= "Add"  size="small" variant="brand" onclick={validatehandleProductSearch}     icon-position="right"></lightning-button>     
+				</div>
+				<div  class="slds-page-header__title slds-col slds-size_1-of-5 auto_adjust slds-large-size_1-of-6 slds-p-around_x-small" style="margin-top: 25px; margin-left: 10px;">
+					<p> or </p>   
+				</div>
+				<div class="slds-col slds-size_1-of-5 auto_adjust slds-large-size_1-of-6 slds-p-around_x-small">
+					<c-custom-lookup-l-w-c 
+					s-object-api-name="gii__Product2Add__c"
+					label="Search by Product"
+					onlookupupdate={handleProdSelected}
+					placeholder="Search by Product Name..."
+					class="prodName"
+					wherefieldapiname="gii__Family__c"
+					wherefieldvalue="ES"> <!--wherefieldvalue: Pass more than one value comma seperated-->
+                    </c-custom-lookup-l-w-c>   
+				</div>
+			</div>
+		</div>     
+		<div class="border cm-table-w-scroll table-responsive" if:true={loadChildCmp}>
+			<table  class="table table-sm table-bordered" >
+				<thead>
+					<tr>
+						<th class="widthth_six"> </th>
+						<th class="widthth_four">Quantity</th>
+						<th class="widthth_four">Unit Price</th>
+						<th class="widthth_four">Product Name</th>
+						<th class="widthth_four">Product Code</th>
+						<th class="widthth_first">Product Description</th>              
+					</tr>
+				</thead>
+				<tbody>
+					<template for:each={finalList} for:item="prod" for:index="index" >
+						<tr key={prod.objProdRef.Id} class="bg-primary">
+							<td> <lightning-button  variant="base" label= "Del"  icon-name="utility:del" onclick={handleDeleteRow} data-rowindex={index} class="slds-m-left_x-small"></lightning-button></td>
+							<td><lightning-input value={prod.prodQty} name="prodQty"  onchange={handleQuantityChange} data-rowindex={index} data-column="quantity"></lightning-input></td>
+							<td><lightning-formatted-text value={prod.prodCost}></lightning-formatted-text></td>
+							<td><lightning-formatted-text value={prod.objProdRef.Name}></lightning-formatted-text></td>
+							<td><lightning-formatted-text value={prod.objProdRef.gii__ProductCode__c}></lightning-formatted-text></td>
+							<td><lightning-formatted-text value={prod.objProdRef.gii__Description__c}></lightning-formatted-text></td>
+						</tr>
+					</template>
+				</tbody>
+			</table>
+			<div class="slds-m-top_small slds-m-bottom_medium slds-text-align_right">            
+				<button type="button" class="slds-button slds-button_neutral" onclick={handleBack}>Cancel</button>
+				<button type="button" class="slds-button slds-button_brand" onclick={handleSave}>Save</button>
+			</div>
+		</div>
+	</lightning-card>  
+</template>

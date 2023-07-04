@@ -1,0 +1,198 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 06-15-2023
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <div class="spinner">
+         <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" variant="brand" size="large">
+            </lightning-spinner>
+         </template>
+
+<lightning-card class="topNav">
+
+    <div class="slds-page-header__title  slds-m-right--small slds-text-align_center">
+        <h1>
+            Add Service Ticket Lines
+        </h1>
+    </div>
+</lightning-card>
+
+<lightning-card class="topNav">
+
+
+    <div class="nav_item slds-grid slds-wrap" role="list">
+        <div class="slds-page-header__title" style="margin-top: 25px; margin-left: 10px;">
+            <h2><b>Search Asset by Site or Asset Reference</b></h2>
+        </div>
+        <!--<div  class="slds-page-header__title" style="margin-top: 25px; margin-left: 565px;"> 
+ <h2><b>Please select Priority</b></h2>
+ </div>-->
+    </div>
+    <div class="nav_item slds-grid slds-wrap" role="list">
+
+        <div class="slds-col slds-size_1-of-7  slds-large-size_1-of-6 slds-p-around_x-small" if:false={assetObjectType}>
+
+            <c-custom-lookup-l-w-c s-object-api-name="gii__Site__c" label="Site" onlookupupdate={handleSiteChange} default-record-id={recordid} wherefieldapiname="" wherefieldvalue="" placeholder="type here..."></c-custom-lookup-l-w-c>
+        </div>
+        <div class="slds-col slds-size_1-of-7 slds-large-size_1-of-6 slds-p-around_x-small" if:true={assetObjectType}>
+
+            <c-custom-lookup-l-w-c s-object-api-name="gii__Site__c" label="Site" onlookupupdate={handleSiteChange} default-record-id={siteRecordId} wherefieldapiname="" wherefieldvalue="" placeholder="type here..."></c-custom-lookup-l-w-c>
+
+        </div>
+
+        <div class="slds-col slds-size_1-of-7 slds-large-size_1-of-6 slds-p-around_x-small">
+            <c-custom-lookup-l-w-c s-object-api-name="gii__AssetReference__c" label="Asset Reference" onlookupupdate={handleAssetChange} default-record-id={recordid} wherefieldapiname="" wherefieldvalue="" placeholder="type here..."></c-custom-lookup-l-w-c>
+
+        </div>
+        <div class="slds-col slds-size_1-of-7  slds-large-size_1-of-6 slds-p-around_x-small" style="margin-top: 25px; margin-left: 10px;">
+            <lightning-button onclick={handleSearch} class="slds-button slds-button_brand searchbtn" variant="brand" label="Search" icon-name="utility:search">
+            </lightning-button>
+        </div>
+
+        <div class="slds-col slds-size_1-of-7 ">
+
+        </div>
+
+        <div class="slds-col slds-size_1-of-7 slds-large-size_1-of-6 slds-p-around_x-small">
+
+            <lightning-combobox name="pty" label="Priority" value={priorityValue} options={priorityValues} placeholder="Select Priority" onchange={handlePriorityChange}>></lightning-combobox>
+        </div>
+
+        <!--<div class="slds-col slds-size_1-of-7 slds-large-size_1-of-6 slds-p-around_x-small"> 
+            <c-custom-lookup-l-w-c  s-object-api-name="gii__ServiceType__c"
+             label="Type"
+             onlookupupdate={handleTypeChange}
+             default-record-id={typeRecId}
+             placeholder="type here...">
+ 
+         </c-custom-lookup-l-w-c>
+     </div>  -->
+
+
+    </div>
+
+</lightning-card>
+
+<template if:true={isEmptyAssestRefList}>
+<lightning-card class="topNav">
+    <div class="slds-page-header slds-m-top_x-small">
+        <div class="slds-media__body">
+            <h1>
+
+                <div class="slds-page-header__title slds-m-right--small slds-align-middle">
+                    Select Asset Reference to create service Ticket
+                </div>
+            </h1>
+        </div>
+    </div>
+    <div class="border cm-scrollbar cm-table-w-scroll table-responsive">
+        <table class="table table-sm table-bordered">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" onchange={handleSelectAll}/> </th>
+                    <th>Asset Reference</th>
+                    <th>Product</th>
+                    <th>Site</th>
+                    <th>Type </th>
+                    <th>Trouble</th>
+                    <!--<th>Field Service Engineer</th> -->
+
+                    <th>Field Service Contract</th>
+                    <th>Field Service Contract Line</th>
+
+                </tr>
+            </thead>
+            <tbody>
+
+                <template for:each={assetReflist} for:item="asst" for:index="index">
+         <tr key={asst.key}>
+             <td><input type="checkbox"  value ={asst.isSelected} onchange={changeSelectHandler} 
+                     data-rowindex={index} data-column="isSelected" data-id="toggle" /></td>
+             <td><lightning-formatted-text value={asst.objAssetRef.Name}></lightning-formatted-text></td>
+             <td><lightning-formatted-text value={asst.objAssetRef.gii__ProductReference__r.Name}></lightning-formatted-text></td>
+             <td><lightning-formatted-text value={asst.siteName}></lightning-formatted-text></td>
+            
+ <td>
+ 
+     <c-custom-lookup-l-w-c  s-object-api-name="gii__ServiceType__c"
+             label=""
+             onlookupupdate={handleTypeChange}
+             default-record-id={typeRecId}
+             wherefieldapiname=""
+			 wherefieldvalue=""
+             placeholder="type here..."
+              data-rowindex={index}
+               data-column="Site">
+         </c-custom-lookup-l-w-c>
+ </td>
+             
+            <td><lightning-textarea value ={asst.trouble} name="trouble"  onchange={handletroubleChange}
+                data-rowindex={index} data-column="trouble"  data-id="troubleInput"> </lightning-textarea></td>
+            <td><lightning-formatted-text value={asst.contractName}></lightning-formatted-text></td>
+            <td><lightning-formatted-text value={asst.contractLineName}></lightning-formatted-text></td>
+
+        
+            <!--     <td><c-custom-lookup-l-w-c icon-name="standard:user"
+                 s-object-api-name="gii__FieldServiceEngineer__c"
+                 label=""
+                 onlookupupdate={lookupRecord}
+                 default-record-id={asst.objAssetRef.gii__Site__r.gii__FieldServiceEngineer__c}
+                 placeholder="type here..."
+                 onchange={changeHandler} data-rowindex={index} data-column="Site"></c-custom-lookup-l-w-c>
+             </td>
+             <td><c-custom-lookup-l-w-c icon-name="standard:user"
+                 s-object-api-name="gii__ServiceContract__c"
+                 label=""
+                 onlookupupdate={lookupRecord}
+                 default-record-id={asst.objAssetRef.gii__ServiceContract__c}
+                 placeholder="type here..."
+                 onchange={changeHandler} data-rowindex={index} data-column="Site"></c-custom-lookup-l-w-c>
+             </td>
+             <td><c-custom-lookup-l-w-c icon-name="standard:user"
+                 s-object-api-name="gii__ServiceContractLine__c"
+                 label=""
+                 onlookupupdate={lookupRecord}
+                 default-record-id={asst.objAssetRef.gii__ServiceContractLine__c}
+                 placeholder="type here..."
+                 onchange={changeHandler} data-rowindex={index} data-column="Site"></c-custom-lookup-l-w-c>
+             </td>          
+            -->
+         </tr>
+         </template>
+
+</tbody>
+
+</table>
+</div>
+<div class="slds-m-top_small slds-m-bottom_medium slds-text-align_right">
+    <template if:false={isSavingRecord}>
+            <lightning-button variant="success" label="Create Service Ticket" disabled={isChecked} title="Create Service Ticket" onclick={handleCreateServiceTicket} class="slds-m-left_x-small  slds-text-align_right"> </lightning-button>
+        </template>
+    <template if:true={isSavingRecord}>
+            <lightning-button variant="success" label="Create Service Ticket" disabled={isSavingRecord} title="Create Service Ticket" onclick={handleCreateServiceTicket} class="slds-m-left_x-small  slds-text-align_right"> </lightning-button>
+        </template>
+    <lightning-button variant="brand" label="Cancel" title="Cancel" disabled={isSavingRecord} onclick={handleCancel} class="slds-m-left_x-small slds-text-align_right"></lightning-button>
+</div>
+
+
+</lightning-card>
+</template>
+
+<template if:false={isEmptyAssestRefList}>
+    <lightning-card class="topNav">
+
+        <div class="slds-text-align_center slds-text-color_error  slds-text-title_bold">
+           
+               <p > There are no Installed/Active Assets at the Site. </p>
+                
+        </div>
+    </lightning-card>
+</template>
+
+</div>
+
+</template>

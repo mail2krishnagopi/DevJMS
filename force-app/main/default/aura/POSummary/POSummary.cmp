@@ -1,0 +1,343 @@
+<aura:component controller="POSummaryController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    
+    <!--Attributes --> 
+    <aura:attribute name="cmpParameters" type="Object"/>  
+    <aura:attribute name="purchaseOrder" type="sObject" />
+    <aura:attribute name="nextStageNumber" type="Integer" default="1"/>
+    <aura:attribute name="nextStageName" type="String"/> 
+    <aura:attribute name="warehouseName" type="String"/> 
+    <aura:attribute name="currentStageNumber" type="Integer" default="{!v.nextStageNumber -1}"/>
+    <aura:attribute name="accountId" type="String" /> 
+    <aura:attribute name="accountName" type="String" /> 
+    <aura:attribute name="processName" type="String" />
+    <aura:attribute name="totalItems" type="Integer"/>    
+    <aura:attribute name="paymentMethod" type="String" /> 
+    <aura:attribute name="paymentMethodId" type="String" />
+    <aura:attribute name="destributor" type="AccountWrapper" />    
+    <aura:attribute name="dealerList" type="AccountWrapper[]" />
+    <aura:attribute name="selectedDealer" type="AccountWrapper" />
+    <aura:attribute name="newDealer" type="Account"  default="{
+                                                              'sobjectType': 'Account',
+                                                              'ParentId': '',
+                                                              'Name': '',
+                                                              'ShippingStreet': '',
+                                                              'ShippingCity': '', 
+                                                              'ShippingState': '',
+                                                              'ShippingCountry': '',
+                                                              'Phone': ''                                                          
+                                                              }"/>
+    <aura:attribute name="isDealerError" type="Boolean" default="false"/>
+    <aura:attribute name="dealerErrorMsg" type="String" default="Dealer Not Found ...!"/>
+    <aura:attribute name="productErrorMsg" type="String" default="Products Not Found ...!"/>
+    <aura:attribute name="editDealerInfo" type="AccountWrapper" />    
+    <aura:attribute name="discount" type="Integer" default="0" />
+    <aura:attribute name="totalAmt" type="Integer" default="0" />
+    <aura:attribute name="totalAmtWithoutDisc" type="Integer" default="0" />
+    <aura:attribute name="percentAmt" type="Integer" default="10" />
+    <aura:attribute name="percentPayAmt" type="Integer" default="0" />
+    <aura:attribute name="customPayAmt" type="Integer" default="100" />
+    <aura:attribute name="selectedPayMethod" type="String" default="fullPay" />
+    <aura:attribute name="ErrorMsg" type="String" default="" />
+    
+    
+    <!--Handler-->    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    
+    <!--Body-->   
+    <div class="slds-card slds-has-top-magnet">
+        <div class="slds-p-around_medium">
+            <div class="slds-grid slds-wrap">
+                <div class="slds-size_1-of-3">
+                    <div class="slds-box slds-box_x-small slds-text-align_left slds-m-around_x-small" style="padding: 0;min-height: 130px;">
+                        <div class="slds-section slds-is-open" style="margin: 0;">
+                            <h3 class="slds-section__title" id="shiptoHeader" style="font-size: inherit;border-radius: 0;">                               
+                                <span class="slds-truncate HdrTextColor" title="Section Title" style="padding-left: 5px;font-size: 14px;">
+                                    {!$Label.c.PoShippingAddress} 
+                                </span>
+                            </h3>
+                            <div aria-hidden="false" class="slds-section__content" id="expando-unique-id" style="padding: 0;padding-left: 5px;">
+                                <ul>
+                                    <li>{!v.destributor.Name}</li>
+                                    <li>{!v.destributor.ShippingStreet},&nbsp;{!v.destributor.ShippingCity},&nbsp;
+                                        {!v.destributor.ShippingState},&nbsp;{!v.destributor.ShippingPostalCode}</li>
+                                    <li>{!v.destributor.ShippingCountry}</li>
+                                    <li>{!$Label.c.POPhone} {!v.destributor.Phone}</li>                            
+                                </ul>                        
+                            </div>
+                        </div>
+                    </div>
+                </div>
+               <div class="slds-size_1-of-3">
+                    <div class="slds-box slds-box_x-small slds-text-align_left slds-m-around_x-small" style="padding: 0;min-height: 130px;">
+                        <div class="slds-section slds-is-open" style="margin: 0;">
+                            <h3 class="slds-section__title" id="shiptoHeader" style="font-size: inherit;border-radius: 0;">                               
+                                <span class="slds-truncate HdrTextColor" title="Section Title" style="padding-left: 5px;font-size: 14px;">
+                                    {!$Label.c.PoBillingAddress}
+                                </span>
+                            </h3>
+                            <div aria-hidden="false" class="slds-section__content" id="expando-unique-id" style="padding: 0;padding-left: 5px;">
+                                <ul>
+                                    <li>{!v.destributor.Name}</li>
+                                    <li>{!v.destributor.BillingStreet},&nbsp;{!v.destributor.BillingCity},&nbsp;
+                                        {!v.destributor.BillingState},&nbsp;{!v.destributor.BillingPostalCode}</li>
+                                    <li>{!v.destributor.BillingCountry}</li>
+                                    <li>{!$Label.c.POPhone} {!v.destributor.Phone}</li>                                
+                                </ul>                       
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size_1-of-3">
+                    <div class="slds-box slds-box_x-small slds-text-align_left slds-m-around_x-small" style="padding: 0;min-height: 130px;">
+                        <div class="slds-section slds-is-open" style="margin: 0;">
+                            <h3 class="slds-section__title" id="shiptoHeader" style="font-size: inherit;border-radius: 0;">                               
+                                <span class="slds-truncate HdrTextColor" title="Section Title" style="padding-left: 5px;font-size: 14px;">
+                                    {!$Label.c.POShipto}
+                                </span>
+                            </h3>
+                            <div aria-hidden="false" class="slds-section__content" id="expando-unique-id" style="padding: 0;padding-left: 5px;">
+                                <ul>
+                                    <li>{!v.warehouseName}</li>                             
+                                </ul>                       
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>    
+             <div class="slds-grid slds-wrap">
+                <div class="slds-size_1-of-1">
+                    <div class="slds-box slds-box_x-small slds-text-align_left slds-m-around_x-small" style="padding: 0;min-height: 130px;">
+                        <div class="slds-section slds-is-open" style="margin: 0;">
+                            <h3 class="slds-section__title" id="shiptoHeader" style="font-size: inherit;border-radius: 0;">                               
+                                <span class="slds-truncate HdrTextColor" title="Section Title" style="padding-left: 5px;font-size: 14px;">
+                                   {!$Label.c.POShoppingCart}
+                                </span>
+                            </h3>
+                            <div aria-hidden="false" class="slds-section__content" id="expando-unique-id" style="padding: 0;padding-left: 5px;">
+                                <aura:if isTrue="{!v.destributor.prodList.length != 0}">
+                                    <table class="slds-table slds-table_bordered slds-max-medium-table_stacked-horizontal">
+                                        <thead>
+                                            <tr class="slds-text-title_caps">
+                                                <th class="slds-cell-shrink" scope="col">
+                                                    <label class="slds-checkbox">
+                                                    </label>
+                                                </th>
+                                                <th scope="col">
+                                                    <div class="slds-truncate" title="Product Name">{!$Label.c.POProductName}</div>
+                                                </th>
+                                                <th scope="col">
+                                                    <div class="slds-truncate" title="Unit Price">{!$Label.c.POUNITPRICE}</div>
+                                                </th>
+                                                <th scope="col">
+                                                    <div class="slds-truncate" title="Quantity">{!$Label.c.POQuantity}</div>
+                                                </th>
+                                                <th scope="col">
+                                                    <div class="slds-truncate" title="Total Price">{!$Label.c.POTotalPrice}</div>
+                                                </th>                                       
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <aura:iteration items="{!v.destributor.prodList}" var="prod" indexVar="idx">
+                                                <tr class="slds-hint-parent">
+                                                    <td class="slds-cell-shrink" data-label="Select Row">
+                                                        <label class="slds-checkbox">
+                                                            <aura:if isTrue="{!prod.isEditable}">
+                                                                <div data-record="{!idx}" onclick="{!c.removeFromCart}"><a style="color:red;font-size: 17px;">
+                                                                    <lightning:icon class="slds-input__icon slds-show" iconName="utility:delete" size="small" alternativeText="Remove"/>
+                                                                    </a></div>
+                                                                <aura:set attribute="else">
+                                                                    <a href=""  class="uiOutputURL" data-backdrop="static" data-record="{!idx}" onclick="{!c.makeEditable}">
+                                                                        <img src="{!$Resource.LightningBoltSoln + '/Icons/EditIcon.png'}" alt="" style="width:20px;height:20px;"/>                        	
+                                                                    </a> 
+                                                                </aura:set>
+                                                            </aura:if>
+                                                        </label>
+                                                    </td>
+                                                    <td data-label="Product Name">
+                                                        <div class="slds-truncate" title="{!prod.ProductName}">{!prod.ProductName}</div>
+                                                    </td>
+                                                    <td data-label="Unit Price">
+                                                        <ui:outputCurrency value="{!prod.UnitPrice}"/>                                                        
+                                                    </td>
+                                                    <td data-label="Order Quantity">
+                                                        <aura:if isTrue="{!prod.isEditable}">
+                                                            <div class="slds-truncate" title="{!prod.OrderQuantity}">
+                                                                <ui:inputNumber class="slds-input qtyInput" value="{!prod.OrderQuantity}" change="{!c.calTotalAmt}"/>
+                                                                <a href="" class="uiOutputURL" data-backdrop="static" data-record="{!idx}" onclick="{!c.makeNonEditable}">
+                                                                    <lightning:icon class="slds-button__icon slds-button__icon_right" iconName="utility:reply" size="x-small" alternativeText=""/>
+                                                                </a>
+                                                            </div>
+                                                            <aura:set attribute="else">
+                                                            	<div class="slds-truncate" title="{!prod.OrderQuantity}">{!prod.OrderQuantity}</div>
+                                                            </aura:set>
+                                                        </aura:if>                                                     
+                                                    </td>
+                                                    <td data-label="Total Price">
+                                                        <ui:outputCurrency value="{!(prod.UnitPrice * prod.OrderQuantity)}"/>
+                                                    </td>
+                                                </tr>
+                                            </aura:iteration> 
+                                        </tbody>
+                                    </table>
+                                    <aura:set attribute="else">
+                                        <div style="color:red;">
+                                            {!v.productErrorMsg} 
+                                        </div> 
+                                    </aura:set>
+                                </aura:if>                      
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+                <aura:if isTrue="{!v.destributor.prodList.length != 0}">
+                    <div class="slds-size_1-of-1">
+                        <div class="slds-box slds-box_x-small slds-text-align_left slds-m-around_x-small" style="padding: 0;min-height: 130px;">
+                            <div class="slds-section slds-is-open" style="margin: 0;">
+                                <h3 class="slds-section__title" id="shiptoHeader" style="font-size: inherit;border-radius: 0;">                               
+                                    <span class="slds-truncate HdrTextColor" title="Section Title" style="padding-left: 5px;font-size: 14px;">
+                                        {!$Label.c.POPayment} 
+                                    </span>
+                                </h3>
+                                <div aria-hidden="false" class="slds-section__content" id="expando-unique-id" style="padding: 0;padding-left: 5px;">
+                                    <div class="slds-grid slds-wrap" style="margin: 5px;">
+                                        <div class="slds-size_1-of-2">
+                                            <div class="slds-grid slds-wrap">
+                                                <div class="slds-size_1-of-2">
+                                                    <div class="slds-box_x-small slds-text-align_left slds-m-around_x-small PaymentDiv" >
+                                                       {!$Label.c.POtotalAmt}
+                                                    </div>
+                                                </div>
+                                                <div class="slds-size_1-of-2">
+                                                    <ui:outputCurrency class="slds-input" value="{!v.totalAmtWithoutDisc}"/>
+                                                </div>
+                                                <div class="slds-size_1-of-2">
+                                                    <div class="slds-box_x-small slds-text-align_left slds-m-around_x-small PaymentDiv">
+                                                       {!$Label.c.PODiscount}
+                                                    </div>
+                                                </div>
+                                                <div class="slds-size_1-of-2">
+                                                    <ui:inputNumber class="slds-input PaymentDiv" value="{!v.discount}" change="{!c.calTotalAmt}" maxlength="3"/>
+                                                </div>
+                                                <div class="slds-size_1-of-2">
+                                                    <div class="slds-box_x-small slds-text-align_left slds-m-around_x-small PaymentDiv">
+                                                        {!$Label.c.PoNetPay}
+                                                    </div>
+                                                </div>
+                                                <div class="slds-size_1-of-2">
+                                                    <ui:outputCurrency class="slds-input" value="{!v.totalAmt}"/>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Commented by Sohit, Hiding the payment section for PO as we not 
+											 storing the data on PO --> 
+                                        <!-- <div class="slds-size_1-of-2">
+                                            <div class="slds-grid slds-wrap">
+                                                <div class="slds-size_1-of-2">
+                                                    <div class="slds-box_x-small slds-text-align_left slds-m-around_x-small PaymentDiv">
+                                                        {!$Label.c.PoPayAmt}
+                                                    </div>
+                                                </div>
+                                                <div class="slds-size_1-of-2">
+                                                </div>
+                                                <div class="slds-size_1-of-2">
+                                                    <div class="slds-box_x-small slds-text-align_left slds-m-around_x-small PaymentDiv">
+                                                        <ui:inputRadio aura:id="fullPay" value="true" change="{!c.selectFullPayment}"/>
+                                                        {!$Label.c.POFullPayment}
+                                                    </div>
+                                                </div>
+                                                <div class="slds-size_1-of-2">
+                                                    <ui:outputCurrency class="slds-input" value="{!v.totalAmt}"/>
+                                                </div>
+                                                <div class="slds-size_1-of-2">
+                                                    <div class="slds-box_x-small slds-text-align_left slds-m-around_x-small PaymentDiv">
+                                                        <div class="slds-grid">
+                                                            <div class="slds-size_1-of-2" > 
+                                                                <ui:inputRadio aura:id="percentPay" change="{!c.selectPercentPayment}"/>
+                                                                {!$Label.c.POPay}
+                                                            </div>
+                                                            <div class="slds-size_1-of-2" >                                                                 
+                                                                <ui:inputText class="slds-input" value="{!v.percentAmt}" change="{!c.calTotalAmt}"/>                           
+                                                            </div>
+                                                        </div>                                            
+                                                    </div>
+                                                </div>
+                                                <div class="slds-size_1-of-2">
+                                                    <ui:outputCurrency class="slds-input" value="{!v.percentPayAmt}"/>
+                                                </div>
+                                                <div class="slds-size_1-of-2">
+                                                    <div class="slds-box_x-small slds-text-align_left slds-m-around_x-small PaymentDiv">
+                                                        <ui:inputRadio aura:id="customPay" change="{!c.selectCustomPayment}"/>
+                                                        {!$Label.c.POPartialPayment}
+                                                    </div>
+                                                </div>
+                                                <div class="slds-size_1-of-2">
+                                                    <ui:outputCurrency class="slds-input" value="{!v.customPayAmt}"/>
+                                                </div>
+                                            </div>
+                                        </div> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </aura:if>
+            </div>
+        </div>
+    </div>
+    <div class="slds-card slds-has-top-magnet">
+        <div class="slds-p-around_medium">
+            <div class="slds-clearfix">
+                <div class="slds-float_left">
+                    <aura:if isTrue="{!v.currentStageNumber == 1}">
+                        <!--button type="button" class="slds-button slds-button_brand" onclick="{!c.cancelOrder}"><i class="fa fa-times-circle" aria-hidden="true"></i>{!$Label.c.POCancelOrder}</button-->
+                    </aura:if>
+                </div>
+                <div class="slds-float_right">
+                    <aura:if isTrue="{!v.currentStageNumber != 1}">
+                        <button type="button" class="slds-button slds-button_brand" onclick="{!c.backButton}">
+                            <lightning:icon variant="inverse" class="slds-button__icon slds-button__icon_left" iconName="utility:back" size="x-small" alternativeText="{!$Label.c.POBack}"/>
+                            {!$Label.c.POBack}
+                        </button>&nbsp;&nbsp;
+                    </aura:if>
+
+                    <button type="button" class="slds-button slds-button_brand" onclick="{!c.placeOrder}">{!$Label.c.POPlaceOrder}
+                        <lightning:icon variant="inverse" class="slds-button__icon slds-button__icon_right" iconName="utility:forward" size="x-small" alternativeText="{!$Label.c.POPlaceOrder}"/>
+                    </button>
+                </div>
+            </div>                            
+        </div>
+    </div>
+    
+    <!-- Start PopUp -->
+    <div role="dialog" tabindex="-1" aura:id="Modalbox3" aria-labelledby="header44" class="slds-modal" style="background-color: rgba(0,0,0,0.4);">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header">
+                <button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.removecss3}">
+                    <span>X
+                        <span class="slds-assistive-text">{!$Label.c.POClose}</span>
+                    </span>                 
+                </button>
+                <h2 id="header43" class="slds-text-heading--medium" style="font-size: medium; font-family: sans-serif;"><b>{!$Label.c.POProductErrorMsg}</b></h2>
+            </div>
+            <div class="slds-modal__content slds-p-around--medium">
+                <div class="modal-body">
+                    <div class="row addchaccount">
+                        <div class="col-md-12">
+                            <div class="row">
+                                {!v.ErrorMsg}                                    
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>   
+                </div>
+            </div>
+            <div class="slds-modal__footer">
+                <button class="slds-button slds-button_brand" onclick="{!c.removecss3}">
+                    <lightning:icon variant="inverse" class="slds-button__icon slds-button__icon_left" iconName="utility:back" size="x-small" alternativeText="{!$Label.c.POCancelbtn}"/>
+                    {!$Label.c.POCancelbtn}
+                </button>                    
+            </div>
+        </div>
+    </div>
+    <!-- End PopUp -->
+</aura:component>

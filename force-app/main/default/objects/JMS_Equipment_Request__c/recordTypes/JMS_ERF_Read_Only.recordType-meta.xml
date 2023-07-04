@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>JMS_ERF_Read_Only</fullName>
+    <active>true</active>
+    <description>ERF Read Only Record Type</description>
+    <label>ERF Read-Only</label>
+    <picklistValues>
+        <picklist>JMS_Account_Type__c</picklist>
+        <values>
+            <fullName>Aramark</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Aramark %2F CPS Canada</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Avendra</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Avendra Canada</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Buyers Edge</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Compass %2F Foodbuy</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Foodbuy%2FCompass</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Great Canadian Gaming</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>HPSI</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>HealthPro Canada</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>National Other</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Premier</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Sodexo</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Street</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Vizient</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>JMS_Contract_Type__c</picklist>
+        <values>
+            <fullName>Cash</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Loan</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>JMS_Equipment_Integrity_Approval_Status__c</picklist>
+        <values>
+            <fullName>Approved</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rejected</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Submitted</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>JMS_Overall_Status__c</picklist>
+        <values>
+            <fullName>Completed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>InProgress - Pending Approvals</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>InProgress - Rejected</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New</fullName>
+            <default>true</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>JMS_Placement_Reason__c</picklist>
+        <values>
+            <fullName>Account Update</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Add%2FPenetrate Existing Customer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Ancillary Order</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Conversion - Brand</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Equipment Modification</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Food Show %2F Special Event</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>New Customer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Replacement - Model Change - Existing Customer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Replacement - Same Model - Existing Customer</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Site Survey</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>JMS_RSM_approval_Status__c</picklist>
+        <values>
+            <fullName>Approved</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rejected</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Submitted</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>JMS_Status__c</picklist>
+        <values>
+            <fullName>Active - Pending Equipment Integrity</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Active - Pending NAM</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Active - Pending RSM</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Completed</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Draft</fullName>
+            <default>true</default>
+        </values>
+        <values>
+            <fullName>Rejected By Equipment Integrity</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rejected By NAM</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rejected By RSM</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+    <picklistValues>
+        <picklist>NAM_approval_Status__c</picklist>
+        <values>
+            <fullName>Approved</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Rejected</fullName>
+            <default>false</default>
+        </values>
+        <values>
+            <fullName>Submitted</fullName>
+            <default>false</default>
+        </values>
+    </picklistValues>
+</RecordType>

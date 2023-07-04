@@ -1,0 +1,12 @@
+<aura:component  implements="force:lightningQuickAction,flexipage:availableForAllPageTypes,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:hasSObjectName,lightning:isUrlAddressable" access="global">
+    <aura:attribute name="recordId" type="String" />
+   <!-- <aura:attribute name="pageReference" type="Object"/>
+    <lightning:navigation aura:id="navService"/>-->
+    <aura:handler name="change" value="{!v.pageReference}" action="{!c.onPageReferenceChanged}" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+
+
+<!--<c:getParentRecord recordId="{!v.recordId}"/>-->
+<c:giic_HarvestProducts  recid="{!v.recordId}" name="welcome"> </c:giic_HarvestProducts>
+
+</aura:component>

@@ -1,0 +1,6 @@
+<aura:component implements="lightning:isUrlAddressable,force:hasRecordId" access="global">
+    
+    <aura:attribute name="supplyPlanRecordId" type="String" />
+    <c:giic_supplyPlanMaster planCycleId = "{!v.supplyPlanRecordId}"></c:giic_supplyPlanMaster>
+    
+</aura:component>

@@ -1,0 +1,49 @@
+.flex_row {
+    display: flex;
+    flex-direction: row;
+}
+
+.flex_column {
+    display: flex;
+    flex-direction: column;
+}
+
+.secondaryFields{
+    background-color: #fff;
+}
+
+.p-around-1rem {
+    padding: 1rem;
+}
+
+.mobHidden {
+    display: none;
+}
+
+
+@media (min-width: 64em) {
+    .nav_item > div.slds-large-size_1-of-6  {
+    width: auto;
+    margin-right: 2%;
+    }
+}
+
+@media screen 
+  and (min-width: 300px) 
+  and (max-width: 750px)  { 
+    .topNav {
+        display: none;
+    }
+
+    .mobHidden {
+        display: block;
+    }
+    
+    .mobile_hide {
+        display: none;
+    }
+
+    .inline_btn > .btn_select {
+        width: 100% !important;
+    }
+}

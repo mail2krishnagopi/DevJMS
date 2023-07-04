@@ -1,0 +1,7 @@
+<aura:component implements="force:lightningQuickAction,flexipage:availableForAllPageTypes,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:hasSObjectName,lightning:isUrlAddressable" access="global">
+<aura:attribute name="recordId" type="String" access="public" />  
+<aura:handler name="change" value="{!v.pageReference}" action="{!c.onPageReferenceChanged}" />
+         
+<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+<c:giic_AddServiceTicketLine recordid="{!v.recordId}"></c:giic_AddServiceTicketLine>
+</aura:component>

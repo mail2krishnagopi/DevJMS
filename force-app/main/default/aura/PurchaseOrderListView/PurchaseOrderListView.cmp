@@ -1,0 +1,6 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global" >
+    <br/>
+    <!--<div style="float:right;">-->
+        <button class="slds-button slds-button_neutral" onclick="{!c.goToURL}">New Purchase Order</button>
+    <!--</div>-->
+</aura:component>

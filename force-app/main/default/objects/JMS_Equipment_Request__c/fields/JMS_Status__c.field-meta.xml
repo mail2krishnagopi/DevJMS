@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>JMS_Status__c</fullName>
+    <externalId>false</externalId>
+    <label>Sub Status</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <controllingField>JMS_Overall_Status__c</controllingField>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Draft</fullName>
+                <default>true</default>
+                <label>Draft</label>
+            </value>
+            <value>
+                <fullName>Active - Pending RSM</fullName>
+                <default>false</default>
+                <label>Active - Pending RSM</label>
+            </value>
+            <value>
+                <fullName>Rejected By RSM</fullName>
+                <default>false</default>
+                <label>Rejected By RSM</label>
+            </value>
+            <value>
+                <fullName>Rejected By NAM</fullName>
+                <default>false</default>
+                <label>Rejected By NAM</label>
+            </value>
+            <value>
+                <fullName>Active - Pending Equipment Integrity</fullName>
+                <default>false</default>
+                <label>Active - Pending Equipment Integrity</label>
+            </value>
+            <value>
+                <fullName>Rejected By Equipment Integrity</fullName>
+                <default>false</default>
+                <label>Rejected By Equipment Integrity</label>
+            </value>
+            <value>
+                <fullName>Completed</fullName>
+                <default>false</default>
+                <label>Completed</label>
+            </value>
+            <value>
+                <fullName>Active - Pending NAM</fullName>
+                <default>false</default>
+                <label>Active - Pending NAM</label>
+            </value>
+            <value>
+                <fullName>Active - Pending NAM &amp; Trade</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Active - Pending NAM &amp; Trade</label>
+            </value>
+            <value>
+                <fullName>Active - Pending Trade</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Active - Pending Trade</label>
+            </value>
+            <value>
+                <fullName>Active_Pending_RSM</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Active_Pending_RSM</label>
+            </value>
+            <value>
+                <fullName>Rejected</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Rejected</label>
+            </value>
+            <value>
+                <fullName>Rejected By NAM &amp; Trade</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Rejected By NAM &amp; Trade</label>
+            </value>
+            <value>
+                <fullName>Rejected By Trade</fullName>
+                <default>false</default>
+                <isActive>false</isActive>
+                <label>Rejected By Trade</label>
+            </value>
+        </valueSetDefinition>
+        <valueSettings>
+            <controllingFieldValue>New</controllingFieldValue>
+            <valueName>Draft</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>InProgress - Rejected</controllingFieldValue>
+            <valueName>Rejected By RSM</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>InProgress - Rejected</controllingFieldValue>
+            <valueName>Rejected By NAM</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>InProgress - Rejected</controllingFieldValue>
+            <valueName>Rejected By Equipment Integrity</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>InProgress - Pending Approvals</controllingFieldValue>
+            <valueName>Active - Pending RSM</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>InProgress - Pending Approvals</controllingFieldValue>
+            <valueName>Active - Pending Equipment Integrity</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>InProgress - Pending Approvals</controllingFieldValue>
+            <valueName>Active - Pending NAM</valueName>
+        </valueSettings>
+        <valueSettings>
+            <controllingFieldValue>Completed</controllingFieldValue>
+            <valueName>Completed</valueName>
+        </valueSettings>
+    </valueSet>
+</CustomField>

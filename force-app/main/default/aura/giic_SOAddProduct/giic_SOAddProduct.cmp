@@ -1,0 +1,197 @@
+<aura:component controller="giic_CreateSOCtrl" implements="lightning:isUrlAddressable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction"
+                access="global">
+    
+    <aura:attribute name="recordId" type="String" />
+    <aura:attribute name="prdqty" type="Decimal" default="1" />
+    <aura:attribute name="searchString" type="String" />
+    
+    <aura:attribute name="prodCode" type="String" />
+    <aura:attribute name="prodDesc" type="String" />
+    <aura:attribute name="unitPrice" type="Decimal" />
+    <aura:attribute name="prodList" type="giic_CreateSOCtrl.ProductLineWrapper[]"/>
+    <aura:attribute name="deleteRows" type="giic_CreateSOCtrl.ProductLineWrapper[]"/>
+    <aura:attribute name="deleteRow" type="String[]" />
+    
+    <aura:attribute name="noresult" type="Boolean" />
+    
+    <aura:attribute name="Spinner" type="boolean" default="false" />   
+    
+    
+    <aura:attribute name="showdeleteall" type="boolean" default="false" />
+    
+    <aura:attribute name="selectedRecord" type="gii__Product2Add__c" default="{}" description="Use,for store SELECTED sObject Record"/>
+    <aura:attribute name="listOfSearchRecords" type="gii__Product2Add__c[]" description="Use,for store the list of search records which returns from apex class"/>
+    <aura:attribute name="SearchKeyWord" type="string"/>
+    <aura:attribute name="Message" type="String" default="Search Result.."/>
+    <aura:attribute name="SearchedResult" type="gii__Product2Add__c[]"/>
+    <aura:attribute name="Dropdownlist" type="Boolean" default="true"/>
+    
+    <aura:handler name="selectedProductEvent" event="c:giic_SelectedProductEvent" action="{!c.handleComponentEvent}"/>
+    <aura:handler name="myEvent" event="c:giic_SelectedProductEvent" action="{!c.GetSelectedCont}" />
+    
+    <ltng:require styles="/resource/SLDS222/assets/styles/salesforce-lightning-design-system.css"/>
+    
+    <!-- Register Final value Event -->
+    <aura:registerEvent name="CustomLookUpFinalValueEvent" type="c:CustomLookUpFinalValueEvent"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+    <aura:handler name="change" value="{!v.pageReference}" action="{!c.doInit}" />
+    <aura:handler name="LookupEventToParent" event="c:LookupEventToParent" action="{!c.handleEvent}"/>
+    
+    
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+    <!--loading spinner start... style=Brand Medium (blue dots)-->
+    <aura:if isTrue="{!v.Spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--large slds-is-relative"
+                 role="alert">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    <!-- Loading spinner end-->
+    
+    <!-- header section -->
+    
+    <div class="slds-page-header">
+        <div class="slds-page-header__row">
+            <div class="slds-page-header__col-title">
+                <div class="slds-media">
+                    <div class="slds-media__figure">
+                        <!-- <c:svgIcon svgPath="/resource/SLDS100/assets/icons/custom/custom96.svg" category="standard"
+                                       size="medium" name="user" />-->
+                    </div>
+                    <div class="slds-media__body">
+                        <div class="slds-page-header__name">
+                            <div class="slds-page-header__name-title">
+                                <h1>
+                                    <span class="slds-page-header__title slds-truncate" title="Add Lines From Price Book">SKU Code Based Order Lines</span>
+                                </h1>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- header section -->
+    
+    <!-- Product Input section -->
+    <div class="slds-box slds-theme_default slds-size--1-of-1">
+        <ul class="slds-list_horizontal">
+            <li>
+                <ui:inputText label="Search by Product Code" aura:id="searchprd" 
+                              class="slds-input text" placeholder="Product SKU..."
+                              value="{!v.searchString}" />
+            </li>
+            &nbsp;&nbsp;&nbsp;   
+            <li>
+                or
+            </li>
+            &nbsp;&nbsp;&nbsp;
+            <li>
+                <div aura:id="lookup-pill" class="slds-pill-container slds-hide">
+                    <span class="slds-pill">
+                        <span class="slds-pill__label">
+                            {!v.selectedRecord.Name}
+                        </span>
+                    </span>
+                </div>
+                <ui:inputText aura:id = "lookupField"  label="Search by Product Name" updateOn="keyup" keyup="{!c.keyPressController}"
+                              class="slds-lookup__search-input slds-input" 
+                              value="{!v.SearchKeyWord}" placeholder="search Product Reference." />                  
+                `
+                <ul class="slds-lookup__list" role="listbox">
+                    <aura:iteration items="{!v.listOfSearchRecords}" var="singleRec">
+                        <!-- Child Component for showing the searched result -->
+                        <c:giic_CustomChildLookupComponent selectedProduct="{!singleRec}" />
+                    </aura:iteration></ul>
+            </li>
+        </ul>
+        <lightning:layoutItem size="3" padding="around-small">
+            <lightning:button onclick="{!c.searchAddProduct}"
+                              variant="brand"
+                              label="Search" class="searchbtn"
+                              iconName="utility:search"/> 
+        </lightning:layoutItem>
+        
+        
+        <!--<aura:if isTrue="{!v.prodCode}">-->
+        <div style="min-height:100p%;text-align:center;" class="slds-box slds-theme_default slds-size--1-of-1">
+            <aura:if isTrue="{!v.prodList.length >0}">    
+                <lightning:layout horizontalAlign="spread" class="slds-border_bottom slds-theme_shade">
+                    <lightning:layoutItem flexibility="auto" size="2" class="slds-p-around_xx-small">
+                        <div style="text-align:center;" class="custom-box">Quantity</div>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem flexibility="auto" size="2" class="slds-p-around_xx-small">
+                        <div style="text-align:center;" class="custom-box">Unit Price</div>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem flexibility="auto" size="2" class="slds-p-around_xx-small">
+                        <div style="text-align:center;" class="custom-box">Product code</div>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem flexibility="auto" size="4" class="slds-p-around_xx-small">
+                        <div style="text-align:center;" class="custom-box">Product Description</div>
+                    </lightning:layoutItem>
+                    <lightning:layoutItem flexibility="auto" size="2" class="slds-p-around_xx-small">
+                        <div style="text-align:center;" class="custom-box">Action</div>
+                    </lightning:layoutItem>
+                    
+                </lightning:layout>
+                
+                
+                <aura:iteration items="{!v.prodList}" var="prod" indexVar="prd">
+                    <lightning:layout verticalAlign="stretch" multipleRows="true" class="slds-border_bottom slds-theme_default">                            
+                        <lightning:layoutItem flexibility="auto" size="2" class="slds-p-around_xx-small">
+                            <ui:inputText class="{!'MyIndex'+prd+' slds-input text '}" value="{!prod.prodQty}"
+                                          keypress="{!c.handleqtychange}" keyup="{!c.handleqtychange}"
+                                          keydown="{!c.handleqtychange}" updateOn="keypress, keyup, keydown"       
+                                          
+                                          maxlength ="5"/>
+                            
+                        </lightning:layoutItem>
+                        <lightning:layoutItem flexibility="auto" size="2" padding="around-small">
+                            {!prod.unitPrice}
+                        </lightning:layoutItem>
+                        <lightning:layoutItem flexibility="auto" size="2" padding="around-small">
+                            {!prod.prodCode}
+                        </lightning:layoutItem>
+                        <lightning:layoutItem flexibility="auto" size="4" padding="around-small">
+                            {!prod.prodDesc}
+                        </lightning:layoutItem>
+                        <lightning:layoutItem flexibility="auto" size="1" class="slds-p-around_xx-small">
+                            <lightning:button name="{!prd}" label="Del" title="Delete" onclick="{!c.deleteRow}" />
+                            
+                        </lightning:layoutItem>
+                    </lightning:layout>
+                </aura:iteration>
+                
+                
+                <lightning:layout>   
+                    
+                    
+                    
+                    
+                    
+                    <lightning:layoutItem flexibility="auto" size="6" class="slds-p-around_xx-small">
+                        <lightning:button label="Save Order Line" onclick="{!c.saveSOl}" />
+                    </lightning:layoutItem>
+                    <lightning:layoutItem flexibility="auto" size="1" class="slds-p-around_xx-small">
+                        <lightning:button label="Cancel" onclick="{!c.goBack}" />
+                    </lightning:layoutItem>
+                    
+                </lightning:layout>
+                
+                
+                
+                
+                
+                
+            </aura:if>
+        </div>
+        
+    </div>
+    
+    
+</aura:component>

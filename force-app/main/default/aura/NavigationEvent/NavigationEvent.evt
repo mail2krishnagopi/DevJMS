@@ -1,0 +1,6 @@
+<aura:event type="APPLICATION" description="Event template" access="global">
+    <aura:attribute name="stage" type="string"  />
+    <aura:attribute name="accountId" type="string"  />
+    <aura:attribute name="objSO" type="gii__SalesOrder__c" />
+    <aura:attribute name="lstProductWrapper" type="SalesOrderController.ProductWrapper[]" />
+</aura:event>

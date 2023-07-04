@@ -1,0 +1,68 @@
+.tableHeader{
+    font-size: 14px;
+}
+
+.tablestuff2 thead {
+    display: table-header-group;
+}
+
+.radio-inline1{
+    margin-right: 15px;
+}
+.tableallign{
+    overflow-x:auto;
+    overflow-y: scroll;
+}
+.stickytablerow{
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    z-index: 67;
+    
+}
+.stickytablecolumn{
+    position: sticky;
+    position: -webkit-sticky;
+   
+}
+.first-col {
+    width: 100px;
+   left: 0px;
+  }
+   .second-col {
+    width: 100px;
+    left: 100px;
+}
+.inputRadioStyle{
+    margin-right: 5px;
+    font-family: 'Josefin Sans', sans-serif;;
+}
+
+.slds-form-element__icon{
+    padding-top: 1px;
+}
+
+.input {
+    width: 10%;
+}
+
+.btn {
+border: none;
+color: red;
+text-align: center;
+text-decoration: none;
+display: inline-block;
+font-size: 14px;
+cursor: pointer;
+}
+
+.modalWidth{
+    max-width: 80rem !important;
+    width: 80% !important;
+}
+
+.stickytablecolumn{
+    position: sticky;
+    position: -webkit-sticky;
+   
+}

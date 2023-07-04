@@ -1,0 +1,91 @@
+<template>
+    <div class="spinner">
+        <template if:true={isLoading}>
+             <lightning-spinner alternative-text="Loading" variant="brand" size="large">
+            </lightning-spinner>
+        </template>
+        </div>
+    
+    <lightning-card class="topNav">            
+           
+            <div class="slds-page-header__title  slds-m-right--small slds-text-align_center">
+            <h1> 
+             Esignature Completion Form
+            </h1>
+            </div>        
+    </lightning-card>
+
+    <lightning-card class="topNav">
+        <div class="slds-page-header slds-m-top_x-small">
+            <div class="slds-media__body">
+                <h1>
+                    
+                    <div class="slds-page-header__title slds-m-right--small slds-align-middle">
+                       Select closed service ticket lines to get Esignatiure
+                    </div>
+                </h1>
+            </div>
+        </div>
+            <div class="border cm-scrollbar cm-table-w-scroll table-responsive">
+                <table class="table table-sm table-bordered"> 
+                <thead>
+                <tr>
+                <th><input type="checkbox" onchange={handleSelectAll}/> </th>
+                <th>Service Ticket Line</th>
+                <th>Line Activity Status</th>
+                <th>isClosed</th>
+                <th>Site</th>
+                <th>Asset Reference</th>                           
+                
+                </tr>
+                </thead>   
+                <tbody>
+                    <template for:each={stlList} for:item="stl" for:index="index">
+                        <tr key={stl.key}>
+                        <td><input type="checkbox"  value ={stl.isSelected} onchange={changeSelectHandler} 
+                            data-rowindex={index} data-column="isSelected" data-id="toggle" /></td>
+    
+                            <td><lightning-formatted-text value={stl.Name}></lightning-formatted-text></td>
+                            <td><lightning-formatted-text value={stl.gii__LineStatus__c}></lightning-formatted-text></td>
+                            <td><lightning-formatted-text value={stl.gii__IsClosed__c}></lightning-formatted-text></td>
+                            <td><lightning-formatted-text value={stl.gii__Site__r.Name}></lightning-formatted-text></td>
+                            <td><lightning-formatted-text value={stl.gii__AssetReference__r.Name}></lightning-formatted-text></td>
+                            
+                            </tr>
+    
+                    </template>
+    
+                </tbody>
+                </table>
+            </div>
+    </lightning-card>
+    <lightning-card class="topNav">
+        <div class="slds-page-header__title  slds-m-right--small slds-text-align_center">
+            <h1> 
+             Esignature Panel Section
+            </h1>
+        </div>  
+        <div class="c-container slds-align_absolute-center"> 
+            <div style="width: 400px"> 
+                <lightning-input label="Enter text " type="text" value={name} onchange={signIt}></lightning-input>
+                <p>
+                    {headerText}
+                </p>         
+                <p class="slds-m-bottom_small"> 
+                    <canvas name="canvasItem" height="200" width="400px" style="border:2px solid rgb(136, 135, 135);
+                    background: transparent;"></canvas>
+                </p>
+                <p class="slds-m-bottom_small"> 
+                <!--<lightning-button variant="brand" label="Download Signature" title="Save" 
+                    onclick={downloadSignature} class="slds-m-left_x-small"></lightning-button> -->
+                <lightning-button variant="brand" label="Save Signature" title="Save" 
+                    onclick={saveSignature} class="slds-m-left_x-small"></lightning-button>
+
+                <lightning-button variant="brand" label="Clear" title="Clear" 
+                    onclick={handleClearClick} class="slds-m-left_x-small"></lightning-button>
+                </p>
+            </div>       
+        </div>
+    </lightning-card>
+    
+</template>

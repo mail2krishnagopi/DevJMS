@@ -1,0 +1,84 @@
+/*
+.table, th, td {
+
+    border-collapse: collapse;
+  }
+  .table td {
+    
+    word-wrap: break-word;
+    padding: 0px;
+  }
+  
+  .table th {
+    padding: 0px;
+    
+  }
+  
+  .slds-table td {
+    padding: 0;
+  }
+  */
+  /* .slds-table th, .slds-table td{
+    padding: 2px;
+  }
+  .ducss .slds-table_bordered tbody td{
+   border-top:none
+  } */
+  .stickytablecolumn{
+    position: sticky;
+    position: -webkit-sticky;
+   
+}
+.stickytablerow{
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    z-index: 67;
+    
+}
+.tableallign{
+    overflow-x:auto;
+    overflow-y: scroll;
+}
+/*
+.textaligntd{
+  text-align: center;
+}
+
+
+.inputcss{
+  text-align: center!important;
+  padding-right: 0;
+}
+
+.inputcss input {
+  text-align: center!important;
+  padding-right: 0;
+}
+
+td.inputcss .slds-input {
+  text-align: center!important;
+  padding-right: 0;
+}
+.backgroundInverse {
+  position: relative;
+  background-color: #16325c;
+  height: 80px;
+
+}*/
+.slds-input { 
+  text-align: right;
+}
+
+.slds-input[readonly]{
+  text-align: right;
+}
+
+.modalWidth{
+  max-width: 60rem !important;
+  width: 50% !important;
+}
+.slds-modal__container{
+  max-width: 60rem !important;
+  min-width: 60rem !important;
+}

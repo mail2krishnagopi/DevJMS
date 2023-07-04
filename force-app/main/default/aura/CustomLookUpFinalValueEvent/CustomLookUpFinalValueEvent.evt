@@ -1,0 +1,5 @@
+<aura:event type="COMPONENT" description="Event template">
+    
+    <aura:attribute name="uniqueName" type="String"/>
+    <aura:attribute name="finalValue" type="Map[]"/>
+</aura:event>

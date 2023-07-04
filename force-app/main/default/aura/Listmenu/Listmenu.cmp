@@ -1,0 +1,41 @@
+<aura:component controller="MenuController" implements="forceCommunity:availableForAllPageTypes,force:appHostable" access="global">
+       
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:attribute name="WrapperList" type="MenuWrapper[]"/>
+    <aura:attribute name="SelectedTab" type="String" />
+    <aura:attribute name="UrlPathPrefix" type="String" />
+    <div style=" max-height: 50px;background-color: white!important;" >
+        <div style="padding-left:17px;">
+            <br/>
+            <div style="font-size:20px;cursor:pointer;">   
+                <a onclick="{!c.goToHomeURL}" href="javascript:void(0);">
+                    <img src="{!$Resource.LightningBoltSoln + '/Icons/Home.png'}" alt="" style="width:20px;height:20px;"/>                        	
+                   <!-- <lightning:icon class="slds-input__icon" iconName="utility:home" size="x-small" alternativeText="Home"/>  -->
+                </a>
+
+                <!--i class="fa fa-home" style="padding-left:6px;" aria-hidden="true" onclick="{!c.goToHomeURL}"></i--> 
+                
+                <b style="padding-left:6px;" onclick="{!c.toggle}">MENU</b>
+                <a onclick="{!c.toggle}" href="javascript:void(0);" style="padding-left:6px;">
+                    <lightning:icon class="slds-input__icon" iconName="utility:rows" size="x-small" alternativeText="MENU"/> 
+                </a>
+                <!--i class="fa fa-bars" style="padding-left:6px;" aria-hidden="true" onclick="{!c.toggle}"></i--> 
+                <b style="margin-left: 35%;">{!v.SelectedTab}</b>              
+                <br/>
+            </div>
+        </div>     
+    </div>    
+    <div aura:id="text" class="slds-card slds" style="overflow: overlay !important;position: absolute !important;background-color: white!important;z-index:100;width:175px;margin-left:5px;" label="Toggle">
+        <section class="slds-card__body">
+            <aura:iteration items="{!v.WrapperList}" var="item" indexVar="index">
+                <div id="{!index}" onclick="{!c.goToURL}" style="padding-left:10px;cursor:pointer" >
+                    <br/>
+                    <div class="row"><i class="{!item.Icon}" aria-hidden="true"></i>                       
+                        <img src="{!$Resource.LightningBoltSoln + item.Icon}" style="{!item.ListIconSize}" />
+                        <b style="padding-left:10px;"><span>{!item.Title}</span></b><br/>
+                    </div>                    
+                </div>
+            </aura:iteration>
+        </section>
+    </div>
+</aura:component>

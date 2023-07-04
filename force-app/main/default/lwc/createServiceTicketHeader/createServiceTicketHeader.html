@@ -1,0 +1,73 @@
+<template>
+    <div class="slds-page-header fixed-position flex_column slds-p-around_none">
+        <!-- Header Title Begin-->
+        <div class="flex_row p-around-1rem">
+           
+            <div class="slds-media slds-no-space">
+                <div class="highlights-icon-container slds-avatar slds-m-right_small icon"
+                    style="background-color: #6d9de3">
+                     <lightning-icon icon-name="custom:custom19" alternative-text="" title=""></lightning-icon> 
+                   
+                </div>
+            </div>
+
+            <div class="slds-media__body">
+                <h1>
+                    <div class="entityNameTitle slds-line-height--reset">Glovia Work Order</div>
+                    <div class="slds-page-header__title slds-m-right--small slds-align-middle">
+                        <lightning-formatted-text value={name}></lightning-formatted-text>
+                    </div>
+                </h1>
+            </div>
+
+        </div>
+        <!-- Header Title End-->
+       
+        <!-- Header List Item Begin -->
+      
+        <lightning-card class="topNav">
+            <div class="slds-p-left_x-small">
+                <div class="nav_item slds-grid slds-wrap" role="list">
+                    <div if:true={productId} class="slds-col slds-size_6-of-12 auto_adjust slds-large-size_1-of-6 slds-p-around_x-small">
+                        <!--<p class="slds-text-title slds-truncate" >Product</p>-->
+                        <!--<lightning-formatted-text value={productName}></lightning-formatted-text>-->
+                       
+                      <c-custom-lookup-l-w-c s-object-api-name="gii__Product2Add__c" label="Product" onlookupupdate={lookupRecord} 
+                         default-record-id={productId} onchange={changeHandler}></c-custom-lookup-l-w-c> 
+                    </div>
+
+                    <div if:true={harvestDate}  class="slds-col slds-size_6-of-12 auto_adjust slds-large-size_1-of-6 slds-p-around_x-small">
+                   <!--  <p class="slds-text-title slds-truncate">Harvest Date</p>
+                     <lightning-formatted-text  value={harvestDate} ></lightning-formatted-text> -->
+                   <lightning-input type="date" label="Harvest Date"
+                             value={date} ></lightning-input> 
+                        
+                    </div>
+
+                    <div if:true={warehouseId} class="slds-col slds-size_6-of-12 auto_adjust slds-large-size_1-of-6 slds-p-around_x-small">
+                    <!--  <p class="slds-text-title slds-truncate" >Warehouse</p>
+                      <lightning-formatted-text value={warehouseName}></lightning-formatted-text>-->
+                        <c-custom-lookup-l-w-c s-object-api-name="gii__Warehouse__c" label="Warehouse" onlookupupdate={lookupRecord} 
+                        default-record-id={warehouseId} onchange={changeHandler}  wherefieldapiname=""
+                        wherefieldvalue=""></c-custom-lookup-l-w-c>
+                    </div>
+                    
+                    <div if:true={locationId} class="slds-col slds-size_6-of-12 auto_adjust slds-large-size_1-of-6 slds-p-around_x-small">
+                                           
+                        <c-custom-lookup-l-w-c s-object-api-name="gii__Location__c" label="Location" onlookupupdate={lookupRecord} 
+                        default-record-id={locationId} onchange={changeHandler}  wherefieldapiname=""
+                        wherefieldvalue=""></c-custom-lookup-l-w-c>
+                       
+                    </div>
+                    
+                     
+
+                   
+                </div>
+            </div>
+        </lightning-card>
+        <!-- Header List Item End -->
+        </div>
+        
+
+</template>

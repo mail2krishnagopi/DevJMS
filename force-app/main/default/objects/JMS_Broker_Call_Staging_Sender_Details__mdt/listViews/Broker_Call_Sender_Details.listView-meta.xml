@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Broker_Call_Sender_Details</fullName>
+    <columns>MasterLabel</columns>
+    <columns>DeveloperName</columns>
+    <columns>JMS_Sender_Email_Address__c</columns>
+    <filterScope>Everything</filterScope>
+    <label>Broker Call Sender Details</label>
+</ListView>

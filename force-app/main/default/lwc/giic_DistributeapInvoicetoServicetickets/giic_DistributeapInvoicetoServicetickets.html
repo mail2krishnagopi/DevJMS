@@ -1,0 +1,187 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 02-01-2023
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+   
+    <div class="spinner">
+        <template if:true={isLoading}>
+             <lightning-spinner alternative-text="Loading" variant="brand" size="large">
+             </lightning-spinner>
+        </template>
+    </div> 
+    <div class="slds-page-header fixed-position flex_column slds-p-around_none">
+        <!-- Header Title Begin-->
+        <div class="flex_row p-around-1rem">
+           
+            <div class="slds-media slds-no-space">
+                <div class="highlights-icon-container slds-avatar slds-m-right_small icon"
+                    style="background-color: #6d9de3">
+                     <lightning-icon icon-name="custom:custom19" alternative-text="" title=""></lightning-icon> 
+                   
+                </div>
+            </div>
+
+            <div class="slds-media__body">
+                <h1>
+                    <div class="entityNameTitle slds-line-height--reset ">AP Invoice</div>
+                    <div class="slds-page-header__title slds-m-right--small slds-align-middle">
+                        <lightning-formatted-text value={name}></lightning-formatted-text>
+                    </div>
+                </h1>
+            </div>
+
+        </div>
+
+        <lightning-card class="topNav">
+            <div class="slds-p-left_x-small">
+                <div class="nav_item slds-grid slds-wrap" role="list">
+                    <div class="slds-col slds-size_6-of-12 auto_adjust slds-large-size_1-of-6 slds-p-around_x-small">
+                        <th><p class="slds-text-title slds-truncate slds-text-title_bold" >AP Invoice</p></th>
+                        <lightning-formatted-text  value={name}></lightning-formatted-text>
+
+                    </div>
+
+                    <div   class="slds-col slds-size_6-of-12 auto_adjust slds-large-size_1-of-6 slds-p-around_x-small">
+                        <p class="slds-text-title slds-truncate slds-text-title_bold" >Supplier</p>
+                        <lightning-formatted-text value={accName}></lightning-formatted-text>
+                    </div>
+
+                    <div  class="slds-col slds-size_6-of-12 auto_adjust slds-large-size_1-of-6 slds-p-around_x-small">
+                        <p class="slds-text-title slds-truncate slds-text-title_bold" >Document Amount </p>
+                        <lightning-formatted-number value={docAmt}></lightning-formatted-number>
+                    </div>
+                    
+                    <div class="slds-col slds-size_6-of-12 auto_adjust slds-large-size_1-of-6 slds-p-around_x-small">
+                        <p class="slds-text-title slds-truncate slds-text-title_bold" >Suspense Amount </p>
+                        <lightning-formatted-number value={susAmt}></lightning-formatted-number>
+                    </div>
+                    <div class="slds-col slds-size_6-of-12 auto_adjust slds-large-size_1-of-6 slds-p-around_x-small">
+                        <p class="slds-text-title slds-truncate slds-text-title_bold" >Total Amount for the selected items  </p>
+                        <lightning-formatted-number value={totSelAmt}></lightning-formatted-number>
+                    </div>   
+                     
+
+                   
+                </div>
+            </div>
+        </lightning-card>
+    </div>
+      
+<div class="outter_container slds-m-top_x-small">
+    <lightning-card class="topNav">
+        <div class="slds-page-header slds-m-top_x-small">
+            <div class="slds-media__body">
+                <h1>
+                    
+                    <div class="slds-page-header__title slds-m-right--small slds-align-middle">
+                        Select purchase order receipt lines and click on save to create a AP voucher distribution           </div>
+                </h1>
+            </div>
+            </div>
+
+<div class="border cm-scrollbar cm-table-w-scroll table-responsive" >
+        <table  class="table table-sm table-bordered">
+               <thead>
+                      
+    <tr>
+    <th><input type="checkbox" onchange={handleSelectAll}/> </th>
+    <th>Service Ticket Line</th>
+    <th>Service Ticket</th>
+    <th>Asset Reference</th>
+    <!--<th>LINE DETAIL EXISTS</th>-->
+    <th>Date Time/Closed</th>
+    <!--<th>PURCHASE ORDER LINE ALREADY CREATED</th>-->
+    <th>Total Actual Cost</th>
+   <!-- <th>Purchase Order</th>
+    <th>Purchase Order Line</th>
+    <th>PO Receipt Line</th>-->
+    <th>Unvouchered Amount</th> 
+    
+    </tr>
+    </thead>   
+    <tbody>
+    
+    
+    <template for:each={purchaseReflist} for:item="purch" for:index="index">
+        <tr key={purch.serviceLine.Id}>
+            <td><input type="checkbox"  value ={purch.isSelected} onchange={changeSelectHandler} 
+                    data-rowindex={index} data-column="isSelected" data-id="toggle" data-serviceid={purch.serviceLine.Id}/></td>
+           <td>{purch.serviceLine.gii__PurchaseOrderLine__r.gii__ServiceTicketLine__r.Name}</td>
+           <td>{purch.serviceLine.gii__PurchaseOrderLine__r.gii__ServiceTicket__r.Name}</td>
+           <td>{purch.serviceLine.gii__PurchaseOrderLine__r.gii__ServiceTicketLine__r.gii__AssetReference__r.Name}</td>
+           
+            <td>{purch.serviceLine.gii__PurchaseOrderLine__r.gii__ServiceTicketLine__r.gii__DateTimeClosed__c}</td>
+          
+          <td>{purch.serviceLine.gii__UnitPrice__c}</td>
+            <td>{purch.serviceLine.gii__UnvoucheredAmount__c}</td>
+            
+            <!--   <td>
+            <div if:true={purch.serviceLine.gii__IsClosed__c}>
+            <lightning-input type="checkbox" value={purch.serviceLine.gii__IsClosed__c} checked disabled="true"> </lightning-input>
+            </div>
+            <div if:false={purch.serviceLine.gii__IsClosed__c}>
+            <lightning-input type="checkbox" value={purch.serviceLine.gii__IsClosed__c} disabled="true"> </lightning-input>
+            </div>
+            </td>-->
+            <!--<td>
+            <div if:true={purch.isLineDetailExits}>
+            <lightning-input type="checkbox" value={purch.isLineDetailExits} checked disabled="true"> </lightning-input>
+            </div>
+            <div if:false={purch.isLineDetailExits}>
+            <lightning-input type="checkbox" value={purch.isLineDetailExits} disabled="true"> </lightning-input>
+            </div>
+            </td>-->
+           <!-- <td>
+            <div if:true={purch.isPurchaseOrderExists}>
+            <lightning-input type="checkbox" value={purch.isPurchaseOrderExists} checked disabled="true"> </lightning-input>
+            </div>
+            <div if:false={purch.isPurchaseOrderExists}>
+            <lightning-input type="checkbox" value={purch.isPurchaseOrderExists} disabled="true"> </lightning-input>
+            </div>
+            </td>-->
+           <!-- <td>
+                <div if:true={purch.isLineDetailExits}>
+                <lightning-input type="checkbox" value={purch.isLineDetailExits} checked disabled="true"> </lightning-input>
+                </div>
+                <div if:false={purch.isLineDetailExits}>
+                <lightning-input type="checkbox" value={purch.isLineDetailExits} disabled="true"> </lightning-input>
+                </div>
+                </td>
+            <td><c-custom-lookup-l-w-c 
+        s-object-api-name="gii__Product2Add__c"
+        label=""
+        onlookupupdate={handleProdSelected}
+        placeholder="Search by Product Name..."
+        class="prodName"
+        default-record-id = {purch.serviceLine.gii__Product__c}
+        ></c-custom-lookup-l-w-c></td>  --> 
+         
+           <!-- <td>{purch.serviceLine.gii__PurchaseOrder__r.Name}</td>
+            <td>{purch.serviceLine.gii__PurchaseOrderLine__r.Name}</td>
+            <td>{purch.serviceLine.Name}</td> --> 
+            
+              
+        
+        
+        </tr>
+        </template>
+    
+    </tbody>
+    
+    </table>
+    </div>
+    </lightning-card>
+
+    <div class="slds-m-top_small slds-m-bottom_medium slds-float_right">
+        <lightning-button variant="success" label="Save"  title="Save" onclick={handleCreateServiceTicket} class="slds-m-left_x-small"  > </lightning-button>
+        <lightning-button variant="brand" label= "Cancel" title="Cancel" onclick={navigateToRecordPage} class="slds-m-left_x-small"></lightning-button>
+    </div>
+
+</div>
+
+
+</template>

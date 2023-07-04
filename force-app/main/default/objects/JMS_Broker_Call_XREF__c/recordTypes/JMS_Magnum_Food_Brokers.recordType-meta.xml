@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<RecordType xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>JMS_Magnum_Food_Brokers</fullName>
+    <active>true</active>
+    <label>Magnum Food Brokers</label>
+</RecordType>

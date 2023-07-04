@@ -1,0 +1,6 @@
+<aura:component implements="forceCommunity:availableForAllPageTypes" access="global" >
+    <br/>
+	<button class="slds-button slds-button_neutral" onclick="{!c.goToURL}">New Sales Order</button>
+    
+
+</aura:component>

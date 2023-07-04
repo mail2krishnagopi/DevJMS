@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>JMS_Placement_Reason__c</fullName>
+    <externalId>false</externalId>
+    <label>Placement Reason</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>New Customer</fullName>
+                <default>false</default>
+                <label>New Customer</label>
+            </value>
+            <value>
+                <fullName>Add/Penetrate Existing Customer</fullName>
+                <default>false</default>
+                <label>Add/Penetrate Existing Customer</label>
+            </value>
+            <value>
+                <fullName>Ancillary Order</fullName>
+                <default>false</default>
+                <label>Ancillary Order</label>
+            </value>
+            <value>
+                <fullName>Food Show / Special Event</fullName>
+                <default>false</default>
+                <label>Food Show / Special Event</label>
+            </value>
+            <value>
+                <fullName>Site Survey</fullName>
+                <default>false</default>
+                <label>Site Survey</label>
+            </value>
+            <value>
+                <fullName>Account Update</fullName>
+                <default>false</default>
+                <label>Account Update</label>
+            </value>
+            <value>
+                <fullName>Equipment Modification</fullName>
+                <default>false</default>
+                <label>Equipment Modification</label>
+            </value>
+            <value>
+                <fullName>Conversion - Brand</fullName>
+                <default>false</default>
+                <label>Conversion - Brand</label>
+            </value>
+            <value>
+                <fullName>Replacement - Same Model - Existing Customer</fullName>
+                <default>false</default>
+                <label>Replacement - Same Model - Existing Customer</label>
+            </value>
+            <value>
+                <fullName>Replacement - Model Change - Existing Customer</fullName>
+                <default>false</default>
+                <label>Replacement - Model Change - Existing Customer</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

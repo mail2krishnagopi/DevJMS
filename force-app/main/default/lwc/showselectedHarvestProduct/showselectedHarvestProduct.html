@@ -1,0 +1,59 @@
+<template>
+    <div class="outter_container slds-m-top_x-small">
+        <lightning-card class="topNav">
+            <div class="slds-page-header slds-m-top_x-small">
+                <div class="slds-media__body">
+                    <h1>
+                        
+                        <div class="slds-page-header__title slds-m-right--small slds-align-middle">
+                            Selected Harvest Products
+                        </div>
+                    </h1>
+                </div>
+                </div>
+
+    <div class="border cm-scrollbar cm-table-w-scroll table-responsive" if:true={finallist}>
+            <table  class="table table-sm table-bordered">
+                   <thead>
+                <tr>
+                    
+                    <!--<th><input type="checkbox" onchange={handleSelectAll}/> </th>-->
+                    <th class="widthth_four">Product Code</th>
+                    <th class="widthth_first">Product Name</th>
+                    <th class="widthth_first">Product Serial</th>
+                    <th class="widthth_four">Quantity</th>
+                    <th class="widthth_four">Quality</th>
+                    <th class="widthth_six"> </th>
+                </tr>
+            </thead>
+            <tbody>
+               
+                <template for:each={finallist} for:item="prodItem" for:index="index">
+                    <tr class="bg-primary" key={prodItem.objHarvestRef.Id}>
+                       <!-- <td><input type="checkbox"  value ={prodItem.isSelected} onchange={changeSelectHandler} 
+                            data-rowindex={index} data-column="isSelected" data-id="toggle" /></td>-->
+                        <td><lightning-formatted-text value={prodItem.objHarvestRef.gii__ProductCode__c}></lightning-formatted-text></td>
+                        <td><lightning-formatted-text value={prodItem.objHarvestRef.Name}></lightning-formatted-text></td>
+                        <td><lightning-formatted-text value={prodItem.prodSerial}></lightning-formatted-text></td>
+                        <td><lightning-formatted-text value={prodItem.quantity}></lightning-formatted-text></td>
+                        <td><lightning-formatted-text value={prodItem.quality}></lightning-formatted-text></td>
+                        <td> <lightning-button  variant="base" label= "Del"  icon-name="utility:del" onclick={handleDeleteRow} data-rowindex={index} class="slds-m-left_x-small"></lightning-button></td>
+                  
+                </tr>
+                </template>
+                
+            </tbody>
+        </table>
+        </div>
+    
+        </lightning-card>
+        </div>
+        
+        <div class="slds-docked-form-footer">
+            
+            <button type="button" class="slds-button slds-button_neutral" onclick={handleBack}>Back</button>
+            <button type="button" class="slds-button slds-button_brand" onclick={handleSave}>Save</button>
+            </div>
+    
+       <!-- <c-create-harvest-product-footer finallist={finallist}></c-create-harvest-product-footer>-->
+</template>

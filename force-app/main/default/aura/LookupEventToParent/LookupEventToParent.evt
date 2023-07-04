@@ -1,0 +1,4 @@
+<aura:event type="COMPONENT" description="Event template">
+ 
+    <aura:attribute name="selectedItem" type="Map"/>
+</aura:event>

@@ -1,0 +1,8 @@
+.slds-notify_container{
+    z-index: unset;
+}
+.slds-notify_toast{
+    min-width: unset;
+    margin-top: 0%;
+    margin-bottom: 2%;
+}

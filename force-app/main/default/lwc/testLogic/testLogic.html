@@ -1,0 +1,20 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 03-19-2023
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <lightning-input                   
+                   type="search"
+                   data-source="searchInputField"
+                   onclick={toggleResult}
+                   onchange={handleKeyChange}
+                   is-loading={isSearchLoading}
+                   value={searchKey}
+                   variant="label-hidden"
+                   placeholder={placeholder}
+                  read-only={readOnlyValue}
+               ></lightning-input> 
+</template>

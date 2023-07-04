@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>JMS_Item_Number__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>Item Number</description>
+    <externalId>false</externalId>
+    <label>Item Number</label>
+    <referenceTo>Product2</referenceTo>
+    <relationshipLabel>Broker Calls</relationshipLabel>
+    <relationshipName>Broker_Calls</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

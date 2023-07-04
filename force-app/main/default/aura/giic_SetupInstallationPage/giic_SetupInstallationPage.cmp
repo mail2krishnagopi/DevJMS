@@ -1,0 +1,6 @@
+<aura:component implements="force:lightningQuickAction,flexipage:availableForAllPageTypes,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:hasSObjectName,lightning:isUrlAddressable" access="global">
+<aura:attribute name="recordId" type="String" />
+<aura:handler name="init" value="{!this}" action="{!c.doInit}" />
+ <c:giic_SetupInstallation recid="{!v.recordId}"></c:giic_SetupInstallation>
+
+</aura:component>

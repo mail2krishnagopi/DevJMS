@@ -1,0 +1,32 @@
+.THIS .tilesCSS{
+    border:1px solid t(colorBorder) !important;
+    height: 100%;
+    display: inline-block;    
+    margin-right: 10px;
+    vertical-align: top;
+    max-height: 138px;
+    min-height: 138px;
+    float:left;
+    width:20%;
+    cursor:pointer;
+    margin: 2%;
+}
+.THIS .wrapper {
+    display: table;    
+    height: auto;
+    width: 100%;
+}
+.THIS .wrapper2 {
+    height: 100%;
+    display: table-row
+}
+
+@media only screen and (min-width: 768px) {
+    /*
+    .THIS .itemTitle {display:none;}
+   .THIS .tilesCSS{
+    	max-height: 108px;
+    	min-height: 108px;    
+    }
+    */
+}

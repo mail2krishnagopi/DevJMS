@@ -1,0 +1,57 @@
+<aura:component implements="forceCommunity:layout" description="Custom Content Layout" access="global">
+    
+    <aura:attribute name="NavigationMenu" type="Aura.Component[]"/>
+    <aura:attribute name="Tiles" type="Aura.Component[]"/> 
+    <aura:attribute name="Tasks" type="Aura.Component[]"/> 
+    <aura:attribute name="Customers" type="Aura.Component[]"/> 
+    <aura:attribute name="Dashboard1" type="Aura.Component[]"/>
+    <aura:attribute name="Dashboard2" type="Aura.Component[]"/>
+    <aura:attribute name="Chatter" type="Aura.Component[]"/>
+    <aura:attribute name="RecentlyViewed" type="Aura.Component[]"/>  
+    
+    <div class="slds-grid slds-grid-align-center">
+        <div class="slds-col fullRow">
+            {!v.NavigationMenu}      
+        </div>
+    </div>
+    <div class="slds-grid slds-grid--align-center">
+        <div class="slds-col left">           
+            <div class="slds-grid slds-grid--vertical">
+                <div class="slds-col panelItem" >                          
+					<div class="slds-grid slds-grid--horizental">
+						<div class="slds-col left" style="width:70%">
+							{!v.Tiles}                   
+						</div>
+						<div class="slds-col right" style="width:30%">
+							{!v.Dashboard1}                   
+						</div> 
+					</div>		
+                </div>
+                <div class="slds-col panelItem" >
+                    <div style="margin-left: 10px;">
+                        {!v.Chatter} 
+                    </div>                                      
+                </div>
+                <div class="slds-col panelItem" >
+                    <div style="margin-left: 10px;">
+                        {!v.Tasks} 
+                    </div>                                            	    	
+                </div>                
+            </div>
+        </div>
+        <div class="slds-col right">           
+            <div class="slds-grid slds-grid--vertical">
+				<div class="slds-col panelItem" >
+                    <div style="margin-left: 10px;">
+                       {!v.Dashboard2} 
+                    </div>
+                </div>
+                <div class="slds-col panelItem" >
+                    <div style="margin-left: 10px;">
+                        {!v.RecentlyViewed} 
+                    </div>
+                </div>
+            </div>    
+        </div>
+    </div>    
+</aura:component>

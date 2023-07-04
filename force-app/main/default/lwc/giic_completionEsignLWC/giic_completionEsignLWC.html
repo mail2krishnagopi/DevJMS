@@ -1,0 +1,94 @@
+<template>  
+    <div class="spinner">
+    <template if:true={isLoading}>
+            <lightning-spinner alternative-text="Loading" variant="brand" size="large">
+        </lightning-spinner>
+    </template>
+    </div>
+    
+    <lightning-card  class={containerClass} >       
+        
+        <div class="slds-page-header__title  slds-m-right--small slds-text-align_center">
+        <h1> 
+            E-Signature Completion Form
+        </h1>
+        </div>     
+        
+    </lightning-card>
+    
+    <lightning-card  class={containerClass} > 
+    <div class="slds-page-header slds-m-top_x-small">        
+            <h1>
+                <div class="slds-page-header__title slds-m-right--small slds-align-middle">
+                    Select service ticket lines to get E-Signature 
+                </div>
+            </h1>            
+    </div>
+    <div class="border cm-scrollbar cm-table-w-scroll table-responsive">
+        <table class="table table-sm table-bordered"> 
+        <thead>
+        <tr>
+        <th><input type="checkbox" onchange={handleSelectAll}/> </th>
+        <th>Service Ticket Line</th>
+       <!-- <th>Line Activity Status</th>-->
+        <th>Type</th>
+      <!--  <th>Site</th> -->
+        <th>Asset Reference</th>                           
+        
+        </tr>
+        </thead>   
+        <tbody>
+            <template for:each={stlList} for:item="stl" for:index="index">
+                <tr key={stl.key}  class="bg-primary">
+                <td><input type="checkbox"  value ={stl.isSelected} onchange={changeSelectHandler} 
+                    data-rowindex={index} data-column="isSelected" data-id="toggle" /></td>
+    
+                    <td><lightning-formatted-text value={stl.objSTLRef.Name}></lightning-formatted-text></td>
+                 <!--   <td><lightning-formatted-text value={stl.objSTLRef.gii__LineStatus__c}></lightning-formatted-text></td> -->
+                    <td><lightning-formatted-text value={stl.objSTLRef.gii__Type__r.Name}></lightning-formatted-text></td>
+                  <!-- <td><lightning-formatted-text value={stl.objSTLRef.gii__Site__r.Name}></lightning-formatted-text></td> -->
+                    <td><lightning-formatted-text value={stl.assetRefName}></lightning-formatted-text></td>
+                    
+                    </tr>
+    
+            </template>
+    
+        </tbody>
+        </table>
+    </div>
+    
+    </lightning-card>
+    <lightning-card  class={containerClass} > 
+    
+    
+        <div class="slds-page-header__title  slds-m-right--small slds-text-align_center">
+            <h1> 
+                Signature Panel
+            </h1>
+        </div>        
+        <div class="c-container slds-align_absolute-center"> 
+            <div style="width: 350px">
+        <lightning-input  label="Signed By" type="text" value={signedBy} onchange={signIt}></lightning-input>
+                <p >
+                    {headerText}
+                </p>  
+        <div class="slds-m-bottom_small">        
+           
+                    <canvas class="signature-canvas" width="350" height="400" style="border:2px solid rgb(136, 135, 135);
+                    background: transparent;"> </canvas>
+             
+                </div>
+                <p class="slds-m-bottom_small slds-align_absolute-center"> 
+                    
+                    <lightning-button variant="success" label="Save Signature" title="Save" 
+                    disabled = "{isChecked}" onclick={saveSignature} class="slds-m-left_x-small"></lightning-button>
+    
+                    <lightning-button variant="brand" label="Clear" title="Clear" 
+                        onclick={handleClearClick} class="slds-m-left_x-small"></lightning-button>
+                    </p>
+           </div>    
+    </div>
+    </lightning-card>
+
+     
+    </template>

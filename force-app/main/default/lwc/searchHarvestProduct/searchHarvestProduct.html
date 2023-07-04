@@ -1,0 +1,72 @@
+<template>
+<div class="outter_container slds-m-top_x-small">
+<lightning-card class="topNav">
+    <div class="slds-page-header slds-m-top_x-small">
+        <div class="slds-media__body">
+            <h1>
+                
+                <div class="slds-page-header__title slds-m-right--small slds-align-middle">
+                    Find Products 
+                </div>
+            </h1>
+        </div>
+        <div class="slds-grid slds-wrap two-col_container">
+            <div class="slds-col slds-size_4-of-12 slds-m-bottom--medium">
+                <lightning-Input type="search" placeholder="search product by keyword" value={productName} name="prodName" 
+                class="prodName" onchange={handleChangeProdName}></lightning-input>                         
+            </div>    
+            <div class="slds-col slds-size_6-of-12 slds-m-top--medium" style="margin-top: 19px; margin-left: 10px;">       
+                <lightning-button label="Search Product" size="small" variant="brand" onclick={handleProductSearch} 
+                icon-name="utility:search" icon-position="right"></lightning-button>                       
+            </div>
+                            
+        </div>
+    </div>
+
+    <div class="border cm-scrollbar cm-table-w-scroll table-responsive" if:true={renderTable}>
+        <table  class="table table-sm table-bordered">
+               <thead>
+            <tr>
+                
+                <!--<th><input type="checkbox" onchange={handleSelectAll}/> </th>-->
+                <th class="widthth_four">Product Code</th>
+                <th class="widthth_first">Product Name</th>
+                <th class="widthth_four">Quantity</th>
+                <th class="widthth_four">Quality</th>
+                <th class="widthth_four">is Serial controlled</th>
+                <th class="widthth_four">Product Serial</th>
+                <th class="widthth_four">is Lot controlled</th>
+                <th class="widthth_four">Lot Number</th>
+                <th class="widthth_six" ></th>
+            </tr>
+        </thead>
+        <tbody>
+           
+            <template for:each={workOrderList} for:item="prodItem" for:index="index">
+                <tr class="bg-primary" key={prodItem.objHarvestRef.Id}>
+                   <!-- <td><input type="checkbox"  value ={prodItem.isSelected} onchange={changeSelectHandler} 
+                        data-rowindex={index} data-column="isSelected" data-id="toggle" /></td>-->
+                    <td><lightning-formatted-text value={prodItem.objHarvestRef.gii__ProductCode__c}></lightning-formatted-text></td>
+                    <td><lightning-formatted-text value={prodItem.objHarvestRef.Name}></lightning-formatted-text></td>
+                    <td><lightning-input value={prodItem.quantity} name="quantity"  onchange={handleQuantityChange} data-rowindex={index} data-column="quantity"></lightning-input></td>
+                    <td><lightning-combobox name="quality" value={prodItem.quality}  options={qualityValues} 
+                        placeholder="Select Quality" onchange={handleQualityChange} 
+                        data-rowindex={index} data-column="quality"></lightning-combobox></td>
+                    <td><lightning-input type="checkbox" checked={prodItem.objHarvestRef.gii__SerialControlled__c} disabled="true"></lightning-input></td>
+                    <td><lightning-input value={prodItem.productSerial} class="prodSerialcmp" name="prodSerial"  onchange={handleproductSerial} data-rowindex={index} data-column="prodSerial"></lightning-input></td>
+                    <td><lightning-input type="checkbox" checked ={prodItem.objHarvestRef.gii__LotControlled__c} disabled="true"></lightning-input></td>
+                    <td><lightning-input value={prodItem.lotNumber} name="lotNumber"  onchange={handlelotNumber} data-rowindex={index} data-column="lotNumber"></lightning-input></td>
+                    <td><lightning-button label= "Add"  icon-name="utility:add" onclick={handleSelectRow} data-rowindex={index}></lightning-button></td>
+                </tr>
+            </template>
+            
+        </tbody>
+    </table>
+    </div>
+</lightning-card>
+
+</div>
+
+<c-showselected-harvest-product finallist={finalList} workorderrecordid={workorderrecordid}></c-showselected-harvest-product>
+
+</template>

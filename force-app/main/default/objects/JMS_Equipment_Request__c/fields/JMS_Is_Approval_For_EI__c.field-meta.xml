@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>JMS_Is_Approval_For_EI__c</fullName>
+    <description>The formula field to check whether EI should be approved or not</description>
+    <externalId>false</externalId>
+    <formula>IF(NOT(OR( JMS_Equipment_Cost__c &gt; 10000, JMS_Ancillary_Cost__c &gt; 1000)) , TRUE, FALSE)</formula>
+    <formulaTreatBlanksAs>BlankAsZero</formulaTreatBlanksAs>
+    <label>Is Approval For EI</label>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

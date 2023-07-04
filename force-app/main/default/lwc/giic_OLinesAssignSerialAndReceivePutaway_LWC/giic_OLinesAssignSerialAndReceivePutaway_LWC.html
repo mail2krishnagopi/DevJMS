@@ -1,0 +1,108 @@
+<template>
+    <lightning-card class="topNav">
+        <lightning-card class="topNav">
+        <div class="slds-page-header slds-m-top_x-small">
+            <div class="slds-media__body">
+                <h1>
+                    <div class="slds-page-header__title slds-m-right--small slds-align-middle">
+                       Serial Controlled Line for Receive and Putaway
+                    </div>
+                    <div if:true={selectedControlledLine.purchaseOrderLineName}>
+                        <b>Purchase Order Line: </b><lightning-formatted-url value={selectedControlledLine.purchaseOrderLineRecordURL} label={selectedControlledLine.purchaseOrderLineName} target="_blank"></lightning-formatted-url>
+                    </div>
+                    <div if:true={selectedControlledLine.transferOrderLineRecordURL}>
+                        <b>Transfer Order Line: </b><lightning-formatted-url value={selectedControlledLine.transferOrderLineRecordURL} label={selectedControlledLine.transferOrderLineName} target="_blank"></lightning-formatted-url>
+					</div>
+                </h1>
+				<div class="slds-m-top_small slds-m-bottom_medium slds-text-align_right">
+					<lightning-button variant="success" label="Receive and Putaway" title="Receive and Putaway" onclick={validateAndProcessData} class="slds-m-left_x-small  slds-text-align_right"  > </lightning-button>
+					<lightning-button variant="brand" label= "Back" title="Cancel" onclick={backToSearchPage} class="slds-m-left_x-small slds-text-align_right"></lightning-button>
+				</div>
+            </div>
+        </div>
+        <div class="border cm-scrollbar cm-table-w-scroll table-responsive">
+            <table class="table table-sm table-bordered"> 
+				<thead>
+					<tr>
+						<!--th if:true={selectedControlledLine.purchaseOrderLineName} data-sort="purchaseOrderLineRecordURL">Purchase Order Line</th>
+						<th if:true={selectedControlledLine.transferOrderLineRecordURL} data-sort="transferOrderLineName">Transfer Order Line</th-->        
+                        <th width="5"></th>
+                        <th width="25">Location</th>
+                        <th width="5"></th>
+						<th width="25">Location Bin</th> 
+                        <th width="40"></th>        
+					</tr>
+				</thead>  
+                <tbody>
+					<tr>
+						<!--td if:true={selectedControlledLine.purchaseOrderLineName}>
+							<lightning-formatted-url value={selectedControlledLine.purchaseOrderLineRecordURL} label={selectedControlledLine.purchaseOrderLineName} target="_blank"></lightning-formatted-url>
+						</td>
+						<td if:true={selectedControlledLine.transferOrderLineRecordURL}>
+							<lightning-formatted-url value={selectedControlledLine.transferOrderLineRecordURL} label={selectedControlledLine.transferOrderLineName} target="_blank"></lightning-formatted-url>
+						</td-->
+                        <td width="5"></td>
+						<td width="25">
+							<c-custom-lookup-l-w-c icon-name="standard:user"
+							s-object-api-name="gii__Location__c"
+							label=""
+							onlookupupdate={handleLocationChangeSerialControlled}
+							default-record-id={selectedControlledLine.locationId}
+							wherefieldapiname="gii__Warehouse__c"
+							wherefieldvalue={selectedControlledLine.warehouseId}
+							placeholder="Enter Location here...">
+                            </c-custom-lookup-l-w-c>
+						</td>
+                        <td width="5"></td>
+						<td width="25">
+							<c-custom-lookup-l-w-c icon-name="standard:user"
+							s-object-api-name="gii__LocationBin__c"
+							label=""
+							onlookupupdate={handleLocationBinChangeSerialControlled}
+							default-record-id={selectedControlledLine.locationBinId}
+							wherefieldapiname="gii__Location__r.gii__Warehouse__c"
+							wherefieldvalue={selectedControlledLine.warehouseId}
+							placeholder="Enter Location Bin here...">
+							</c-custom-lookup-l-w-c>
+						</td>
+                        <td width="40"></td>
+					</tr>
+                </tbody>
+            </table>
+        </div>
+        </lightning-card>
+        <lightning-card class="topNav">
+		<div class="slds-page-header slds-m-top_x-small">
+            <h1>
+                <div class="slds-page-header__title slds-m-right--small slds-align-middle">
+                    Product Serial
+                </div>
+            </h1>
+        </div>
+		<div class="nav_item slds-grid slds-wrap">
+			<table class="slds-table slds-table_bordered slds-no-row-hover slds-table_cell-buffer" role="grid">
+				<thead>
+					<tr>
+						<th scope="col" height="22" style="width: 3rem" width="10%">SEQUENCE</th>
+						<th scope="col" height="22" width="25%">PRODUCT SERIAL</th>
+                        <th scope="col" height="22" width="65%"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<template for:each={itemList} for:item="rec" for:index="index">
+						<tr key={rec} class="slds-hint-parent">
+                            <td style="font-weight: bold" width="10%">
+								<lightning-formatted-number value={rec}></lightning-formatted-number>.
+							</td>
+							<td width="25%">
+								<lightning-input type="text" variant="label-hidden" data-rowindex={index} data-id={rec} onchange={captureProductSerial}></lightning-input>
+							</td>
+                            <td width="65%"></td>
+						</tr>
+					</template>
+				</tbody>
+			</table>
+		</div>
+        </lightning-card>
+    </lightning-card>
+</template>

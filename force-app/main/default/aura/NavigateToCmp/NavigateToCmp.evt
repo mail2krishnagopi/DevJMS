@@ -1,0 +1,18 @@
+<aura:event type="APPLICATION" description="Event template" access="global" >
+	<aura:attribute name="cmpName" type="String" />
+    <aura:attribute name="accountId" type="String" />
+    <aura:attribute name="accountName" type="String" />
+    <aura:attribute name="paymentMethod" type="String" />
+	<aura:attribute name="paymentMethodId" type="String" />
+    <aura:attribute name="searchKey" type="String" />
+    <aura:attribute name="totalItems" type="Integer"/>
+    <!-- aura:attribute name="prodFamily" type="giic_HomeScreenController.ProductFamilyWrapper[]" /> 
+    <aura:attribute name="prodPackaging" type="giic_HomeScreenController.ProductPackagingWrapper[]" />
+    <aura:attribute name="prodTreatment" type="giic_HomeScreenController.ProductTreatmentWrapper[]" / -->  
+    <aura:attribute name="selectedDealer" type="AccountWrapper" />
+    <aura:attribute name="currentStageNumber" type="Double" default="1"/>
+    <aura:attribute name="nextStageNumber" type="Integer" default="1"/>
+    <aura:attribute name="nextStageName" type="String"/>
+    <aura:attribute name="cmpParameters" type="Object" />
+    <aura:attribute name="selectedRecord" type="sObject" />
+</aura:event>

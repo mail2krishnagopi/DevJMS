@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>giic_IsErrorMapping__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Mark TRUE and give Field of API name of Integration Error (you can create lookup field of source sobject into Integration error sobject) on which current Source Object will show integration error record</description>
+    <externalId>false</externalId>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <label>IsErrorMapping</label>
+    <type>Checkbox</type>
+</CustomField>

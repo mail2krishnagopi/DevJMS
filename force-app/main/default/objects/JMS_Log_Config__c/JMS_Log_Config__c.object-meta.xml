@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <customSettingsType>Hierarchy</customSettingsType>
+    <description>Settings to manage the custom logging using Logger framework</description>
+    <enableFeeds>false</enableFeeds>
+    <label>JMS Log Config</label>
+    <visibility>Public</visibility>
+</CustomObject>

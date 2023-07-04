@@ -1,0 +1,25 @@
+<aura:component >
+<aura:attribute name="selectedProduct" type="gii__Product2Add__c" />
+<!-- Register the component level event -->
+<aura:registerEvent name="selectedProductEvent" type="c:giic_SelectedProductEvent"/>
+
+<!-- Create a searched result dropdown list -->
+
+<li role="presentation">
+<span class="slds-lookup__item-action slds-media slds-media–center" id="lookup-option-350" role="option">
+
+<div class="slds-media__body">
+
+<div class="slds-input-has-icon slds-input-has-icon–right">
+<!--<c:svg ariaHidden="true" class="slds-input__icon" xlinkHref="/resource/SLDS222/assets/icons/standard-sprite/svg/symbols.svg#contact"/>
+-->
+<div class="slds-lookup__result-text"><a onclick="{!c.selectProduct}">{!v.selectedProduct.Name}</a></div>
+
+</div>
+
+</div>
+
+</span>
+</li>
+
+</aura:component>

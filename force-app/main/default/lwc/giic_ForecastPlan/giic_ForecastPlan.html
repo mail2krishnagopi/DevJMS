@@ -1,0 +1,584 @@
+<template>
+    <div class="container slds-is-relative">
+        
+        <c-giic_common-search-filter plancycleid={cyclerecid} objectname={cycleobjname} forecast-plan={isForecast} planname={planName} onsearchchange={getSearcHeaderData}></c-giic_common-search-filter>
+
+        <!-- show spinner  -->
+         <div if:true={isLoaded} class="">
+            <lightning-spinner alternative-text="Loading..." variant="brand" class="slds-show slds-spinner_container" size="large"></lightning-spinner>
+        </div> 
+       <!--  <lightning-spinner alternative-text="Loading..." variant="brand" class="slds-show slds-spinner_container" size="large"></lightning-spinner> -->
+        <!-- <template if:true={isLoaded}>
+            <lightning-spinner alternative-text="Loading..." variant="brand" class="slds-show slds-spinner_container" size="large"></lightning-spinner>
+        </template> -->
+        <div class ="slds-p-top_medium" if:true={showRecordMessage}>
+            <div style="text-align:center;width: 300px;margin: 0 auto;border-style: dotted;"><b>No Record Found</b></div>
+        </div>
+        <!-- show produt table -->
+        <template if:true={showProductData}>
+            <div class="tablestuff2 table tableallign" style="height: 500px;">
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered tableHeader">
+                    <!-- slds-table_striped  -->
+                    <thead>
+                        <tr class="slds-line-height_reset stickytablerow">
+                            <th class="" scope="col" id="th1">
+                                <div class="slds-truncate">Select</div>
+                            </th>
+                            <th class="" scope="col" id="th14">
+                                <div class="slds-truncate" title="Region">Region</div>
+                            </th>
+                            <th class="" scope="col" id="th12">
+                                <div class="slds-truncate" title="Country">Country</div>
+                            </th>
+                            <th class="" scope="col" id="th2">
+                                <div class="slds-truncate" title="Legal Entity">Legal Entity</div>
+                            </th>
+                            <th class="" scope="col" id="th13">
+                                <div class="slds-truncate" title="Warehouse">Warehouse</div>
+                            </th>
+                            <th class="" scope="col" id="th3">
+                                <div class="slds-truncate" title="Account">Account</div>
+                            </th>
+                            <th class="" scope="col" id="th6">
+                                <div class="slds-truncate" title="Other">Other</div>
+                            </th>
+                            <th class="" scope="col" id="th7">
+                                <div class="slds-truncate" title="Product">Product</div>
+                            </th>
+                            <th class="" scope="col" id="th9">
+                                <div class="slds-truncate" title="Total">Total</div>
+                            </th>
+                            <template for:each={forecastData.allMonthsSort} for:item="month">
+                                <th scope="col" key={month}>
+                                    <c-giic_forecast-period mapkey={month} mapcollection={forecastData.allPeriodsMap}></c-giic_forecast-period>
+                                </th>
+                            </template>
+                            <th class="" scope="col" id="th11">
+                                <div class="slds-truncate" title="Notes">Notes</div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody if:true={foreCastLocal}>
+                        <template for:each={forecastData.prodWrap} for:item="prod" for:index="indexVar">
+                            <tr key={prod.proForecast.Id}>
+                                <td headers="th1" class="">
+                                    <div >
+                                        <lightning-input type="checkbox" value={prod.checked} onchange={prodChecked} data-id={prod.productId} data-forecast={prod.proForecast.Id} data-ware={prod.warehouse}></lightning-input>
+                                    </div>
+                                </td>
+                                <td headers="th14" class="">
+                                    <div style="word-wrap:break-word;width:100px;">
+                                        {prod.prodRegion}
+                                    </div>
+                                </td>
+                                <td headers="th12" class="">
+                                    <div style="word-wrap:break-word;width:100px;">
+                                        {prod.country}
+                                    </div>
+                                </td>
+                                <td headers="th2" class="">
+                                    <div style="white-space: pre-wrap !important;width:100px;">
+                                        {prod.legalEntity}
+                                    </div>
+                                </td>
+                                <td headers="th13" class="">
+                                    <div style="white-space: pre-wrap !important;width:100px;">
+                                        {prod.warehouse} 
+                                    </div>
+                                </td>
+                                <td headers="th3" class="">
+                                    <div style="white-space: pre-wrap !important;width:100px;">
+                                        {prod.opportunityName}
+                                    </div>
+                                </td>
+                                <td headers="th6" data-id={prod.proForecast.Id} class="">
+                                    <div class="slds-truncate">
+                                        <table cellspacing="0" cellpadding="0" border="0">
+                                            <tr>
+                                                <td style="font-size: 10px; border: none; padding-left: 4px;">Owner: {prod.productOwner}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 10px; border: none; padding-left: 4px;">
+                                                    <label for="fname">Forecast Priority: </label>
+                                                    <input type="number" name="fname" value={prod.priority} data-indexvar={indexVar} onchange={getForePriority}>        
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 10px; border: none; padding-left: 4px;">
+                                                    <label for="fname">Purpose Order Priority: </label>
+                                                    <input type="number" name="fname" value={prod.purposeOrderPriority} data-indexvar={indexVar} onchange={getPOPriority}>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 10px; border: none; padding-left: 4px;">
+                                                    <label for="fname">Purpose: </label>
+                                                    <input type="text" name="fname" style="width: 191px;height: 50px; word-wrap:break-word;" value={prod.productPurpose} data-indexvar={indexVar} onchange={getProductPurpose}  maxlength="255">
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 10px; border: none; padding-left: 4px;">
+                                                    <label for="fname">Opportunity: </label>
+                                                    <input type="text" name="fname" style="width: 191px;height: 50px; word-wrap:break-word;" value={prod.oppName} data-indexvar={indexVar} onchange={getOpportunityName}  maxlength="255">
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </td>
+                                <td headers="th7" style="width: 200px;" data-id={prod.productId} class="stickytablecolumn">
+                                    <div class="slds-truncate">
+                                        <table cellspacing="0" cellpadding="0" border="0">
+                                            <tr>
+                                                <td if:true={prod.lstBVUMsgs.length} style="font-size: 14px; border: none; padding-left: 8px;">
+                                                    A<button  data-indexvar={indexVar} class="btn" onclick={showBVUList}>*</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 10px; border: none; padding-left: 8px;"><b>{prod.productName}</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 10px; border: none; padding-left: 8px;">SKU: {prod.productSKU}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 10px; border: none; padding-left: 8px;">Family: {prod.productFamily}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 10px; border: none; padding-left: 8px;">Category: {prod.productCategory}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 10px; border: none; padding-left: 8px;">SubCategory2: {prod.productSubcategory2}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 10px; border: none; padding-left: 8px;">SubCategory1: {prod.productSubcategory1}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </td>
+                                <td headers="th9" class="">
+                                    <div class="slds-truncate">
+                                        <lightning-formatted-number maximum-fraction-digits="2" style="width: 55px;" type="number" name="input1" value={prod.total} read-only="true" variant="label-hidden"></lightning-formatted-number>
+                                    </div>
+                                </td>
+                               <template if:true={restoreVal}>
+                                    <template for:each={forecastData.allPeriods} for:item="period" for:index="index">
+                                        <td headers="th11" key={period}>
+                                            <c-giic_forecast-period-input
+                                                periodkey={period}
+                                                productdata={prod}
+                                                indexvalue={indexVar}
+                                                allperiodsdisable={forecastData.allPeriodsDisable}
+                                                zonedata={forecastData.zoneMap}
+                                                reportingperiod={forecastData.strReportingPeriod}
+                                                onchild={handleChild}
+                                                forecast={searchHeaderData}
+                                            ></c-giic_forecast-period-input>
+                                        </td>
+                                    </template>
+                                </template>
+                                <td headers="th11">
+                                    <div class="" style="width: 100px">
+                                        <lightning-textarea type="text" name="input1" value={prod.prodNotes} data-id={indexVar} variant="label-hidden" onchange={getNotesValue}></lightning-textarea>
+                                    </div>
+                                </td>  
+                            </tr>
+                        </template>
+                    </tbody>
+                    <tbody if:true={forecastPlanRegionView}>
+                        <template for:each={forecastData.prodWrap} for:item="prod" for:index="indexVar">
+                            <tr key={prod.proForecast.Id}>
+                                <td headers="th1" class="stickytablecolumn">
+                                    <div>
+                                        <lightning-input read-only="true" type="checkbox" value={prod.checked} onchange={prodChecked} data-id={prod.productId}></lightning-input>
+                                    </div>
+                                </td>
+                                <td headers="th14" class="stickytablecolumn">
+                                    <div style="white-space: pre-wrap !important;width:100px;">
+                                        {prod.prodRegion}
+                                    </div>
+                                </td>
+                                <td headers="th12" class="stickytablecolumn">
+                                    <div style="white-space: pre-wrap !important;width:100px;">
+                                        {prod.country}
+                                    </div>
+                                </td>
+                                <td headers="th2" class="stickytablecolumn">
+                                    <div style="white-space: pre-wrap !important;width:100px;">
+                                        {prod.legalEntity}
+                                    </div>
+                                </td>
+                                <td headers="th13" class="">
+                                    <div style="white-space: pre-wrap !important;width:100px;">
+                                        {prod.warehouse}
+                                    </div>
+                                </td>
+                                <td headers="th3" class="stickytablecolumn">
+                                    <div style="white-space: pre-wrap !important;width:100px;">
+                                        {prod.opportunityName}
+                                    </div>
+                                </td>
+                                <td headers="th6" class="stickytablecolumn">
+                                    <div class="slds-truncate">
+                                        <table cellspacing="0" cellpadding="0" border="0">
+                                            <tr>
+                                                <td style="font-size: 10px; border: none; padding-left: 4px;">Owner: {prod.productOwner}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 10px; border: none; padding-left: 4px;">
+                                                    <label for="fname">Forecast Priority: </label>
+                                                    <input type="number" name="fname" value={prod.priority} data-indexvar={indexVar} readonly>        
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 10px; border: none; padding-left: 4px;">
+                                                    <label for="fname">Purpose Order Priority: </label>
+                                                    <input type="number" name="fname" value={prod.purposeOrderPriority} data-indexvar={indexVar} readonly>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 10px; border: none; padding-left: 4px;">
+                                                    <label for="fname">Purpose: </label>
+                                                    <input type="text" name="fname" style="width: 191px;height: 50px;" value={prod.productPurpose} data-indexvar={indexVar} readonly>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 10px; border: none; padding-left: 4px;">
+                                                    <label for="fname">Opportunity: </label>
+                                                    <input type="text" name="fname" style="width: 191px;height: 50px; word-wrap:break-word;" value={prod.oppName} data-indexvar={indexVar} readonly>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </td>
+                                <td headers="th7" style="width: 200px;" class="stickytablecolumn">
+                                    <div class="slds-truncate">
+                                        <table cellspacing="0" cellpadding="0" border="0">
+                                            <tr>
+                                                <td if:true={prod.lstBVUMsgs.length} style="font-size: 14px; border: none; padding-left: 8px;">
+                                                   <button  data-indexvar={indexVar} class="btn" onclick={showBVUList}>*</button>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 10px; border: none; padding-left: 8px;"><b>{prod.productName}</b></td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 10px; border: none; padding-left: 8px;">SKU: {prod.productSKU}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 10px; border: none; padding-left: 8px;">Family: {prod.productFamily}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 10px; border: none; padding-left: 8px;">Category: {prod.productCategory}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 10px; border: none; padding-left: 8px;">SubCategory2: {prod.productSubcategory2}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="font-size: 10px; border: none; padding-left: 8px;">SubCategory1: {prod.productSubcategory1}</td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </td>
+                                <td headers="th9" class="stickytablecolumn">
+                                    <div class="slds-truncate">
+                                        <lightning-formatted-number maximum-fraction-digits="2" style="width: 55px;" type="number" name="input1" value={prod.total} read-only="true" variant="label-hidden"></lightning-formatted-number>
+                                    </div>
+                                </td>
+                                <template if:true={restoreVal}>
+                                    <template for:each={forecastData.allPeriods} for:item="period" for:index="index">
+                                        <td headers="th11" key={period}>
+                                            <c-giic_forecast-period-input
+                                                periodkey={period}
+                                                productdata={prod}
+                                                indexvalue={indexVar}
+                                                allperiodsdisable={forecastData.allPeriodsDisable}
+                                                zonedata={forecastData.zoneMap}
+                                                reportingperiod={forecastData.strReportingPeriod}
+                                                onchild={handleChild}
+                                                readonlydata= {inputReadOnly}
+                                                forecast={searchHeaderData}
+                                            ></c-giic_forecast-period-input>
+                                        </td>
+                                    </template>
+                                </template>
+                                <td headers="th11">
+                                    <div class="" style="width: 100px">
+                                        <lightning-textarea name="input1" value={prod.prodNotes} variant="label-hidden" readonly="true"></lightning-textarea>
+                                    </div>
+                                </td> 
+                            </tr>
+                        </template>
+                    </tbody>
+                </table>
+            </div>
+        </template>
+        <br />
+        <!-- Show Buttons -->
+        <div if:true={showButtonGroup} class="slds-align_absolute-center">
+            <lightning-button-group>
+                <lightning-button if:true={showAllButton} label="Remove From Forecast" variant="destructive" icon-name="action:remove" onclick={removeProductLine} > </lightning-button> &nbsp;&nbsp;
+                <lightning-button if:true={showAllButton} label="Add Forecast" icon-name="utility:add" onclick={navigateToLineStaging}> </lightning-button> &nbsp;&nbsp;
+                <lightning-button if:true={showApproveReject} label="Approve/Reject" icon-name="action:approval" onclick={appoveForecast} variant="success"> </lightning-button> &nbsp;&nbsp;
+                <lightning-button if:true={showAllButton} label="Save" variant="brand" icon-name="utility:save" onclick={save} ></lightning-button> &nbsp;&nbsp;
+                <lightning-button if:true={showAllButton} label="Save & Exit" variant="brand" icon-name="utility:save" onclick={saveAndExit}></lightning-button> &nbsp;&nbsp;
+                <lightning-button if:true={showAllButton} label="Export" variant="brand" icon-name="utility:arrow_bottom" onclick={exportReport}></lightning-button> &nbsp;&nbsp;
+                <lightning-button if:true={showSubmitApprovalButton} label="Submit for Approval" variant="success" icon-name="standard:record_create" onclick={submitRecordForApprovalModal} > </lightning-button>&nbsp;&nbsp;
+                <lightning-button if:true={showreqForEdit} label="Request for Edit" icon-name="action:edit" onclick={reqForEdit}> </lightning-button> &nbsp;&nbsp;
+                <lightning-button if:true={showApproveUpdatePlan} label="Approve/Reject for Edit" variant="success" icon-name="action:edit" onclick={approveRejectUpdatePlan}> </lightning-button> &nbsp;&nbsp;
+                <lightning-button if:true={showDemandOrder} label="Generate Demand Plan" variant="success" icon-name="action:edit" onclick={generateDO}> </lightning-button> &nbsp;&nbsp;
+                <lightning-button label="Back" icon-name="utility:back" onclick={backToRecord} > </lightning-button>
+                
+            </lightning-button-group>
+        </div>
+    
+        <!--- Show the product modal if:true={showreqForEdit}   -->
+        <template if:true={isProductModalOpen}>
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-02" aria-modal="true" aria-describedby="modal-content-id-2" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <!-- Modal/Popup Box LWC header here -->
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeProductModal}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-02" class="slds-text-heading_medium slds-hyphenate">Add Product</h2>
+                    </header>
+                    <!-- Modal/Popup Box LWC body starts here -->
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
+                        <lightning-layout multiple-rows="true" horizontal-align="spread">
+                            <lightning-layout-item size="6" padding="around-small">
+                                Country: {countryName} 
+                            </lightning-layout-item>
+                            <lightning-layout-item size="6" padding="around-small">
+                                Legal Entity: {legalEntityValue}
+                            </lightning-layout-item>
+                            <lightning-layout-item size="6" padding="around-small">
+                                <c-giic_reusable-custom-lookup lookup-label="Product" object-api-name="gii__Product2Add__c" icon-name="standard:product" onrecordselection={onProductSelection}></c-giic_reusable-custom-lookup>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="6" padding="around-small">
+                                <lightning-input type="date" name="input2" label="Required Delivery Date" value={reqDelDate} onchange={getReqDelDate} required="true"></lightning-input>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="6" padding="around-small">
+                                <c-giic_reusable-custom-lookup lookup-label="Onwer" object-api-name="User" icon-name="standard:user" onrecordselection={onUserSelection}></c-giic_reusable-custom-lookup>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="6" padding="around-small">
+                                <c-giic_reusable-custom-lookup lookup-label="Opportunity(Account)" object-api-name="Account" icon-name="standard:account" onrecordselection={onAccountSelection}></c-giic_reusable-custom-lookup>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="6" padding="around-small">
+                                <lightning-input type="text" name="input2" label="Purpose" value={prodPurpose} onchange={getProdPurpose}></lightning-input>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="6" padding="around-small">
+                                <c-giic_reusable-custom-lookup lookup-label="Warehouse" object-api-name="gii__Warehouse__c" icon-name="utility:store" onrecordselection={onWareSelection}></c-giic_reusable-custom-lookup>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </div>
+                    <!-- Modal/Popup Box LWC footer starts here -->
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick={closeProductModal} title="Cancel">Cancel</button>
+                        <button class="slds-button slds-button_brand" onclick={submitProductDetails} title="Apply">Apply</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+        <!-- show approval/show more information-->
+        <template if:true={isApprovalShowInformation}>
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-02" aria-modal="true" aria-describedby="modal-content-id-2" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <!-- Modal/Popup Box LWC header here -->
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeApproveModal}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-03" class="slds-text-heading_medium slds-hyphenate">Approve/Reject Forecast Plan</h2>
+                    </header>
+                    <!-- Modal/Popup Box LWC body starts here -->
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-3">
+                        <lightning-layout multiple-rows="true" horizontal-align="spread">
+                            <lightning-layout-item  padding="around-small">
+                                <lightning-tabset>
+                                    <lightning-tab label="Approval">
+                                        <lightning-layout>
+                                            <lightning-layout-item size="9">
+                                                <lightning-textarea type="text" label="Additional Comment" value={additionApprovalComment} onchange={getAprovalComment}></lightning-textarea><br/>
+                                                <lightning-button label="Approve" variant="success" onclick={approveForecastPlan}> </lightning-button>
+
+                                            </lightning-layout-item>
+                                        </lightning-layout>
+                                    </lightning-tab>
+                                    <lightning-tab label="Rejection">
+                                        <lightning-layout>
+                                            <lightning-layout-item size="9">
+                                                <lightning-textarea type="text" label="Rejection Reason" value={rejectionReason} required="true" onchange={getRejectionReason}></lightning-textarea><br/>
+                                                <lightning-button label="Reject" variant="destructive" onclick={rejectForecastPlan}> </lightning-button>
+                                            </lightning-layout-item>
+                                        </lightning-layout>
+                                    </lightning-tab>
+                                </lightning-tabset>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </div>
+                    <!-- Modal/Popup Box LWC footer starts here -->
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick={closeApproveModal} title="Cancel">Cancel</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+        <!-- show approval/reject update plan more information-->
+        <template if:true={isApprovalRejectRequest}>
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-02" aria-modal="true" aria-describedby="modal-content-id-2" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <!-- Modal/Popup Box LWC header here -->
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeApproveRejectModal}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-04" class="slds-text-heading_medium slds-hyphenate">Approve/Reject Request for Forecast Plan</h2>
+                    </header>
+                    <!-- Modal/Popup Box LWC body starts here -->
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-4">
+                        <lightning-layout multiple-rows="true" horizontal-align="spread">
+                            <lightning-layout-item  padding="around-small">
+                                <lightning-tabset>
+                                    <lightning-tab label="Approval">
+                                        <lightning-layout>
+                                            <lightning-layout-item size="9">
+                                                <lightning-textarea type="text" label="Additional Comment" value={additionApprovalComment} onchange={getAprovalComment}></lightning-textarea><br/>
+                                                <lightning-button label="Approve" variant="success" onclick={approveUpdateForecastPlan}> </lightning-button>
+                                            </lightning-layout-item>
+                                        </lightning-layout>
+                                    </lightning-tab>
+                                    <lightning-tab label="Rejection">
+                                        <lightning-layout>
+                                            <lightning-layout-item size="9">
+                                                <lightning-textarea type="text" label="Rejection Reason" value={rejectionReason} onchange={getRejectionReason} required="true"></lightning-textarea><br/>
+                                                <lightning-button label="Reject" variant="destructive" onclick={rejectUpdateForecastPlan}> </lightning-button>
+                                            </lightning-layout-item>
+                                        </lightning-layout>
+                                    </lightning-tab>
+                                </lightning-tabset>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </div>
+                    <!-- Modal/Popup Box LWC footer starts here -->
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick={closeApproveRejectModal} title="Cancel">Cancel</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+        <!--- Show the BVU records -->
+        <template if:true={showBVURec}>
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-02" aria-modal="true" aria-describedby="modal-content-id-2" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container modalWidth">
+                    <!-- Modal/Popup Box LWC header here -->
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeBVUModal}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-05" class="slds-text-heading_medium slds-hyphenate">Issues List</h2>
+                    </header>
+                    <!-- Modal/Popup Box LWC body starts here -->
+                    <div class="slds-modal__content slds-p-around_medium tablestuff2 table" id="modal-content-id-5">
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered tableHeader">
+                            <!-- slds-table_striped  -->
+                            <thead>
+                                <tr class="slds-line-height_reset">
+                                    <th class="" scope="col" >
+                                        <div class="slds-truncate" title="Name">Name</div>
+                                    </th>
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="Message">Message</div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <template for:each={BVUList} for:item="bvu" for:index="indexVar">
+                                    <tr key={bvu.id}>
+                                        <td>
+                                            {bvu.giic_Demand_Forecast__r.Name}
+                                        </td>
+                                        <td>
+                                            {bvu.giic_Message__c}
+                                        </td>
+                                    </tr>
+                                </template>
+                            </tbody>
+                        </table>
+                    </div>
+                    <!-- Modal/Popup Box LWC footer starts here -->
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick={closeBVUModal} title="Cancel">Cancel</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+        <!-- Show Submit for approval modal-->
+        <template if:true={showsubmit}>
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-02" aria-modal="true" aria-describedby="modal-content-id-2" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <!-- Modal/Popup Box LWC header here -->
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closesubmitapprovalModal}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-07" class="slds-text-heading_medium slds-hyphenate">Submit Record</h2>
+                    </header>
+                    <!-- Modal/Popup Box LWC body starts here -->
+                    <div class="slds-modal__content slds-p-around_medium tablestuff2 table" id="modal-content-id-7">
+                        <b><center>All Forecast related to selected Region will be submit for Approval. Please confirm.</center></b>
+                    </div>
+                    <!-- Modal/Popup Box LWC footer starts here -->
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_brand" onclick={submitRecordForApproval} title="Yes">Yes</button>
+                        <button class="slds-button slds-button_brand" onclick={closesubmitapprovalModal} title="No">No</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+        <template if:true={isBatchProcessed}>
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <!-- Modal/Popup Box LWC header here -->
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Batch Progress</h2>
+                    </header>
+        
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                            <template if:true={isBatchProcessCompleted}>
+                                <div>
+                                Completed With {failedJobs} Errors..!!
+                            </div>
+                            </template>
+                        </br>
+                        <template if:true={isBatchProcessZero}>
+                        <div>
+                           There is no records to process.!!
+                        </div>
+                        </template>
+                            <br/>
+                          <lightning-progress-bar value={batchProgressPercent} size="large"></lightning-progress-bar>
+                        </div>
+                    </div>
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+    </div>
+</template>

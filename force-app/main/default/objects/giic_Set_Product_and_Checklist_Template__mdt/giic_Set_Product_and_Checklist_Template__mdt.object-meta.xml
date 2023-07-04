@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>Set the correct match data for Service Ticket Estimated Service with he help of Service Product and Service Checklist Template .</description>
+    <label>Set Product and  Checklist Template</label>
+    <pluralLabel>Set Product and Checklist Templates</pluralLabel>
+    <visibility>Public</visibility>
+</CustomObject>

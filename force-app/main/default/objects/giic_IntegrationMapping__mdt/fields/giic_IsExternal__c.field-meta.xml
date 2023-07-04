@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>giic_IsExternal__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>Mark as True if we need to use External Field binding, not sfdc id</description>
+    <externalId>false</externalId>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <label>IsExternal</label>
+    <type>Checkbox</type>
+</CustomField>

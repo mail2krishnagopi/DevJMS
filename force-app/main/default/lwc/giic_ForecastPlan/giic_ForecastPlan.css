@@ -1,0 +1,86 @@
+.tableHeader{
+    font-size: 14px;
+}
+
+.tablestuff2 thead {
+    display: table-header-group;
+    
+}
+.tableallign{
+    overflow-x:auto;
+    overflow-y: scroll;
+}
+.stickytablerow{
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    z-index: 67;
+    
+}
+.stickytablecolumn{
+    position: sticky;
+    position: -webkit-sticky;
+   
+}
+.first-col {
+    width: 100px;
+   left: 0px;
+  }
+   .second-col {
+    width: 100px;
+    left: 100px;
+  }
+.radio-inline1{
+    margin-right: 15px;
+}
+
+.inputRadioStyle{
+    margin-right: 5px;
+    font-family: 'Josefin Sans', sans-serif;;
+}
+
+.imgCls{
+    border-radius: 10pt;
+    max-width: 60px;
+    min-width: 60px;
+    max-height: 70px;
+    min-height: 70px;
+    padding-right: 5px;
+}
+
+.slds-form-element__icon{
+    padding-top: 1px;
+}
+
+.input {
+    width: 10%;
+}
+
+.btn {
+    border: none;
+    color: red;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    cursor: pointer;
+  }
+
+.modalWidth{
+    max-width: 80rem !important;
+    width: 80% !important;
+  }
+
+.frozenZone{
+    background-color: #faf0f0;
+}
+.slushyZone{
+    background-color: #eef8f5;
+}
+
+.slds-dueling-list__column_responsive {
+    min-width: 45%;
+}
+.slds-dueling-list__column_responsive .slds-dueling-list__options {
+    min-width: 100%;
+}

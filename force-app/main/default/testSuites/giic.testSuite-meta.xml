@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ApexTestSuite xmlns="http://soap.sforce.com/2006/04/metadata">
+    <testClassName>giic_AddServiceTicketLineTest</testClassName>
+    <testClassName>giic_BookingConfirmationTest</testClassName>
+    <testClassName>giic_completeEsignTest</testClassName>
+    <testClassName>giic_createFollowUpServiceRecordsTest</testClassName>
+    <testClassName>giic_CreateHarvestProductTest</testClassName>
+    <testClassName>giic_CreatePurchaseOrderTest</testClassName>
+    <testClassName>giic_CreatePurchaseRequistionLineTest</testClassName>
+    <testClassName>giic_CreateSalesOrderLinesTest</testClassName>
+    <testClassName>Giic_CreateTransferOrderTest</testClassName>
+    <testClassName>giic_DemandPlanningForWarehouseTest</testClassName>
+    <testClassName>giic_DistributeapInvoicetoSTTest</testClassName>
+    <testClassName>giic_JMSCommonUtilityTest</testClassName>
+    <testClassName>giic_PicklistDetailAFterInsertTest</testClassName>
+    <testClassName>giic_PurchaseOrderInvocableClaFutureTest</testClassName>
+    <testClassName>giic_PurchaseOrderInvocableClaTest</testClassName>
+    <testClassName>giic_RecieveandPutawayTest</testClassName>
+    <testClassName>giic_RMAProcessFlowTest</testClassName>
+    <testClassName>giic_SaleQuoteTriggerHelperTest</testClassName>
+    <testClassName>giic_ServiceTicketLineTriggerHandlerTest</testClassName>
+    <testClassName>giic_ServiceTicketLineTriggerTest</testClassName>
+    <testClassName>Giic_SetupInstallationTest</testClassName>
+    <testClassName>giic_Test_DataCreationUtility</testClassName>
+</ApexTestSuite>

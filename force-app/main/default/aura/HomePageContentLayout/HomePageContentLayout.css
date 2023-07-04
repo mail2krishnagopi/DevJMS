@@ -1,0 +1,26 @@
+.THIS .contentPanel:before,
+.THIS .contentPanel:after {
+    content: " ";
+    display: table;
+}
+.THIS .contentPanel:after {
+    clear: both;
+}
+.THIS .panelItem{
+    border: 1px solid t(colorBorder) !important;
+    border-radius: .25rem;
+    background-clip: padding-box;
+    box-shadow: 0 2px 0 0 rgba(0,0,0,.1);
+    margin: 6px;
+}
+.THIS .left {
+    float: left;
+    width: 75%;
+}
+.THIS .right {
+    float: right;
+    width: 25%;
+}
+.THIS .fullRow{
+    width: 100%;
+}

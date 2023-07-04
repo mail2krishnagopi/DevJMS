@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>JMS_StackTrace__c</fullName>
+    <description>This details the order of method invocation which occurred at the point the debug entry was written</description>
+    <externalId>false</externalId>
+    <label>StackTrace</label>
+    <length>32768</length>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>25</visibleLines>
+</CustomField>

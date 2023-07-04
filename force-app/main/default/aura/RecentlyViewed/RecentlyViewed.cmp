@@ -1,0 +1,22 @@
+<aura:component controller="RecentViewController" implements="forceCommunity:availableForAllPageTypes" access="global">
+    <!-- ltng:require styles="{!$Resource.SLDS243 + '/assets/styles/salesforce-lightning-design-system.min.css'}"/ -->
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <aura:attribute name="RecentlyViewed" type="RecentlyViewed[]"/>
+    
+    <div style="padding-bottom: 7px;font-size: 1rem;font-weight: 700;line-height: 1.5;"><!-- text-transform: uppercase; -->
+        {!$Label.c.RecentlyViewed}
+    </div>
+    <table class="slds-table slds-table_bordered slds-table_cell-buffer" >
+        <tbody>
+            <aura:iteration items="{!v.RecentlyViewed}" var="item" indexVar="index"> 
+                <tr>                    
+                    <td data-label="{!item.Name}" class="tdCss">
+                        <div class="slds-truncate" title="{!item.Name}"><a id="{!index}" target="_top" onclick="{!c.redirectTo}">{!item.Name}</a></div>     
+                    </td>
+                </tr>
+            </aura:iteration>            
+        </tbody>
+    </table>
+    
+</aura:component>

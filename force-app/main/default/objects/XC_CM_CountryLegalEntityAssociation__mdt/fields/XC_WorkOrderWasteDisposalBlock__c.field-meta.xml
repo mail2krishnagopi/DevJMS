@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>XC_WorkOrderWasteDisposalBlock__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>RB_CRM_B2C_Y: Checkbox field used for CR NR1757 (WEEE Traceability). It is set to true if the documentation on work order is needed.</description>
+    <externalId>false</externalId>
+    <fieldManageability>DeveloperControlled</fieldManageability>
+    <label>WorkOrder Waste Disposal Block</label>
+    <type>Checkbox</type>
+</CustomField>

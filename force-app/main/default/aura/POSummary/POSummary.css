@@ -1,0 +1,12 @@
+.THIS .PaymentDiv{
+    padding-top: 0;
+    margin-top: 0;
+    margin-bottom: 8px;
+}
+.THIS .qtyInput{
+    padding: 0;
+    width: 85px;
+}
+.THIS .slds-cell-shrink{
+    width : 3%;
+}

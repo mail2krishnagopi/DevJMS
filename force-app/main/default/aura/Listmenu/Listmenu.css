@@ -1,0 +1,38 @@
+.THIS .slds-icon-text-default {
+   fill:  t(colorTextDefault) !important; 
+}    
+
+/*toggleCss.css*/
+.THIS.toggle {
+    display: none;
+}
+
+
+.THIS {
+    /* width:175px;
+    background-color: #f4f6f9;
+    border-left: 1px solid #d8dde6;
+    border-right: 1px solid #d8dde6;
+    font-size: 14px;
+    font-weight: 600;
+    width: 250px;
+    padding-right: 55px;*/
+}
+
+.THIS .card-custom{
+    overflow: overlay !important;
+    position: absolute !important;   
+}
+
+.THIS .layoutCSS{
+    max-width: 250px; max-height: 50px;
+}
+
+.THIS .customLayout{
+    padding: 2px !important;
+    width: 250px;
+}
+
+.THIS .slds-col{
+    max-width: 250px;
+}

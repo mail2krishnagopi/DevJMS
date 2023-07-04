@@ -1,0 +1,2 @@
+<apex:page standardController="gii__DemandOrder__c" extensions="giic_DemandOrdCreationBatchExecute" recordSetVar="inv" action="{!runBatch}">
+</apex:page>

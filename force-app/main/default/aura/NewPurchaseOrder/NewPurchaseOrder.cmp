@@ -1,0 +1,19 @@
+<!--NewPurchaseOrder_cmp-->
+<aura:component controller="POSupplierController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global">
+    
+    <!--<ltng:require styles="{!$Resource.LightningBoltSoln + '/FontAwesome/css/font-awesome.min.css'}"/>-->
+    
+    <aura:attribute name="processName" type="String" default="PurchaseOrder" description="Need Process Name. Eg- SalesOrder"/>
+    <aura:attribute name="currentStageNumber" type="Decimal" default="1"/>
+    <aura:attribute name="stages" type="ProcessStepsWrapper[]"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" /> 
+    <aura:handler event="c:NavigateToCmp" action="{!c.NavigateComponent}" />
+	<aura:attribute name="selectedLookUpRecord" type="sObject" default="{}"/>
+    
+    <c:ProgressPath currentStageNumber="{!v.currentStageNumber}" stages="{!v.stages}"/> 
+    <div style="height:100%; width:100%;">
+        {!v.body}
+    </div>    
+    
+</aura:component>

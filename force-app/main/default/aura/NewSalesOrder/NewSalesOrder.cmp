@@ -1,0 +1,25 @@
+<aura:component controller="AppController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction,lightning:actionOverride" access="global">
+	
+    <!-- ltng:require styles="{!$Resource.SLDS243 + '/assets/styles/salesforce-lightning-design-system.min.css'}"/ -->
+    <!-- ltng:require styles="{!$Resource.FontAwesome + '/FontAwesome/css/font-awesome.min.css'}"/ -->
+    <!--ltng:require styles="{!$Resource.LightningBoltSoln + '/FontAwesome/css/font-awesome.min.css'}"/-->
+    
+    <aura:attribute name="processName" type="String" default="SalesOrder" description="Need Process Name. Eg- SalesOrder"/>
+    <aura:attribute name="currentStageNumber" type="Decimal" default="1"/>
+    <aura:attribute name="stages" type="ProcessStepsWrapper[]"/>
+    <aura:attribute name="isExternalUser" type="Boolean" default="false"/>
+    <!-- aura:attribute name="accountId" type="String" / -->
+    
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" /> 
+    <aura:handler event="c:NavigateToCmp" action="{!c.NavigateComponent}" />
+    
+  <!--  <aura:if isTrue="{!v.isExternalUser==true}">
+        <c:Listmenu /><br/>
+    </aura:if> -->
+    
+    <c:ProgressPath currentStageNumber="{!v.currentStageNumber}" stages="{!v.stages}" isExternalUser="{!v.isExternalUser}"/> 
+    <div style="height:100%; width:100%;">
+        {!v.body}
+    </div>    
+</aura:component>

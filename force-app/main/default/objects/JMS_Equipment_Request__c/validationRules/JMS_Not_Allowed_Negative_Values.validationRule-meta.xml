@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ValidationRule xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>JMS_Not_Allowed_Negative_Values</fullName>
+    <active>true</active>
+    <errorConditionFormula>OR( JMS_Ancillary_Cost__c &lt; 0 , JMS_Equipment_Cost__c &lt; 0, JMS_Machine_Count__c  &lt; 0)</errorConditionFormula>
+    <errorMessage>Ancillary Cost , Equipment Cost , Machine Count should not be less than Zero</errorMessage>
+</ValidationRule>

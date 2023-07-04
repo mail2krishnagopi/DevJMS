@@ -1,0 +1,25 @@
+.THIS .mycss1{width:50%;text-align: left;}
+.THIS .mycss2{width:50%;text-align: left;}
+.THIS .mycss3{text-align: end;padding-right: 5px;}
+.THIS .alignRight{text-align: right !important;}
+.THIS .alignCenter{text-align: center !important;}
+.THIS .colalign{text-align: left;     padding-top: 0.5rem;}
+.THIS .cenalign{text-align: center;}
+.THIS .fixedWidth35pc{width:50% !important;}
+.THIS .paddingRight1rem{padding-right: 1rem !important;}
+.THIS .paddingRight2d1rem{padding-right: 2.1rem !important;}
+.THIS .slds-table--fixed-layout thead th { padding: 0;z-index: 14;text-align: left; word-wrap:break-word !important;}
+.THIS .slds-table--fixed-layout {table-layout: auto;width: 100%;white-space: normal;}
+.THIS.slds-spinner_container {  
+  z-index: 10000;
+  position: fixed;   
+}
+.THIS .label-hidden > label {
+    display: none;
+}
+.THIS .mycss5 {
+    margin-top: 29px;
+}
+.THIS .mycss4{    max-width: 50px;
+    text-align: left;
+}

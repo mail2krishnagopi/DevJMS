@@ -1,0 +1,466 @@
+<template>
+
+    <c-giic_search-header cyclename = {PlanYear} recordid = {planCycleId} planname={plantype} asofdate={asOfstartdate} onsearchchange={getSearcHeaderData}></c-giic_search-header>
+
+    <div class="container slds-is-relative">
+
+        <!-- show spinner  -->
+        <div if:true={isLoaded} class="slds-spinner_inline spinner-padding">
+            <lightning-spinner alternative-text="Loading..." variant="brand" class="slds-show slds-spinner_container"></lightning-spinner>
+        </div>
+
+        <div class ="slds-p-top_medium" if:true={showRecordMessage}>
+            <div style="text-align:center;width: 300px;margin: 0 auto;border-style: dotted;"><b>No Record Found</b></div>
+        </div>
+
+        <!-- show produt table -->
+        <template if:true={showsupplyPlanData}>
+            <div class="tablestuff2 table tableallign" style="height: 500px;">
+                <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered" cellpadding="0" cellspacing="0">
+                    
+                    <thead>
+                        <tr class="slds-line-height_reset stickytablerow">
+                            <!-- <th class="" scope="col" id="th1" rowspan="2">
+                                <div class="slds-truncate">Select</div>
+                            </th> -->
+                            <th class="" scope="col" id="th2" rowspan="2">
+                                <div class="slds-truncate slds-align_absolute-center" title="Demand Warehouse">Demand Warehouse</div>
+                            </th>
+                            <th class="slds-truncate" scope="col" id="th3" rowspan="2">
+                                <div class="slds-truncate slds-align_absolute-center" title="Product Category">Product Category</div>
+                            </th>
+                            <th class="slds-truncate" scope="col" id="th4" rowspan="2">
+                                <div class="slds-truncate slds-align_absolute-center" title="Product Name">Product Name</div>
+                            </th>
+                            <th class="slds-truncate" scope="col" id="th5" rowspan="2">
+                                <div class="slds-truncate slds-align_absolute-center" title="SKU">SKU</div>
+                            </th>
+                            <th class="slds-truncate" scope="col" id="th6" rowspan="2">
+                                <div class="slds-truncate slds-align_absolute-center" title="Other">Other</div>
+                            </th>
+                            <th class="slds-truncate" scope="col" id="th7" rowspan="2">
+                                <div class="slds-truncate slds-align_absolute-center" title="Total Demand">Total Demand</div>
+                            </th>
+                            <th class="slds-truncate" scope="col" id="th8" rowspan="2">
+                                <div class="slds-truncate slds-align_absolute-center" title="Total Supply">Total Supply</div>
+                            </th>
+                            <th class="slds-truncate" scope="col" id="th9" rowspan="2" width="200px">
+                                <div class="slds-truncate slds-align_absolute-center" title="Status">Status</div>
+                            </th>
+                           <template for:each={supplyData} for:item="month" key={month.key}>
+                                <th key={month.key}  scope="month" >
+                                    
+									<table key={month.key} class="slds-line-height_reset" cellpadding="0" cellspacing="0" style="width:100%">
+                                        <tr>
+                                            <th colspan="5">
+                                                <div class="slds-align_absolute-center"> {month.value}</div>
+
+                                            </th>
+                                        </tr>
+										<tr>
+											<th class="">
+												<div  title="Demand Qty">Demand Qty</div>
+											</th>
+											<th class="" style="width: 20%">
+												<div  title="Supplier/Source WH">Supplier/Source WH</div>
+											</th>
+											<th class="" style="width: 15%">
+												<div  title="Supply Qty">Supply Qty</div>
+                                            </th>
+                                            <!--th class="" style="width: 5%">
+												<div   title="Week">Week#</div>
+											</th>
+											<th class=""  style="width: 15%">
+												<div  title="Qty">Qty</div>
+											</th-->
+										</tr>
+									</table>
+                               </th>
+                            </template>
+                            <th class="" scope="col" id="th11" rowspan="2">
+                                <div class="slds-truncate" style="width: 200px" title="Notes">Notes</div>
+                            </th>
+                        </tr>
+                       
+                    </thead>
+                  <tbody if:true={supplyLocal}>
+                        <template for:each={supplyDataWrapperData} for:item="supply" for:index="indexvar">
+                            <tr key={supply.id} >
+                                <!-- <td headers="th1" >
+                                    <div >
+                                        <lightning-input type="checkbox" value={supply.checked} onchange={prodChecked} data-id={supply.Id}></lightning-input>
+                                    </div>
+                                </td> -->
+                                <td headers="th2" >
+                                    <div>
+                                        <lightning-formatted-text type="text" value={supply.transferToWarehouse} data-id={supply.Id} read-only="true"></lightning-formatted-text>
+                                    </div>
+                                </td>
+                                <td headers="th3" >
+                                    <div>
+                                        <lightning-formatted-text type="text" value={supply.productCategory}></lightning-formatted-text>
+                                    </div>
+                                </td>
+                                <td headers="th4" data-id={supply.id} >
+                                    <div class="slds-truncate slds-align_absolute-center">
+                                       Product: {supply.productReference} </br>
+                                        Status: {supply.productStatus}
+                                      </div>
+                                </td>
+                                <td headers="th5" data-id={supply.id} >
+                                    <div>
+                                        <lightning-formatted-text type="text" value={supply.skuCode} ></lightning-formatted-text>
+                                    </div>
+                                </td>
+                                <td headers="th6" data-id={supply.id} >
+                                    <div class="slds-truncate slds-align_absolute-center">
+                                       Total COGS: {supply.totalCOGS}</br>
+                                        MSRP: {supply.msrp}
+                                     </div>
+                                </td>
+                                <td headers="th7" data-id={supply.id}>
+                                    <div class="">
+                                        <lightning-formatted-number type="number" class="slds-float_right"  name="input1" value={supply.totalDemandOrderQuantity} variant="label-hidden"></lightning-formatted-number>
+                                    </div>
+                                </td>
+                                
+                                <td headers="th8" data-id={supply.id}>
+                                   <div class="">
+                                        <lightning-formatted-number type="number" class="slds-float_right" name="input1" value={supply.totalSupplyQuantity} variant="label-hidden"></lightning-formatted-number>
+                                    </div>
+                                </td>
+                                <td headers="th9" data-id={supply.id} >
+                                    <div class="slds-truncate">
+                                        <lightning-formatted-text  type="text" name="input1" value={supply.status} ></lightning-formatted-text>
+                                    </div>
+                                </td>
+                               
+                                 <template for:each={supply.supplyPlanNettingMonthList} for:item="monthlydata" for:index="monthindex">
+                                    <td key={monthlydata.keyDate} class="" style="vertical-align: top;">
+                                        <table class="" cellpadding="0" cellspacing="0" style="Width:100%">
+                                                <tr>
+                                                    <td rowspan={monthlydata.rowspanforDemandOrderQty} style="width:32%;word-wrap:break-word;border-right: var(--lwc-borderWidthThin,1px) solid var(--lwc-colorBorder,rgb(221, 219, 218));">
+                                                    <div style="text-align: left;word-wrap:break-word;" class="slds-float_left" >
+                                                        {monthlydata.demandOrderQuantityTotal}
+                                                     </div>
+                                                    </td>
+                                                </tr>
+                                                <template for:each={monthlydata.supplyPlanNettingLineSupplierWarpperList} for:item="supp" for:index="monthindexsup">
+                                                    <tr key={supp.Id} class="">
+                                                        <td  class="" style="width:40%;word-wrap:break-word; white-space: pre-wrap !important">
+                                                           {supp.supplierCountry}
+                                                        </td>
+                                                        <td class="" style="width:20%;word-wrap:break-word;"><div onclick={getWeekData}  data-warehouse = {supp.supplierWarehouse}  data-monthindexsup = {monthindexsup} data-monthindex = {monthindex} data-superparenrindexvar = {indexvar} data-supplier = {supp} class="slds-float_right" style="text-align: right;">{supp.supplyQuantityofMonth}</div></td>
+                                                    </tr>
+                                            
+                                                </template>
+                                                
+                                        </table>
+                                    </td>
+                                
+                                </template> 
+                                <td headers="th11" data-id={supply.id} >
+                                    <div class="slds-truncate" style="width: 200px">
+                                        <lightning-textarea name="input1" data-superparenrindexvar={indexvar} value={supply.notes} variant="label-hidden" read-only={isReadOnly} onchange={handleNotesValue} ></lightning-textarea>
+                                    </div>
+                                </td> 
+                            </tr>
+                        </template>
+                    </tbody>
+                 
+                </table>
+            </div>
+        </template>
+        <template if:true={isBatchProcessed}>
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <!-- Modal/Popup Box LWC header here -->
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Batch Progress</h2>
+                    </header>
+
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                            <template if:true={isBatchProcessCompleted}>
+                                <div>
+                                Completed With {failedJobs} Errors..!!
+                            </div>
+                            </template>
+                        </br>
+                            <template if:true={isBatchProcessZero}>
+                            <div>
+                               There is no records to process.!!
+                            </div>
+                            </template>
+                            <br/>
+                          <lightning-progress-bar value={batchProgressPercent} size="large"></lightning-progress-bar>
+                        </div>
+                    </div>
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+        <template if:true={isWeekBatchProcessed}>
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <!-- Modal/Popup Box LWC header here -->
+                    <header class="slds-modal__header">
+                        <!--button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button-->
+                        <h2 id="modal-heading-03" class="slds-text-heading_medium slds-hyphenate">Batch Progress</h2>
+                    </header>
+
+                        <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-2">
+                            <template if:true={isBatchProcessCompleted}>
+                                <div>
+                                Completed With {failedJobs} Errors..!!
+                            </div>
+                            </template>
+
+                            <br/>
+                          <lightning-progress-bar value={batchProgressPercent} size="large"></lightning-progress-bar>
+                        </div>
+                        <div>
+                            <footer class="slds-modal__footer">
+                                <template if:true={isBatchProcessCompleted}>
+                                <button class="slds-button slds-button_brand" onclick={closeBatchModal} title="No">Close</button>
+                            </template>
+                            </footer>
+                        </div>
+                    </div>
+                   
+                    </section>
+                    <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+        <template if:true={isApprovalRejectRequest}>
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-02" aria-modal="true" aria-describedby="modal-content-id-2" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <!-- Modal/Popup Box LWC header here -->
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeApproveRejectModal}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-04" class="slds-text-heading_medium slds-hyphenate">Approve/Reject Request for Supply Plan</h2>
+                    </header>
+                    <!-- Modal/Popup Box LWC body starts here -->
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-4">
+                        <lightning-layout multiple-rows="true" horizontal-align="spread">
+                            <lightning-layout-item  padding="around-small">
+                                <lightning-tabset>
+                                    <lightning-tab label="Approval">
+                                        <lightning-layout>
+                                            <lightning-layout-item size="9">
+                                                <lightning-textarea type="text" label="Additional Comment" value={additionApprovalComment} onchange={getAprovalComment}></lightning-textarea><br/>
+                                                <lightning-button label="Approve" variant="success" onclick={approveSupplyPlan}> </lightning-button>
+                                            </lightning-layout-item>
+                                        </lightning-layout>
+                                    </lightning-tab>
+                                    <lightning-tab label="Rejection">
+                                        <lightning-layout>
+                                            <lightning-layout-item size="9">
+                                                <lightning-textarea type="text" label="Rejection Reason" value={rejectionReason} required="true" onchange={getRejectionReason}></lightning-textarea><br/>
+                                                <lightning-button label="Reject" variant="destructive" onclick={rejectSupplyPlan}> </lightning-button>
+                                            </lightning-layout-item>
+                                        </lightning-layout>
+                                    </lightning-tab>
+                                </lightning-tabset>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </div>
+                    <!-- Modal/Popup Box LWC footer starts here -->
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick={closeApproveRejectModal} title="Cancel">Cancel</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+        <br />
+        <div if:true={showButtonGroup} class="slds-align_absolute-center">
+            <lightning-button-group >
+                <!-- <lightning-button label="Export" variant="destructive" icon-name="action:remove" onclick={exportSupplyPlan} disabled={showAllButton}> </lightning-button> &nbsp;&nbsp; -->
+                <lightning-button if:true={showApproveUpdatePlan} label="Approve/Reject for Update" icon-name="action:approval" onclick={approveRejectUpdatePlan}> </lightning-button> &nbsp;&nbsp;
+                <!-- <lightning-button label="Save" variant="brand" icon-name="utility:save" onclick={saveSupplyPlan} disabled={showSaveButtons}></lightning-button> &nbsp;&nbsp; -->
+                <!--<lightning-button label="Save & Exit" variant="brand" icon-name="utility:save" onclick={saveExitSupplyPlan} disabled={showSaveButtons}></lightning-button> &nbsp;&nbsp;
+                <lightning-button label="Request for Edit" icon-name="action:edit" onclick={reqForEdit} disabled={showreqForEdit}> </lightning-button> &nbsp;&nbsp;-->
+                <lightning-button if:true={showSubmitApprovalButton} label="Submit for Approval" variant="success" icon-name="standard:record_create" onclick={submitRecordForApprovalModal} > </lightning-button>&nbsp;&nbsp;
+                <lightning-button if:true={showApproveReject} label="Approve/Reject" variant="success" icon-name="action:edit" onclick={approveRejectUpdatePlan}> </lightning-button> &nbsp;&nbsp;
+                <lightning-button if:true={showprodPlan} label="Generate Production Plan" variant="success" icon-name="action:edit" onclick={createPP}> </lightning-button> &nbsp;&nbsp; <!--if:true={showprodPlan} -->
+                <lightning-button if:true={showExport} label="Export" variant="brand" icon-name="utility:arrow_bottom" onclick={exportReport}> </lightning-button> &nbsp;&nbsp; <!--if:true={showprodPlan} -->
+                <lightning-button label="Back" icon-name="utility:back" onclick={backToRecord} > </lightning-button>
+            </lightning-button-group>
+        </div>
+
+
+        <!-- Show Submit for approval modal-->
+        <template if:true={showsubmit}>
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-02" aria-modal="true" aria-describedby="modal-content-id-2" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container modalWidth">
+                    <!-- Modal/Popup Box LWC header here -->
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closesubmitapprovalModal}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-07" class="slds-text-heading_medium slds-hyphenate">Submit Record</h2>
+                    </header>
+                    <!-- Modal/Popup Box LWC body starts here -->
+                    <div class="slds-modal__content slds-p-around_medium tablestuff2 table" id="modal-content-id-7">
+                        <b><center>All Supply Plan related to selected Region will be submit for Approval. Please confirm.</center></b>
+                    </div>
+                    <!-- Modal/Popup Box LWC footer starts here -->
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_brand" onclick={submitRecordForApproval} title="Yes">Yes</button>
+                        <button class="slds-button slds-button_brand" onclick={closesubmitapprovalModal} title="No">No</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+      
+        <template if:true={showQty}>
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-02" aria-modal="true" aria-describedby="modal-content-id-2" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container" >
+                    <!-- Modal/Popup Box LWC header here -->
+                    <header class="slds-modal__header">
+                        <!-- <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeQtyModal}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button> -->
+                        <h2 id="modal-heading-08" class="slds-text-heading_medium slds-hyphenate">Quantity</h2>
+                    </header>
+                    <!-- Modal/Popup Box LWC body starts here -->
+                    <div class="slds-modal__content slds-p-around_medium tablestuff2 table slds-scrollable" id="modal-content-id-8">
+                        <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered" cellpadding="0" cellspacing="0">
+                            <thead>
+                                <tr>
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="SKU">SKU</div>
+                                    </th>
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="Month">Month</div>
+                                    </th>
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="Supplier">Supplier</div>
+                                    </th>
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="Prod Line">Production Line</div>
+                                    </th>
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="Prod Line">PL Actual Capacity(Hours)</div>
+                                    </th>
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="Prod Line">Used Capacity(Hours)</div>
+                                    </th>
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="Prod Line">Product Category</div>
+                                    </th>
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="Prod Line">Rate</div>
+                                    </th>
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="Week">Week</div>
+                                    </th>
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="Week Cap">Week Capacity</div>
+                                    </th>
+                                    
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="Quantity">Quantity     </div>
+                                    </th>
+                                    
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="LO Quantity">Left Over Qty</div>
+                                    </th>
+                                </tr>
+                            </thead>
+                            <template for:each={QtyData} for:item="spnl" for:index="spnlindex">
+                                <tr key={spnl.id} class="">
+                                    <td class="">
+                                        <div>{spnl.spnlDetail.gii__Product__r.gii__ProductCode__c}</div>
+                                     </td>
+                                     <td class="">
+                                        <div>{spnl.keyStartDate}</div>
+                                     </td>
+                                     <td class="">
+                                        <div>{spnl.spnlDetail.giic_SupplierName__c}</div>
+                                     </td>
+                                    <td class="">
+                                        <div>{spnl.spnlDetail.gii__ProductionLine__c}</div>
+                                     </td>
+                                        <td class="">
+                                            <template if:true={spnl.spnlDetail.gii__WeeklyCapacity__r}>
+                                                <div if:true={spnl.spnlDetail.gii__WeeklyCapacity__r.gii__ActualCapacity__c}>{spnl.spnlDetail.gii__WeeklyCapacity__r.gii__ActualCapacity__c}</div>
+                                            </template>
+                                        </td>
+                                     <td class="">
+                                        <template if:true={spnl.spnlDetail.giic_WeeklyCapacityUtilizedhour__r}>
+                                            <div if:true={spnl.spnlDetail.giic_WeeklyCapacityUtilizedhour__r.giic_UsedCapacityProductionLine__c}>{spnl.spnlDetail.giic_WeeklyCapacityUtilizedhour__r.giic_UsedCapacityProductionLine__c}</div>
+                                        </template>
+                                    </td>
+                                     <td class="">
+                                        <div>{spnl.spnlDetail.gii__ProductCategory__c}</div>
+                                     </td>
+                                     <td class="">
+                                        <div>{spnl.spnlDetail.gii__ProductionRateHour__c}</div>
+                                     </td>
+                                    <td class="">
+                                       <div>{spnl.weekNumber}</div>
+                                    </td>
+                                    <td class="">
+                                        <template if:true={spnl.spnlDetail.gii__WeeklyCapacity__r}>
+                                            <div if:true={spnl.spnlDetail.gii__WeeklyCapacity__r.Name}>{spnl.spnlDetail.gii__WeeklyCapacity__r.Name}</div>
+                                        </template>
+                                     </td> 
+                                    <td>
+                                        <div style="width:115%;">
+                                            <div style="float:left;width:83%">
+                                                <lightning-input type="number" min="0" 
+                                                variant="label-hidden"
+                                                read-only={isReadOnly} 
+                                                data-superparenrindexvar={indexvar} 
+                                                data-monthindex={monthindex} 
+                                                data-monthindexsup={monthindexsup} 
+                                                data-spnlindex={spnlindex} 
+                                                value={spnl.orderQuantity} 
+                                                onchange={handleOrderValue}></lightning-input>
+                                            </div>
+                                            <!--<div style="float:left;width:15%;">
+                                                <template if:true={spnl.isArrowVisible}>
+                                                <lightning-helptext icon-name={spnl.arrowType} class="slds-m-left_xx-small" content={spnl.tooltipString}></lightning-helptext>
+                                                </template>
+                                                <template if:true={supplyqtyerror}>
+                                                    <span style="word-break:break-all;color:Red;">Error</span> 
+                                                </template>
+                                            </div>-->
+                                        </div>
+                                    </td>
+                                    
+                                    <td class="">
+                                        <div>{spnl.spnlDetail.giic_LeftOverQuantity__c}</div>
+                                     </td> 
+                                </tr>
+                            </template>
+                        </table>
+                    </div>
+                    <!-- Modal/Popup Box LWC footer starts here -->
+                    <footer class="slds-modal__footer">
+                        <!--button class="slds-button slds-button_brand" onclick={saveSupplyPlan} title="Yes">Save</button-->
+                        <button class="slds-button slds-button_brand" onclick={saveSupplyPlanNettingLine} title="Yes">Save</button>
+                        <button class="slds-button slds-button_brand" onclick={closeQtyModal} title="No">Cancel</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+        
+    </div>
+</template>

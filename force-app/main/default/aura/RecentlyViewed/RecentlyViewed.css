@@ -1,0 +1,10 @@
+.THIS .tableTitle{
+    padding-bottom: 7px;
+    font-size: 1rem;
+    font-weight: 700;
+    line-height: 1.5;
+    text-transform: uppercase;
+}
+.THIS .tdCss{
+    border-color: t(colorBorder) !important;
+}

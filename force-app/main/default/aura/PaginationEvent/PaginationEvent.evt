@@ -1,0 +1,4 @@
+<aura:event type="APPLICATION" description="Event template" access="global">
+    <aura:attribute name="offset" type="Integer" default="0" description="Contains the offset value for SOQL"/>
+    <aura:attribute name="totalResultSize" type="Integer" default="0" description="Total Record Number of Search Result"/>
+</aura:event>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>This metadata is used for mapping of Campaign Target  Landing to Campaign Target Staging object.</description>
+    <label>Campaign Target Landing To Staging</label>
+    <pluralLabel>Campaign Target Landing To Staging</pluralLabel>
+    <visibility>Public</visibility>
+</CustomObject>

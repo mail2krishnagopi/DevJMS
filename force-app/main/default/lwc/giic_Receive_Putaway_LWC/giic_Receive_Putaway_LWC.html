@@ -1,0 +1,250 @@
+<template>
+    <div class="spinner">
+		<template if:true={isLoading}>
+			<lightning-spinner alternative-text="Loading" variant="brand" size="large">
+			</lightning-spinner>
+		</template>
+	</div>
+	<lightning-card class="topNav">            
+		<div class="slds-page-header__title  slds-m-right--small slds-text-align_center">
+			<h1>Receive and Putaway</h1>
+		</div>
+        <div class="slds-text-body_regular">
+            </br>{message.headerMessage}
+		</div>      
+	</lightning-card>
+ 	<lightning-card class="topNav" if:true={showSearch}>
+		<div class="nav_item slds-grid slds-wrap" role="list">  
+			<div class="slds-col slds-size_1-of-7  slds-large-size_1-of-6 slds-p-around_x-small" if:false={assetObjectType}> 
+				<c-custom-lookup-l-w-c s-object-api-name="gii__Warehouse__c" 
+				label= "Warehouse" 
+				onlookupupdate={handleWarehouseChange} 
+                default-record-id={defaultWarehouseValue}
+				wherefieldapiname=""
+				wherefieldvalue=""
+                placeholder= "Search By Warehouse...">
+				</c-custom-lookup-l-w-c>
+			</div>
+			<!--<div class="slds-col slds-size_1-of-7 slds-large-size_1-of-6 slds-p-around_x-small">      
+				<c-custom-lookup-l-w-c s-object-api-name="Account"  
+				label= "Supplier" 
+				onlookupupdate={handleSupplierChange} 
+				placeholder=""
+				class="prodName">
+				</c-custom-lookup-l-w-c>           
+			</div> -->
+			<div class="slds-col slds-size_1-of-7 slds-large-size_1-of-6 slds-p-around_x-small">      
+				<c-custom-lookup-l-w-c s-object-api-name="gii__PurchaseOrder__c"  
+				label= "Purchase Order" 
+				onlookupupdate={handlePurchaseOrderChange} 
+				default-record-id={purchaseSearchIdkey}
+				placeholder="Search by Purchase Order..."
+				wherefieldapiname=""
+				wherefieldvalue=""
+				class="prodName">
+				</c-custom-lookup-l-w-c>           
+			</div>
+			<div class="slds-col slds-size_1-of-7 slds-large-size_1-of-6 slds-p-around_x-small">      
+				<c-custom-lookup-l-w-c s-object-api-name="gii__TransferOrder__c"  
+				label= "Transfer Order" 
+				onlookupupdate={handleTransferOrderChange}
+				default-record-id={transferSearchIdkey}				
+				placeholder="Search by Transfer Order..."
+				wherefieldapiname=""
+				wherefieldvalue=""
+				class="prodName">
+				</c-custom-lookup-l-w-c>           
+			</div>
+			<div class="slds-col slds-size_1-of-7 slds-large-size_1-of-6 slds-p-around_x-small" >
+				<c-custom-lookup-l-w-c s-object-api-name="gii__Product2Add__c" 
+				label="Product"
+				onlookupupdate={handleProdChange} 
+                default-record-id={productSearchIdKey}
+				placeholder="Search by Product Name..." 
+				wherefieldapiname=""
+				wherefieldvalue=""
+				class="prodName">
+				</c-custom-lookup-l-w-c>  
+			</div>
+			<div class="slds-col slds-size_1-of-7  slds-large-size_1-of-6 slds-p-around_x-small" style="margin-top: 25px; margin-left: 10px;" >
+				<lightning-button onclick={handleSearch} class="slds-button slds-button_brand searchbtn"
+				variant="brand"
+				label="Search" icon-name="utility:search">
+				</lightning-button>
+			</div>
+        </div>
+    </lightning-card>
+	<template if:true={showCard}>
+        <div if:true={errorMessage} class="slds-theme_error">
+            <pre>{errorMessage} </pre>
+		</div>
+		<lightning-card class="topNav" >
+			<div class="slds-page-header slds-m-top_x-small">
+				<div class="slds-media__body">
+					<h1>
+						<div class="slds-page-header__title slds-m-right--small slds-align-middle">
+						   Select the lines for Receive and Putaway
+						</div>
+					</h1>
+					<div class="slds-m-top_small slds-m-bottom_medium slds-text-align_right">
+						<lightning-button variant="success" label="Receive and Putaway" disabled = "{isChecked}" title="Receive and Putaway" onclick={handleButtonClick} class="slds-m-left_x-small  slds-text-align_right"  > </lightning-button>
+						<!--<lightning-button variant="brand" label= "Cancel" title="Cancel" onclick={handleCancel} class="slds-m-left_x-small slds-text-align_right"></lightning-button>-->
+					</div>
+				</div>
+			</div>
+			<div class="border cm-scrollbar cm-table-w-scroll table-responsive">
+				<table class="table table-sm table-bordered"> 
+					<thead>
+						<tr>
+							<th><!--input type="checkbox" onchange={handleSelectAll}/--> </th>
+							<th data-sort="RecordURL" onclick={handleSort}>Warehouse</th>
+							<th data-sort="purchaseOrderRecordURL" onclick={handleSort}>Purchase Order</th>
+							<th data-sort="purchaseOrderLineRecordURL" onclick={handleSort}>Purchase Order Line</th>
+							<th data-sort="transferOrderName" onclick={handleSort}>Transfer Order</th>
+							<th data-sort="transferOrderLineName" onclick={handleSort}>Transfer Order Line</th>        
+							<th data-sort="productRecordURL" onclick={handleSort}>Product</th>
+							<th>Open Quantity</th>
+							<th>Receipt Quantity</th>
+							<!--<th>Is Serial Controlled</th>
+							<th>Product Serial</th>-->        
+							<th>Location</th>
+							<th>Location Bin</th>         
+						</tr>
+					</thead>   
+					<tbody>
+						<template for:each={finalList} for:item="ord" for:index="index" >
+							<tr key={ord.key} class="bg-primary">
+								<td><input type="checkbox"  value ={ord.isSelected} onchange={changeSelectHandler} data-rowindex={index} data-column="isSelected" data-id="toggle" /></td>
+								<!--<td><lightning-formatted-text value={ord.warehouseName}></lightning-formatted-text></td> -->
+								<td>
+									<lightning-formatted-url value={ord.RecordURL} label={ord.warehouseName} target="_blank"></lightning-formatted-url>
+								</td>            
+								<!--    <td><lightning-formatted-text value={ord.purchaseOrderName}></lightning-formatted-text></td> -->
+								<td>
+									<lightning-formatted-url value={ord.purchaseOrderRecordURL} label={ord.purchaseOrderName} target="_blank"></lightning-formatted-url>
+								</td>
+								<!--      <td><lightning-formatted-text value={ord.purchaseOrderLineName}></lightning-formatted-text></td> -->
+								<td>
+									<lightning-formatted-url value={ord.purchaseOrderLineRecordURL} label={ord.purchaseOrderLineName} target="_blank"></lightning-formatted-url>
+								</td>
+								<!--   <td><lightning-formatted-text value={ord.transferOrderName}></lightning-formatted-text></td>
+								<td><lightning-formatted-text value={ord.transferOrderLineName}></lightning-formatted-text></td> -->
+								<td>
+									<lightning-formatted-url value={ord.transferOrderRecordURL} label={ord.transferOrderName} target="_blank"></lightning-formatted-url>
+								</td>
+								<td>
+									<lightning-formatted-url value={ord.transferOrderLineRecordURL} label={ord.transferOrderLineName} target="_blank"></lightning-formatted-url>
+								</td>
+								<!--      <td><lightning-formatted-text value={ord.productName}></lightning-formatted-text></td> -->
+								<td>
+									<lightning-formatted-url value={ord.productRecordURL} label={ord.productName} target="_blank"></lightning-formatted-url>
+								</td>
+								<td><lightning-formatted-number value={ord.quantity}></lightning-formatted-number></td>
+								<td><lightning-input variant="label-hidden" data-id={index} value={ord.receivedQuantity} onchange={validateReceivedQuantity} data-rowindex={index} type="number"></lightning-input></td>
+								<!--<td><lightning-input type="checkbox" checked={ord.serialproductChecked} disabled="true"></lightning-input></td>
+								<td><div if:true={ord.purchaseOrderId}><lightning-input value={ord.productSerial} class="prodSerialcmp" data-name="prodSerial"  data-rowindex={index} data-column="prodSerial" type="text" onchange={handleProductSerialChange}></lightning-input></div></td>-->
+								<td><c-custom-lookup-l-w-c icon-name="standard:user"
+									s-object-api-name="gii__Location__c	"
+									label=""
+									onlookupupdate={handleLocationChange}
+									default-record-id={ord.locationId}
+									placeholder="Enter Location here..."
+									wherefieldapiname="gii__Warehouse__c"
+									wherefieldvalue={ord.warehouseId}
+									onchange={changeHandler} data-rowindex={index} data-column="Location" ></c-custom-lookup-l-w-c>
+								</td>
+								<!--<td>
+									<div if:true={ord.locationId}></div><c-custom-lookup-l-w-c icon-name="standard:user"
+									s-object-api-name="gii__Location__c	" label=""
+									onlookupupdate={handleLocationChange}
+									default-record-id={ord.locationId}
+									placeholder="Enter Location here..."
+									onchange={changeHandler} data-rowindex={index} data-column="Location" ></c-custom-lookup-l-w-c>
+									</div>
+								</td>  -->
+								<td><c-custom-lookup-l-w-c icon-name="standard:user"
+									s-object-api-name="gii__LocationBin__c	"
+									label=""
+									onlookupupdate={handleLocationBinChange}
+									default-record-id={ord.locationBinId}
+									placeholder="Enter Location Bin here..."
+									wherefieldapiname="gii__Location__r.gii__Warehouse__c"
+									wherefieldvalue={ord.warehouseId}
+									onchange={changeHandler} data-rowindex={index} data-column="Location"></c-custom-lookup-l-w-c>
+								</td>  
+								<!-- <td><lightning-formatted-text value={ord.objPurchaseOrderLine.Name}></lightning-formatted-text></td>
+								<td><lightning-formatted-text value={ord.objPurchaseOrderLine.Name}></lightning-formatted-text></td>
+								<td><lightning-formatted-text value={ord.objPurchaseOrderLine.Name}></lightning-formatted-text></td>
+								<td><lightning-formatted-text value={ord.objPurchaseOrderLine.gii__ShipTo__c}></lightning-formatted-text></td>
+								<td><lightning-formatted-text value={ord.objPurchaseOrderLine.Name}></lightning-formatted-text></td>
+								<td><lightning-formatted-text value={ord.objProdRef.gii__ProductCode__c}></lightning-formatted-text></td>
+								<td><lightning-formatted-text value={ord.objProdRef.gii__Description__c}></lightning-formatted-text></td>-->
+							</tr>
+						</template>
+					</tbody>
+				</table>
+			</div>
+		</lightning-card>
+	</template>
+	<!--Start Serial Control-->
+	<template if:true={showCardSerialControl}>
+		<lightning-card class="topNav">
+			<div class="slds-page-header slds-m-top_x-small">
+				<div class="slds-media__body">
+					<h1>
+						<div class="slds-page-header__title slds-m-right--small slds-align-middle">
+						   Serial Controlled Lines available for Receive and Putaway
+						</div>
+					</h1>
+				</div>
+			</div>
+			<div class="border cm-scrollbar cm-table-w-scroll table-responsive">
+				<table class="table table-sm table-bordered"> 
+					<thead>
+						<tr>
+							<th></th>
+							<th data-sort="RecordURL" onclick={handleSort}>Warehouse</th>
+							<th data-sort="purchaseOrderRecordURL" onclick={handleSort}>Purchase Order</th>
+							<th data-sort="purchaseOrderLineRecordURL" onclick={handleSort}>Purchase Order Line</th>
+							<th data-sort="transferOrderName" onclick={handleSort}>Transfer Order</th>
+							<th data-sort="transferOrderLineName" onclick={handleSort}>Transfer Order Line</th>        
+							<th data-sort="productRecordURL" onclick={handleSort}>Product</th>
+							<th>Open Quantity</th>
+						</tr>
+					</thead>   
+					<tbody>
+						<template for:each={finalListSerial} for:item="ordSerial" for:index="index" >
+							<tr key={ordSerial.key} class="bg-primary">
+								<td>
+									<lightning-tile>
+                                        <lightning-button variant="Base" label="Serial Receive" onclick={navigateToSerialControlled} value={index} data-rowindex={index}></lightning-button>
+                                    </lightning-tile>
+								</td> 
+                                <td>
+									<lightning-formatted-url value={ordSerial.RecordURL} label={ordSerial.warehouseName} target="_blank"></lightning-formatted-url>
+								</td>            
+								<td>
+									<lightning-formatted-url value={ordSerial.purchaseOrderRecordURL} label={ordSerial.purchaseOrderName} target="_blank"></lightning-formatted-url>
+								</td>
+								<td>
+									<lightning-formatted-url value={ordSerial.purchaseOrderLineRecordURL} label={ordSerial.purchaseOrderLineName} target="_blank"></lightning-formatted-url>
+								</td>
+								<td>
+									<lightning-formatted-url value={ordSerial.transferOrderRecordURL} label={ordSerial.transferOrderName} target="_blank"></lightning-formatted-url>
+								</td>
+								<td>
+									<lightning-formatted-url value={ordSerial.transferOrderLineRecordURL} label={ordSerial.transferOrderLineName} target="_blank"></lightning-formatted-url>
+								</td>
+								<td>
+									<lightning-formatted-url value={ordSerial.productRecordURL} label={ordSerial.productName} target="_blank"></lightning-formatted-url>
+								</td>
+								<td><lightning-formatted-text value={ordSerial.quantity}></lightning-formatted-text></td>
+							</tr>
+						</template>
+					</tbody>
+				</table>
+			</div>
+		</lightning-card>
+	</template>
+	<!--End Serial Control-->
+</template>

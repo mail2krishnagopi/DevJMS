@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>JMS_Message__c</fullName>
+    <description>This is the developer provided string in the debug or exception entry</description>
+    <externalId>false</externalId>
+    <label>Message</label>
+    <length>62768</length>
+    <trackTrending>false</trackTrending>
+    <type>LongTextArea</type>
+    <visibleLines>25</visibleLines>
+</CustomField>

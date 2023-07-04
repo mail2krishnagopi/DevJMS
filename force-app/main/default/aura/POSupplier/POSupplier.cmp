@@ -1,0 +1,70 @@
+<!--POSupplier_cmp-->
+<aura:component controller="POSupplierController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    
+    <!--declare attributes--> 
+    <aura:attribute name="SearchKeyWord" type="string"/>
+    <aura:attribute name="Message" type="String" default=""/>
+    <aura:attribute name="accountId" type="String"/> 
+    <aura:attribute name="cmpParameters" type="Object"/>
+    <aura:attribute name="nextStageNumber" type="Integer" default="1"/>
+    <aura:attribute name="nextStageName" type="String"/> 
+    <aura:attribute name="purchaseOrder" type="sObject"/>
+    <aura:attribute name="fieldSet" type="Object[]"/>
+    
+    <!--declare events hendlers-->  
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" /> 
+    
+    <div class="slds-card">
+        <div class="slds-box slds-m-around_x-small">
+            <div class="slds-section slds-is-open" style="margin: 0;">
+                <h3 class="slds-section__title" id="shiptoHeader" style="font-size: inherit;border-radius: 0;">                               
+                    <span class="slds-truncate HdrTextColor" title="Section Title" style="padding-left: 5px;font-size: 14px;">
+                        {!$Label.c.POInformation}
+                    </span>
+                </h3>
+                <div class="slds-grid slds-wrap" style="padding: 0;min-height: 130px;">
+                    <aura:iteration items="{!v.fieldSet}" var="field">
+                        <div class="slds-size_1-of-2 slds-form-element" style="padding-left:7px;padding-right:7px;">
+                            <aura:if isTrue="{!field.type == 'REFERENCE'}">
+                                <div data-field="{!field.fieldPath}" onclick="{!c.updatePriceBook}" data-value="{!field.value}">
+                                    <c:LightningLookup sObjectName="{!field.referenceTo}" displayedFieldName="Name" valueFieldName="Id" label="{!field.label}" selectedValue="{!field.value}"/>
+                                </div>
+                                
+                                <aura:set attribute="else">
+                                    <lightning:input name="{!field.label}" label="{!field.label}" type="{!field.type}" value="{!field.value}" disabled="{!field.readOnly}"/>
+                                </aura:set>
+                            </aura:if> 
+                        </div>
+                    </aura:iteration>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="slds-card slds-has-top-magnet">
+        <div class="slds-card slds-has-top-magnet">
+            <div class="slds-p-around_medium">
+                <div class="slds-clearfix">
+                    <div class="slds-float_left">
+                        <aura:if isTrue="{!(v.nextStageNumber -1) == 1}">
+                          <!--  <button type="button" class="slds-button slds-button_neutral" onclick="{!c.cancelOrder}"><i class="fa fa-times-circle" aria-hidden="true"></i> Cancel Order</button> -->
+                        </aura:if>
+                    </div>
+                    <div class="slds-float_right">
+                        <aura:if isTrue="{!(v.nextStageNumber-1) != 1}">
+                            <button type="button" class="slds-button slds-button_brand" onclick="{!c.BackButton}">
+                                <lightning:icon variant="inverse" class="slds-button__icon slds-button__icon_left" iconName="utility:back" size="x-small" alternativeText="{!$Label.c.POBack}"/>
+                                {!$Label.c.POBack}
+                            </button>&nbsp;&nbsp;
+                        </aura:if>
+                        <button type="button" class="slds-button slds-button_brand" onclick="{!c.ContinueButton}">
+                            {!$Label.c.POContinue} {!v.nextStageName} 
+                            <lightning:icon variant="inverse" class="slds-button__icon slds-button__icon_right" iconName="utility:forward" size="x-small" alternativeText="{!$Label.c.POContinue}"/>
+                        </button>
+                    </div>
+                </div>                            
+            </div>
+        </div>   
+    </div> 
+    
+</aura:component>

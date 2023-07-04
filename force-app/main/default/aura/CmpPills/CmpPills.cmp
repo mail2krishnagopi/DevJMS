@@ -1,0 +1,20 @@
+<aura:component access="GLOBAL">
+	<aura:attribute name="label" type="String" required="true"/>
+	<aura:attribute name="onremove" type="Object" required="false"/>
+	<aura:attribute name="iconName" type="String" required="false"/>
+
+			
+
+	<aura:renderIf isTrue="{!v.iconName != null}">
+		<lightning:pill label="{!v.label}" onremove="{!v.onremove}">
+			<aura:set attribute="media">
+				<lightning:icon iconName="{!v.iconName}"/>
+			</aura:set>
+		</lightning:pill>
+		<aura:set attribute="else">
+			<lightning:pill label="{!v.label}" onremove="{!v.onremove}">
+				
+			</lightning:pill>
+		</aura:set>
+	</aura:renderIf>
+</aura:component>

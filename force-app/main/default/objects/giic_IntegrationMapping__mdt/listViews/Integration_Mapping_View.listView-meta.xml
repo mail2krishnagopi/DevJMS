@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Integration_Mapping_View</fullName>
+    <columns>MasterLabel</columns>
+    <columns>DeveloperName</columns>
+    <columns>NamespacePrefix</columns>
+    <columns>giic_SourceObject__c</columns>
+    <columns>giic_SourceField__c</columns>
+    <columns>giic_TargetObject__c</columns>
+    <columns>giic_TargetField__c</columns>
+    <filterScope>Everything</filterScope>
+    <label>Integration Mapping View</label>
+    <language>en_US</language>
+</ListView>

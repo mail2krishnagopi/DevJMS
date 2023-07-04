@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>JMS_Is_Attachment_Added__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>This field is used to check whether attachment is added or not.</description>
+    <externalId>false</externalId>
+    <label>Is Attachment Added</label>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

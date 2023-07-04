@@ -1,0 +1,3 @@
+<aura:component controller="giic_ShipmentHelper" implements="force:lightningQuickAction,force:hasRecordId,flexipage:availableForRecordHome"> 
+    <c:giic_IntegrationButton recordId="{!v.recordId}" onupdateRecord="{!c.handleUpdateRecord}" onerrorRecord="{!c.handleErrorRecord}" onfieldsMissing="{!c.handleMissingFields}"/>
+</aura:component>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>JMS_Account_Type__c</fullName>
+    <externalId>false</externalId>
+    <label>Account Type</label>
+    <required>false</required>
+    <trackFeedHistory>false</trackFeedHistory>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Picklist</type>
+    <valueSet>
+        <restricted>true</restricted>
+        <valueSetDefinition>
+            <sorted>false</sorted>
+            <value>
+                <fullName>Street</fullName>
+                <default>false</default>
+                <label>Street</label>
+            </value>
+            <value>
+                <fullName>National Other</fullName>
+                <default>false</default>
+                <label>National Other</label>
+            </value>
+            <value>
+                <fullName>Aramark</fullName>
+                <default>false</default>
+                <label>Aramark</label>
+            </value>
+            <value>
+                <fullName>Avendra</fullName>
+                <default>false</default>
+                <label>Avendra</label>
+            </value>
+            <value>
+                <fullName>Foodbuy/Compass</fullName>
+                <default>false</default>
+                <label>Foodbuy/Compass</label>
+            </value>
+            <value>
+                <fullName>HPSI</fullName>
+                <default>false</default>
+                <label>HPSI</label>
+            </value>
+            <value>
+                <fullName>Premier</fullName>
+                <default>false</default>
+                <label>Premier</label>
+            </value>
+            <value>
+                <fullName>Sodexo</fullName>
+                <default>false</default>
+                <label>Sodexo</label>
+            </value>
+            <value>
+                <fullName>Vizient</fullName>
+                <default>false</default>
+                <label>Vizient</label>
+            </value>
+            <value>
+                <fullName>Buyers Edge</fullName>
+                <default>false</default>
+                <label>Buyers Edge</label>
+            </value>
+            <value>
+                <fullName>Aramark / CPS Canada</fullName>
+                <default>false</default>
+                <label>Aramark / CPS Canada</label>
+            </value>
+            <value>
+                <fullName>Compass / Foodbuy</fullName>
+                <default>false</default>
+                <label>Compass / Foodbuy</label>
+            </value>
+            <value>
+                <fullName>HealthPro Canada</fullName>
+                <default>false</default>
+                <label>HealthPro Canada</label>
+            </value>
+            <value>
+                <fullName>Great Canadian Gaming</fullName>
+                <default>false</default>
+                <label>Great Canadian Gaming</label>
+            </value>
+            <value>
+                <fullName>Avendra Canada</fullName>
+                <default>false</default>
+                <label>Avendra Canada</label>
+            </value>
+        </valueSetDefinition>
+    </valueSet>
+</CustomField>

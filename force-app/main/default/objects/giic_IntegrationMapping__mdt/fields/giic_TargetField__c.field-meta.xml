@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>giic_TargetField__c</fullName>
+    <description>Select Target Sobject Field</description>
+    <externalId>false</externalId>
+    <fieldManageability>SubscriberControlled</fieldManageability>
+    <label>Target Field</label>
+    <metadataRelationshipControllingField>giic_IntegrationMapping__mdt.giic_TargetObject__c</metadataRelationshipControllingField>
+    <referenceTo>FieldDefinition</referenceTo>
+    <relationshipLabel>Integration Details Target Field</relationshipLabel>
+    <relationshipName>IntegrationDetailsTargetField</relationshipName>
+    <required>false</required>
+    <type>MetadataRelationship</type>
+    <unique>false</unique>
+</CustomField>

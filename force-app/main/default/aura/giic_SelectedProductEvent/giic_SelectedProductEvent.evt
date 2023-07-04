@@ -1,0 +1,3 @@
+<aura:event type="COMPONENT" description="by this event we are pass the selected product in the parent component">
+<aura:attribute name="contactByEvent" type="gii__Product2Add__c"/>
+</aura:event>

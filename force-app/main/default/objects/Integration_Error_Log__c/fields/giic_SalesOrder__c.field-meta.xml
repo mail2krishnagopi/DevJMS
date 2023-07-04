@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>giic_SalesOrder__c</fullName>
+    <deleteConstraint>SetNull</deleteConstraint>
+    <description>lookup to Sales Order Id</description>
+    <externalId>false</externalId>
+    <label>Sales Order</label>
+    <referenceTo>gii__SalesOrder__c</referenceTo>
+    <relationshipLabel>Integration Errors</relationshipLabel>
+    <relationshipName>Integration_Errors</relationshipName>
+    <required>false</required>
+    <trackTrending>false</trackTrending>
+    <type>Lookup</type>
+</CustomField>

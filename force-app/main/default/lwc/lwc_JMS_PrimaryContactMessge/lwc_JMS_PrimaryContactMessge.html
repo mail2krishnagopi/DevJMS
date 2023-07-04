@@ -1,0 +1,30 @@
+<template>
+    <lightning-card>
+        <!--Info message will be shown when there is a Primary Contact on Account-->
+        <template if:true={hasPrimaryContact}>
+            <div class="slds-notify_container slds-is-relative">
+                <div class="slds-notify slds-notify_toast slds-theme_info" role="status">
+                    <span class="slds-icon_container slds-icon-utility-info slds-m-right_small slds-no-flex slds-align-top">
+                        <lightning-icon icon-name="utility:info_alt" variant="inverse" size="small"></lightning-icon>
+                    </span>
+                    <div class="slds-notify__content">
+                        <h2 class="slds-text-heading_small">{infoMessage}</h2>
+                    </div>
+                </div>
+            </div>
+        </template>
+        <!--Warning message will be shown when there is no Primary Contact on Account-->
+        <template if:true={noPrimaryContact}>
+            <div class="slds-notify_container slds-is-relative">
+                <div class="slds-notify slds-notify_toast slds-theme_warning" role="status">
+                    <span class="slds-icon_container slds-icon-utility-warning slds-m-right_small slds-no-flex slds-align-top">
+                        <lightning-icon icon-name="utility:warning" variant="warning" size="small"></lightning-icon>
+                    </span>
+                    <div class="slds-notify__content">
+                        <h2 class="slds-text-heading_small ">{warningMessage}</h2>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </lightning-card>
+</template>

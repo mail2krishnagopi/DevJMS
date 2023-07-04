@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>My_View</fullName>
+    <columns>NAME</columns>
+    <columns>JMS_Message__c</columns>
+    <columns>CREATEDBY_USER</columns>
+    <columns>JMS_Log_Created_Date_Time__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>CREATED_DATE</field>
+        <operation>equals</operation>
+        <value>YESTERDAY</value>
+    </filters>
+    <label>My View</label>
+</ListView>

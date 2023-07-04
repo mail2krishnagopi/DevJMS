@@ -1,0 +1,16 @@
+<aura:component implements="flexipage:availableForRecordHome,force:hasRecordId,force:lightningQuickAction" access="global" controller="giic_SupplyPlanBatchProgressIndicator" >
+	
+    <aura:attribute name="recordId" type="String" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+
+    <aura:attribute name="spcData" type="Boolean" default="false"></aura:attribute>
+    <aura:attribute name="progress" type="Integer" default="0"/>
+    <aura:attribute name="isBatchProcessed" type="Boolean" default="false"/>
+    <aura:attribute name="failed" type="Integer" default="0"/>
+
+        <aura:if isTrue="{!v.isBatchProcessed}">
+            Completed with {!v.failed} errors.
+        </aura:if>
+        <lightning:progressBar value="{!v.progress}" size="large" variant="circular"/>
+    
+</aura:component>

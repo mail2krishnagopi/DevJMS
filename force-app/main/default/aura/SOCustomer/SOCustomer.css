@@ -1,0 +1,14 @@
+.THIS .qtyDiv{
+    float:left;
+    width:50%;
+}
+.THIS .btnAddCartDiv{
+    padding-top: 5px;
+    padding-right: 5px;
+    float:left;
+    width:50%;
+}
+.THIS input[type=checkbox], .THIS input[type=radio] {
+    height: 1.2em;
+    width: 20px;
+}

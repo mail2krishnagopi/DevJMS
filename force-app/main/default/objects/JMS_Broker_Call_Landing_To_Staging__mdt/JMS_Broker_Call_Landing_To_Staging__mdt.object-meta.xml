@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomObject xmlns="http://soap.sforce.com/2006/04/metadata">
+    <description>This will be used for mapping fields of Broker Call Landing to Broker Call Staging Object</description>
+    <label>Broker Call Landing To Staging</label>
+    <pluralLabel>Broker Call Landing To Staging</pluralLabel>
+    <visibility>Public</visibility>
+</CustomObject>

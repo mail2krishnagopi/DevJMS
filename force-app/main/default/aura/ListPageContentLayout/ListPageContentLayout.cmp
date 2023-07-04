@@ -1,0 +1,26 @@
+<aura:component implements="forceCommunity:layout" description="Custom Content Layout for ListPage" access="global">
+	<aura:attribute name="ListMenu" type="Aura.Component[]"/>
+    <aura:attribute name="NavigationButtons" type="Aura.Component[]"/> 
+    <aura:attribute name="Content" type="Aura.Component[]"/> 	
+    <div class="slds-grid">
+        <div class="slds-col">           
+            <div class="slds-grid slds-grid--vertical">
+                <div class="slds-col panelItem" >                          
+					<div class="slds-grid slds-grid--horizental">
+						<div class="slds-col left" style="width:70%">
+							{!v.ListMenu}                   
+						</div>
+						<div class="slds-col right" style="width:30%">
+							{!v.NavigationButtons}                   
+						</div> 
+					</div>		
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slds-grid slds-grid-align-center">
+        <div class="slds-col fullRow">
+            {!v.Content}      
+        </div>
+    </div>
+</aura:component>

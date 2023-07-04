@@ -1,0 +1,457 @@
+<aura:component controller="POProductsController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+
+    <!--Attributes --> 
+    <aura:attribute name="cmpParameters" type="Object"/>  
+    <aura:attribute name="nextStageNumber" type="Integer" default="1"/>
+    <aura:attribute name="nextStageName" type="String"/> 
+    <aura:attribute name="accountId" type="String"/> 
+    <aura:attribute name="accountName" type="String"/> 
+    <aura:attribute name="paymentMethodId" type="String" />
+    <aura:attribute name="selectedDealer" type="AccountWrapper" />    
+    <aura:attribute name="searchKey" type="String" />  
+    <aura:attribute name="sObjectName" type="Object"/>
+    <aura:attribute name="resultSize" type="Integer"/>
+    <aura:attribute name="totalItems" type="Integer"/>
+    <aura:attribute name="selectedRecord" type="sObject" />
+    <aura:attribute name="ProductWrapper" type="ProductWrapper[]"/>
+    <aura:attribute name="favProductWrapper" type="ProductWrapper[]"/>
+    <aura:attribute name="topProductWrapper" type="ProductWrapper[]"/>
+    <aura:attribute name="selProductWrapper" type="ProductWrapper"/>
+    <aura:attribute name="purchaseOrder" type="sObject" />
+    <aura:attribute name="Flag" type="Boolean" default="true"/>
+    <aura:attribute name="alphaText" type="String" default=""/> 
+   <!-- <aura:attribute name="prodFamily" type="ProductFamilyWrapper[]" /> 
+    <aura:attribute name="prodPackaging" type="ProductPackagingWrapper[]" />
+    <aura:attribute name="prodTreatment" type="ProductTreatmentWrapper[]" />  -->   
+    <aura:attribute name="selectedProdQty" type="Integer" default="0" />
+    <aura:attribute name="selectedProdIndex" type="Integer" default="0" />
+    <aura:attribute name="selectedProdFrom" type="String" default="" />  
+    <aura:attribute name="sortByOptions"  type="String[]" default="Sort By,Price,Product Family,Name"/>
+    <aura:attribute name="isAdSearch" type="Boolean" default="false" /> 
+    <aura:attribute name="cssStyle" type="String" />    
+    <aura:attribute name="ErrorMsg" type="String" default="" />
+    <aura:attribute name="prodFilter" type="ProductAdvancedFilter" />
+    
+    <!--Handler-->
+    <aura:registerEvent name="DumpEvent" type="c:DumpEvent" />
+    <aura:registerEvent name="fromParent" type="c:PaginationEvent" />
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" />         
+    <aura:handler name="fromPagination" event="c:PaginationEvent" action="{!c.doPagination}" />    
+    <aura:handler name="DumpEvent" event="c:DumpEvent" action="{!c.doInit}" />
+    <!-- Body -->
+    <div>
+        <div class="demo-only" id="main">
+            <div class="slds-global-header slds-grid slds-grid_align-spread" style="background: #346b9a;">            
+                <div style="min-width: 80%;" class="slds-global-header__item slds-global-header__item_search">
+                    <div aria-expanded="false" aria-haspopup="listbox" class="slds-form-element slds-lookup" role="combobox">
+                        <label class="slds-assistive-text" for="global-search-01">{!$Label.c.POSearchSalesforce}</label>
+                        <div class="slds-form-element__control slds-input-has-icon slds-input-has-icon_left-right">                            
+                            <div style="min-width: 100%;margin-left: 10px;" class="slds-button-group" role="group">
+                                <ui:inputText aura:id="searchKey" value="{!v.searchKey}" class="slds-input slds-lookup__search-input" placeholder="Search Products"/>
+                                <!-- input type="text" aria-autocomplete="list" aria-controls="global-search-list-01" autocomplete="off" class="slds-input slds-lookup__search-input" id="global-search-01" placeholder="Search Salesforce" role="textbox" / -->
+                                <button style="width:150px;padding: 0;" class="slds-button slds-button_brand" onclick="{!c.advanceSearch}" >
+                                    <lightning:icon variant="inverse" class="slds-button__icon slds-button__icon_left" iconName="utility:search" size="x-small" alternativeText="{!$Label.c.POSearch}"/>
+                                    {!$Label.c.POSearch}
+                                </button>
+                                <button id="advancedSearch" style="width:200px;padding: 0;" onclick="{!c.openAdvancedFilter}" class="slds-input slds-lookup__search-input" aura:id="MB-Back" >
+                                    <lightning:icon class="slds-button__icon slds-button__icon_left" iconName="utility:search" size="x-small" alternativeText="{!$Label.c.POAdvanceSearch}"/>
+                                    {!$Label.c.POAdvanceSearch}
+                                </button>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+                
+                <ul class="slds-global-header__item slds-grid slds-grid_vertical-align-center">
+                    <li class="slds-dropdown-trigger slds-dropdown-trigger_click slds-m-left_x-small" style="color: #ffffff;font-size: 15px;">
+                        {!v.totalItems}&nbsp;{!$Label.c.POItems_In_Your_Cart} 
+                    </li>
+                </ul>
+            </div>
+            <!-- /header -->   
+            <div class="slds-grid slds-gutters">
+                <div class="slds-col" style="width:25%;padding-right:0px;">
+                    <div>
+                         <!-- Comment Favorite Product Functionality -->
+                        <!--div class="slds-card slds-has-bottom-magnet">                       
+                            <ul class="slds-accordion">
+                                <li class="slds-accordion__list-item"> 
+                                    <section id="FavProducts" class="slds-accordion__section slds-is-open" style="background: #d8e5f1;">
+                                        <div class="slds-accordion__summary">
+                                            <h3 class="slds-text-heading_small slds-accordion__summary-heading">
+                                                <button aria-controls="accordion-details-01" aria-expanded="true" class="slds-button slds-button_reset slds-accordion__summary-action">
+                                                    <span class="slds-truncate slds-form-element__label" title="{!$Label.c.POFavorite_Products}">
+                                                        {!$Label.c.POFavorite_Products}
+                                                    </span>
+                                                </button>
+                                            </h3>
+                                            <button onclick="{!c.hideFavProdSection}" data-from="f" id="showFavProdDown" class="slds-button slds-button_icon slds-button_icon-border-filled slds-button_icon-x-small slds-shrink-none" aria-haspopup="true">
+                                                <lightning:icon class="slds-button__icon Iconwidth" iconName="utility:chevrondown" size="x-small" alternativeText="Hide"/>
+                                            </button>
+                                            <button onclick="{!c.showFavProdSection}" id="showFavProdUp" style="display:none;" data-from="f" class="slds-button slds-button_icon slds-button_icon-border-filled slds-button_icon-x-small slds-shrink-none" aria-haspopup="true">
+                                                <lightning:icon class="slds-button__icon Iconwidth" iconName="utility:chevronleft" size="x-small" alternativeText="Show"/>
+                                            </button>
+                                        </div>
+                                    </section>
+                                    <section class="slds-accordion__section slds-is-open">
+                                        <div aria-hidden="false" class="slds-accordion__content" id="showFavProdUl">
+                                            <table>
+                                                <aura:iteration items="{!v.favProductWrapper}" var="fp" indexVar="index">
+                                                    <tr>
+                                                        <td style="cursor: pointer;padding-top:10px;" data-from="fp" data-index="{!index}" onclick="{!c.showSlider}">{!fp.ProductName}</td>
+                                                        <td >
+                                                            <a title="{!fp.isFavProduct == true ? 'Remove From Favorite' : 'Add to Favorite'}" href="javascript:void(0);" style="margin: 0;" id="{!index}" onclick="{!c.makeProductFavoriteFromFav}">
+                                                                <img src="{!$Resource.LightningBoltSoln + '/Icons/FillStar.png'}" alt="" style="width:20px;height:20px;"/>                        	
+                                                            </a>
+                                                        </td>
+                                                        <td>
+                                                             <a href="javascript:void(0);" id="{!'fpip'+index}"  data-from="fp" data-index="{!index}" onclick="{!c.showSlider}"  >
+                                                                <img src="{!$Resource.LightningBoltSoln + '/Icons/PlusIcon.png'}" alt="" style="width:20px;height:20px;"/>                        	
+                                                            </a>
+                                                             <a href="javascript:void(0);" style="display:none;" id="{!'fpim'+index}"  data-from="fp" data-index="{!index}" onclick="{!c.hideSlider}"  >
+                                                                <img src="{!$Resource.LightningBoltSoln + '/Icons/MinusIcon.png'}" alt="" style="width:20px;height:20px;"/>                        	
+                                                            </a>
+                                                        </td><br/>
+                                                    </tr>
+                                                    <tr style="display:none;" id="{!'fp'+index}">
+                                                        <td colspan="3">
+                                                            <div class="slds-clearfix" style="padding-top: 12px;overflow:auto;">
+                                                                <div class="qtyDiv">                                                       
+                                                                    <ui:inputNumber value="{!fp.OrderQuantity}"  class="slds-input"  />                                                            
+                                                                </div>
+                                                                <div class="btnAddCartDiv">                                                     
+                                                                    <button type="button" onclick="{!c.addToCart}" data-index="{!index}" class="slds-button slds-button_brand">
+                                                                        {!$Label.c.POAddtoCart}
+                                                                    </button>
+                                                                </div>
+                                                            </div>                                            
+                                                            <div class="slds-form-element">
+                                                                <label class="slds-form-element__label" for="slider-id-01">
+                                                                    <span class="slds-slider-label">                                                        
+                                                                        <span class="slds-slider-label__range">{!$Label.c.POProductRange}</span>
+                                                                    </span>
+                                                                </label>
+                                                                <div class="slds-form-element__control">
+                                                                    <div class="slds-slider">
+                                                                        <input type="range" data-from="fp" data-index="{!index}" id="slider-id-01" class="slds-slider__range" value="{!fp.OrderQuantity}" step="1" min="0" max="1000" oninput="{!c.changeQty}" />
+                                                                    </div>
+                                                                </div>
+                                                            </div> 
+                                                        </td>
+                                                    </tr>
+                                                    <tr style="border-bottom:1px solid #dddbda;"> <td colspan="3">&nbsp;</td></tr>
+                                                </aura:iteration>
+                                            </table> 
+                                        </div>
+                                    </section>
+                                </li>                                
+                            </ul>
+                        </div-->
+                        <div class="slds-card slds-has-top-magnet">                        
+                            <ul class="slds-accordion">
+                                <li class="slds-accordion__list-item">
+                                    <section id="TopProducts" class="slds-accordion__section slds-is-open" style="background: #d8e5f1;">
+                                        <div class="slds-accordion__summary">
+                                            <h3 class="slds-text-heading_small slds-accordion__summary-heading">
+                                                <button aria-controls="accordion-details-01" aria-expanded="true" class="slds-button slds-button_reset slds-accordion__summary-action">
+                                                    <span class="slds-truncate slds-form-element__label" title="{!$Label.c.POTop_Products}">
+                                                        {!$Label.c.POTop_Products}
+                                                    </span>
+                                                </button>
+                                            </h3>
+                                            <button onclick="{!c.hideTopProdSection}" id="showTopProdDown" data-from="t" class="slds-button slds-button_icon slds-button_icon-border-filled slds-button_icon-x-small slds-shrink-none" aria-haspopup="true">
+                                                <lightning:icon class="slds-button__icon Iconwidth" iconName="utility:chevrondown" size="x-small" alternativeText="Hide"/>
+                                            </button>
+                                            <button onclick="{!c.showTopProdSection}" id="showTopProdUp" style="display:none;" data-from="t" class="slds-button slds-button_icon slds-button_icon-border-filled slds-button_icon-x-small slds-shrink-none" aria-haspopup="true">
+                                                <lightning:icon class="slds-button__icon Iconwidth" iconName="utility:chevronleft" size="x-small" alternativeText="Show"/>
+                                            </button>
+                                        </div>
+                                    </section>
+                                    <section class="slds-accordion__section slds-is-open">
+                                        <div aria-hidden="false" class="slds-accordion__content" id="showTopProdUl">
+                                            <table>
+                                                <aura:iteration items="{!v.topProductWrapper}" var="tp" indexVar="index">
+                                                    <tr>
+                                                        <td style="cursor: pointer;padding-top:10px;" data-from="tp" data-index="{!index}" onclick="{!c.showSlider}">{!tp.ProductName}</td>
+                                                        <!-- Comment Favorite Product Functionality -->
+                                                        <!--td >                                                             
+                                                            <a title="{!tp.isFavProduct == true ? 'Remove From Favorite' : 'Add to Favorite'}" href="javascript:void(0);" class="btn-wishlist" style="margin: 0;" id="{!index}" onclick="{!c.makeProductFavoriteFromTop}">
+                                                                <img src="{!tp.isFavProduct == true ? $Resource.LightningBoltSoln + '/Icons/FillStar.png' : $Resource.LightningBoltSoln + '/Icons/EmptyStar.png' }" alt="" style="width:20px;height:20px;"/>                        	
+                                                            </a>
+                                                        </td-->
+                                                        <td>
+                                                             <a href="javascript:void(0);" id="{!'tpip'+index}"  data-from="tp" data-index="{!index}" onclick="{!c.showSlider}"  >
+                                                                <img src="{!$Resource.LightningBoltSoln + '/Icons/PlusIcon.png'}" alt="" style="width:20px;height:20px;"/>                        	
+                                                            </a>
+                                                             <a href="javascript:void(0);" style="display:none;" id="{!'tpim'+index}"  data-from="tp" data-index="{!index}" onclick="{!c.hideSlider}"  >
+                                                                <img src="{!$Resource.LightningBoltSoln + '/Icons/MinusIcon.png'}" alt="" style="width:20px;height:20px;"/>                        	
+                                                            </a>
+                                                        </td>
+                                                    </tr>
+                                                    <tr style="display:none;" id="{!'tp'+index}">
+                                                        <td colspan="3">
+                                                            <div class="slds-clearfix" style="padding-top: 12px;overflow:auto;">
+                                                                <div class="qtyDiv"> 
+                                                                    <ui:inputNumber value="{!tp.OrderQuantity}" class="slds-input"  /> 
+                                                                </div>
+                                                                <div class="btnAddCartDiv"> 
+                                                                    <button type="button" onclick="{!c.addToCart}" data-index="{!index}" class="slds-button slds-button_brand" >
+                                                                        {!$Label.c.POAddtoCart}
+                                                                    </button>
+                                                                </div>
+                                                            </div>                                                         
+                                                            <div class="slds-form-element">
+                                                                <label class="slds-form-element__label" for="slider-id-01">
+                                                                    <span class="slds-slider-label">
+                                                                        <span class="slds-slider-label__range">{!$Label.c.POProductRange}</span>
+                                                                    </span>
+                                                                </label>
+                                                                <div class="slds-form-element__control">
+                                                                    <div class="slds-slider">
+                                                                        <input type="range" data-from="tp" data-index="{!index}" id="slider-id-01" class="slds-slider__range" value="{!tp.OrderQuantity}" step="1" min="0" max="1000" oninput="{!c.changeQty}" />
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </td>
+                                                    </tr> 
+                                                    <tr style="border-bottom:1px solid #dddbda;"> <td colspan="3">&nbsp;</td></tr>
+                                                </aura:iteration>
+                                            </table>                                        
+                                        </div>
+                                    </section>
+                                </li>                                
+                            </ul>                        
+                        </div>                 
+                    </div>
+                </div>
+                <div class="slds-col" style="width:75%;padding-left:0px;">
+                    <div>                    
+                        <div class="slds-card slds-has-bottom-magnet">
+                            <div class="slds-p-around_medium">
+                                <div class="slds-clearfix">
+                                    <div class="slds-float_left">
+                                        <p>{!$Label.c.PORelevantResult}</p>
+                                    </div>
+                                    <div class="slds-float_right">
+                                        <div class="slds-select_container">
+                                            <ui:inputSelect aura:id="sortByOption" class="slds-select"  multiple="false" change="{!c.onSortByChange}">
+                                                <aura:iteration items="{!v.sortByOptions}" var="opt">
+                                                    <ui:inputSelectOption class="slds-select" text="{!opt}" label="{!opt}"/>
+                                                </aura:iteration>
+                                            </ui:inputSelect>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="slds-card slds-has-top-magnet">
+                            <div class="slds-clearfix">
+                                <aura:iteration items="{!v.ProductWrapper}" var="prod" indexVar="index">
+                                    <!-- div style="" --> 
+                                    <div style="margin:1%;width:31%;float:left;">
+                                        <div class="slds-box slds-box_x-small">                            
+                                            <div class="slds-card slds-has-top-magnet">
+                                                <div class="slds-p-around_medium">                                                
+                                                    <div>
+                                                        <div class="slds-clearfix">
+                                                            <div class="qtyDiv">
+                                                                <aura:if isTrue="{!and(prod.ProductImageId != null,prod.ProductImageId != '')}">
+                                                                    <img src="{! '/servlet/servlet.ImageServer?id=' + prod.ProductImageId + '&amp;oid=' + prod.OrganizationId}" alt="" style="width:100px;height:100px;" />                        	
+                                                                    <aura:set attribute="else">
+                                                                        <img src="{!$Resource.LightningBoltSoln + '/Icons/no-photo.jpg'}" alt="" style="width:100px;height:100px;"/>                        	
+                                                                    </aura:set>
+                                                                </aura:if>
+                                                            </div>
+                                                            <div class="btnAddCartDiv" >
+                                                                <strong style="word-wrap:break-word;">{!prod.ProductName}</strong><br/><br/>
+                                                                {!prod.ProductCode}
+                                                            </div>
+                                                        </div>
+                                                    </div><br/>
+                                                    <div class="slds-clearfix">
+                                                        <div class="slds-float_left">
+                                                            <p><strong>${!prod.UnitPrice} </strong> / Unit</p>
+                                                        </div>
+                                                        <div class="slds-float_right">
+                                                            <!-- Comment Favorite Product Functionality -->
+                                                            <!--a title="{!prod.isFavProduct == true ? 'Remove From Favorite' : 'Add to Favorite'}" href="javascript:void(0);" id="{!index}" onclick="{!c.makeProductFavoriteFromList}">
+                                                                <img src="{!prod.isFavProduct == true ? $Resource.LightningBoltSoln + '/Icons/FillStar.png' : $Resource.LightningBoltSoln + '/Icons/EmptyStar.png' }" alt="" style="width:30px;height:30px;"/>                        	
+                                                            </a-->
+                                                        </div>
+                                                    </div>
+                                                    <div class="detail">                                        
+                                                        {!prod.Description ==null?'-':prod.Description}                                         
+                                                    </div><br/>
+                                                    <div class="slds-clearfix" style="overflow:auto">                                                        
+                                                        <div class="qtyDiv">
+                                                            <ui:inputNumber value="{!prod.OrderQuantity}" class="slds-input" /> 
+                                                        </div>
+                                                        <div class="btnAddCartDiv">
+                                                            <button type="button" onclick="{!c.addToCartList}" data-index="{!index}" class="slds-button slds-button_brand" style="padding:2px">
+                                                                <lightning:icon variant="inverse" class="slds-button__icon slds-button__icon_left" iconName="utility:download"  size="x-small" alternativeText=""/>
+                                                                {!$Label.c.POAddtoCart}
+                                                            </button>
+                                                        </div>                                                         
+                                                    </div>
+                                                    <div class="slds-form-element">
+                                                        <label class="slds-form-element__label" for="slider-id-01">
+                                                            <span class="slds-slider-label">
+                                                                <!-- <span class="slds-slider-label__label">Slider Label</span> -->
+                                                                <span class="slds-slider-label__range"><strong>{!$Label.c.POProductRange}</strong></span>
+                                                            </span>
+                                                        </label>
+                                                        <div class="slds-form-element__control">
+                                                            <div class="slds-slider">
+                                                                <input type="range" data-from="pw" data-index="{!index}" id="slider-id-01" class="slds-slider__range" value="{!prod.OrderQuantity}" step="1" min="0" max="1000" oninput="{!c.changeQty}" />
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>  
+                                    </div>                                    
+                                    <!-- /div -->  
+                                </aura:iteration>  
+                            </div>
+                        </div> 
+                        <div class="slds-card slds-has-top-magnet" style="border-bottom: none;border-top: none;">
+                            <div class="slds-p-around_medium">
+                                <aura:if isTrue="{!v.resultSize > 0}">
+                                    <div><center>
+                                        <c:Pagination totalResultSize="{!v.resultSize}" pageSize="{!$Label.c.PaginationPageSize}" />
+                                        </center></div>
+                                </aura:if>
+                            </div>
+                        </div> 
+                        <div class="slds-card slds-has-top-magnet">
+                            <div class="slds-p-around_medium">
+                                <div class="slds-clearfix">
+                                    <div class="slds-float_left">
+                                        <aura:if isTrue="{!(v.nextStageNumber -1) == 1}">
+                                            <!--button type="button" class="slds-button slds-button_neutral" onclick="{!c.cancelOrder}"><i class="fa fa-times-circle" aria-hidden="true"></i>{!$Label.c.POCancelOrder}</button-->
+                                        </aura:if>
+                                    </div>
+                                    <div class="slds-float_right">
+                                        <aura:if isTrue="{!(v.nextStageNumber-1) != 1}">
+                                            <button type="button" class="slds-button slds-button_brand" onclick="{!c.BackButton}">
+                                                <lightning:icon variant="inverse" class="slds-button__icon slds-button__icon_left" iconName="utility:back" size="x-small" alternativeText="{!$Label.c.POBack}"/>
+                                                {!$Label.c.POBack}
+                                            </button>&nbsp;&nbsp;
+                                        </aura:if>
+                                        <button type="button" class="slds-button slds-button_brand" onclick="{!c.ContinueButton}">{!$Label.c.POContinue} {!v.nextStageName}&nbsp; 
+                                            <lightning:icon variant="inverse" class="slds-button__icon slds-button__icon_right" iconName="utility:forward" size="x-small" alternativeText="{!$Label.c.POContinue}"/>
+                                        </button>
+                                    </div>
+                                </div>                            
+                            </div>
+                        </div>                     
+                    </div>
+                </div>            
+            </div>
+            
+            <div id="itemAddedMessage" class="slds-notification-container" style="pointer-events:none;display:none;position:fixed;top:50%;left:50%;transform:translate(-50%, -50%);">
+                <section class="slds-notification" role="dialog" aria-labelledby="noti" aria-describedby="dialog-body">
+                    <div class="slds-notification__body" id="dialog-body">
+                        <a class="slds-notification__target slds-media slds-box slds-theme--success" style="text-decoration:none;" href="javascript:void(0);">
+                            <div class="slds-media__body">
+                                <h2 class="slds-text-heading--small slds-m-bottom-xx--small" id="noti" style="text-align:center;">
+                                    <span class="slds-assistive-text"></span>{!$Label.c.itemAddedToCartMessage}
+                                </h2>
+                            </div>
+                        </a>
+                    </div>
+                </section>
+            </div>
+            
+        </div>
+        <!-- Advance Search -->
+        <div id="advFilterPanel" style="position: relative;z-index: 9;">
+            <div class="from-right">
+                <header class="cd-panel-header">
+                    <h1>{!$Label.c.POAdvanceSearch}</h1>
+                    <a href="#0" class="cd-panel-close" onclick="{!c.closeAdvancedFilter}">X</a>
+                </header>
+                <div class="cd-panel-container">
+                    <div class="cd-panel-content">
+                        <div class="demo-only demo-only--sizing slds-grid slds-wrap">
+                            <div class="slds-size_1-of-1">
+                                <label class="slds-form-element__label" for="lookup-65">
+                                    {!$Label.c.POProductFamily}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="demo-only demo-only--sizing slds-grid slds-wrap">
+                            <ui:inputText value="{!v.prodFilter.Family}"/>
+                        </div>                        
+                        <div class="demo-only demo-only--sizing slds-grid slds-wrap">
+                            <c:LightningLookup sObjectName="gii__MerchandiseType__c" displayedFieldName="Name" valueFieldName="Id" label="Merchandise Type:" selectedValue="{!v.prodFilter.MerchandiseType}"/>
+                        </div>
+                        <div class="demo-only demo-only--sizing slds-grid slds-wrap">
+                            <div class="slds-size_1-of-1">
+                                <label class="slds-form-element__label" for="lookup-65">
+                                    {!$Label.c.POProductCode}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="demo-only demo-only--sizing slds-grid slds-wrap">
+                            <ui:inputText value="{!v.prodFilter.ProductCode}"/>
+                        </div> 
+                        <div class="demo-only demo-only--sizing slds-grid slds-wrap">
+                            <c:LightningLookup sObjectName="gii__Color__c" displayedFieldName="Name" valueFieldName="Id" label="Color:" selectedValue="{!v.prodFilter.Color}"/>
+                        </div>
+                        <div class="demo-only demo-only--sizing slds-grid slds-wrap">
+                            <c:LightningLookup sObjectName="gii__Size__c" displayedFieldName="Name" valueFieldName="Id" label="Size:" selectedValue="{!v.prodFilter.Size}"/>
+                        </div>
+                        <div class="demo-only demo-only--sizing slds-grid slds-wrap">                    
+                            <div class="slds-size_1-of-2">
+                                <div class="slds-box_x-small slds-text-align_left slds-m-around_x-small">
+                                    <button class="slds-button slds-button_brand" onclick="{!c.cancelFilter}">{!$Label.c.POClearFilter}</button>&nbsp;
+                                </div>
+                            </div>
+                            <div class="slds-size_1-of-2">
+                                <div class="slds-box_x-small slds-text-align_left slds-m-around_x-small">
+                                    <button class="slds-button slds-button_brand" data-dismiss="slds-modal" onclick="{!c.applyFilter}">{!$Label.c.POApplyFilter}</button>
+                                </div>
+                            </div>
+                        </div>                
+                    </div>
+                </div>
+            </div> 
+        </div>
+        <!-- Advance Search -->
+    </div>    
+    
+    <div role="dialog" tabindex="-1" aura:id="Modalbox3" aria-labelledby="header44" class="slds-modal" style="background-color: rgba(0,0,0,0.4);">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header">
+                <button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.removecss3}">
+                    <span>X
+                        <span class="slds-assistive-text">{!$Label.c.POClose}</span>
+                    </span>                 
+                </button>
+                <h2 id="header43" class="slds-text-heading--medium" style="font-size: medium; font-family: sans-serif;"><b>{!$Label.c.POProductErrorMsg}</b></h2>
+            </div>
+            <div class="slds-modal__content slds-p-around--medium">
+                <div class="modal-body">
+                    <div class="row addchaccount">
+                        <div class="col-md-12">
+                            <div class="row">
+                                {!v.ErrorMsg}                                    
+                                <div class="clearfix"></div>
+                            </div>
+                        </div>
+                    </div>   
+                </div>
+            </div>
+            <div class="slds-modal__footer">
+                <button class="slds-button slds-button_brand" onclick="{!c.removecss3}">
+                    <lightning:icon variant="inverse" class="slds-button__icon slds-button__icon_left" iconName="utility:back" size="x-small" alternativeText="{!$Label.c.POCancelbtn}"/>
+                    {!$Label.c.POCancelbtn}
+                </button>                    
+            </div>
+        </div>
+    </div>
+    <!-- End PopUp -->
+</aura:component>

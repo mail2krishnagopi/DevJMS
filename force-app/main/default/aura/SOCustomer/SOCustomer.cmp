@@ -1,0 +1,532 @@
+<aura:component controller="SOCustomerController" implements="force:appHostable,flexipage:availableForAllPageTypes,flexipage:availableForRecordHome,force:hasRecordId,forceCommunity:availableForAllPageTypes,force:lightningQuickAction" access="global" >
+    
+    <!--Attributes -->  
+    <aura:attribute name="cmpParameters" type="Object"/>  
+    <aura:attribute name="nextStageNumber" type="Integer" default="1"/>
+    <aura:attribute name="nextStageName" type="String"/> 
+    <aura:attribute name="isExternalUser" type="Boolean" default="false"/>
+    <aura:attribute name="accountId" type="String"/>
+    <aura:attribute name="currentStageNumber" type="Integer" default="{!v.nextStageNumber -1}"/>
+    
+    
+    <aura:attribute name="selectedLookUpRecord" type="sObject" default="{}"/>
+    <aura:attribute name="selectedRecord" type="sObject" default="{!v.selectedLookUpRecord}" description="Use,for store SELECTED sObject Record"/>
+    <aura:attribute name="listOfSearchRecords" type="List" description="Use,for store the list of search records which returns from apex class"/>
+    <aura:attribute name="SearchKeyWord" type="string"/>
+    <aura:attribute name="objectAPIName" type="string" default="Account"/>
+    <aura:attribute name="IconName" type="string" default="standard:account"/>
+    <aura:attribute name="label" type="string" default="Select Customer"/>
+    <aura:attribute name="Message" type="String" default=""/>
+  
+    <aura:attribute name="accountName" type="String" /> 
+    <aura:attribute name="mapAccFieldLables" type="Map"/>  
+    <aura:attribute name="totalItems" type="Integer"/>
+    <aura:attribute name="paymentMethod" type="String" default="Cash"/>
+    <aura:attribute name="paymentMethodId" type="String" />
+    <aura:attribute name="estimatedDate" type="String" />
+    <aura:attribute name="destributor" type="AccountWrapper" />    
+    <aura:attribute name="dealerList" type="AccountWrapper[]" />
+    <aura:attribute name="selectedDealer" type="AccountWrapper" />
+    <aura:attribute name="newDealer" type="Account"  default="{
+                                                              'sobjectType': 'Account',
+                                                              'ParentId': '',
+                                                              'Name': '',
+                                                              'ShippingStreet': '',
+                                                              'ShippingCity': '', 
+                                                              'ShippingState': '',
+                                                              'ShippingCountry': '',
+                                                              'Phone': '',
+                                                              'ShippingPostalCode': ''
+                                                              }"/>
+    <aura:attribute name="isDealerError" type="Boolean" default="false"/>
+    <aura:attribute name="dealerErrorMsg" type="String" default="Dealer Not Found ...!"/>
+    <aura:attribute name="productErrorMsg" type="String" default="Products Not Found ...!"/>
+    <aura:attribute name="editDealerInfo" type="AccountWrapper" />    
+    <aura:attribute name="discount" type="Integer" default="0" />
+    <aura:attribute name="totalAmt" type="Integer" default="0" />
+    <aura:attribute name="percentAmt" type="Integer" default="10" />
+    <aura:attribute name="percentPayAmt" type="Integer" default="0" />
+    <aura:attribute name="customPayAmt" type="Integer" default="100" />
+    <aura:attribute name="selectedPayMethod" type="String" default="fullPay" />
+    <aura:attribute name="isReqMissing" type="Boolean" default="false"/>
+    <aura:attribute name="reqErrorMsg" type="String" />
+    <aura:attribute name="searchKey" type="String" />  
+    
+    
+    <!--Handler-->   
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}" /> 
+    <aura:handler name="oSelectedAccountEvent" event="c:SelectedAccountEvent" action="{!c.handleComponentEvent}"/>
+    <aura:registerEvent name="oSelectedAccountEvent" type="c:SelectedAccountEvent"/>
+    <!--Body-->
+    <div class="slds-card slds-has-top-magnet">
+        <div class="slds-p-around_medium">
+            
+            <aura:if isTrue="{!v.isExternalUser == false}">
+                <div onmouseleave="{!c.onblur}" aura:id="searchRes" class="slds-form-element slds-lookup slds-is-close" data-select="single">
+                    <label class="slds-form-element__label" for="lookup-348">{!v.label}</label>
+                    <div class="slds-form-element__control">            
+                        <div class="slds-input-has-icon slds-input-has-icon--right">
+                            <lightning:icon class="slds-input__icon slds-show" iconName="utility:search" size="x-small" alternativeText="search"/> 
+                            <div aura:id="lookup-pill" class="slds-pill-container slds-hide">
+                                <lightning:pill class="pillSize" label="{!v.selectedRecord.Name}" name="{!v.selectedRecord.Name}" onremove="{! c.clear }">
+                                    <aura:set attribute="media">
+                                        <lightning:icon iconName="{!v.IconName}" size="x-small" alternativeText="{!v.IconName}"/>
+                                    </aura:set>
+                                </lightning:pill>
+                            </div>
+                            <div aura:id="lookupField" class="slds-show">
+                                <!--    <span class="slds-icon_container  slds-combobox__input-entity-icon" title="record">
+                            <lightning:icon class="slds-icon slds-icon slds-icon_small slds-icon-text-default" iconName="{!v.IconName}" size="x-small" alternativeText="icon"/>
+                            <span class="slds-assistive-text"></span>
+                        </span>  -->
+                                <ui:inputText click="{!c.onfocus}" updateOn="keyup" keyup="{!c.keyPressController}" class="slds-lookup__search-input slds-input leftPaddingClass" value="{!v.SearchKeyWord}" placeholder="{!$Label.c.SOSearchCustomer}"/>
+                            </div>   
+                        </div>
+                    </div>
+                    <ul style="min-height:40px;margin-top:0px !important" class="slds-listbox slds-listbox_vertical slds-dropdown slds-dropdown_fluid slds-lookup__menu slds" role="listbox">
+                        <lightning:spinner class="slds-hide" variant="brand" size="small" aura:id="mySpinner"/>
+                        <center> {!v.Message}</center>
+                        <aura:iteration items="{!v.listOfSearchRecords}" var="singleRec">
+                            <c:CustomerInformation oRecord="{!singleRec}" IconName="{!v.IconName}"/>
+                        </aura:iteration>
+                    </ul>
+                </div>
+                <br/>
+            </aura:if>            
+            <div class="slds-grid slds-wrap">
+                <div class="slds-size_1-of-2"> 
+                    <div class="slds-box slds-box_x-small slds-text-align_left slds-m-around_x-small" style="padding: 0;min-height: 130px;">
+                        <div class="slds-section slds-is-open" style="margin: 0;">
+                            <h3 class="slds-section__title" id="shiptoHeader" style="font-size: inherit;border-radius: 0;">                               
+                                <span class="slds-truncate HdrTextColor" title="Section Title" style="padding-left: 5px;font-size: 14px;">
+                                    	{!v.mapAccFieldLables.ShippingAddress}
+                                </span>&nbsp;
+                                <a href=""  class="uiOutputURL" data-backdrop="static" data-record="{!idx}" onclick="{!c.applycss1}">
+                                    <img src="{!$Resource.LightningBoltSoln + '/Icons/EditIcon.png'}" alt="" style="width:20px;height:20px;"/>                        	
+                                </a>
+                            </h3>
+                            <div aria-hidden="false" class="slds-section__content" id="expando-unique-id" style="padding: 0;padding-left: 5px;">
+                                <ul>
+                                    <aura:if isTrue="{!v.selectedDealer != null}">
+                                        <li>{!v.selectedDealer.Name}</li>
+                                        <li>{!v.selectedDealer.ShippingStreet},&nbsp;{!v.selectedDealer.ShippingCity},&nbsp;
+                                            {!v.selectedDealer.ShippingState},&nbsp;{!v.selectedDealer.ShippingPostalCode}</li>
+                                        <li>{!v.selectedDealer.ShippingCountry}</li>
+                                        <li>Phone: {!v.selectedDealer.Phone}</li>
+                                    </aura:if>
+                                </ul>                        
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-size_1-of-2">
+                    <div class="slds-box slds-box_x-small slds-text-align_left slds-m-around_x-small" style="padding: 0;min-height: 130px;">
+                        <div class="slds-section slds-is-open" style="margin: 0;">
+                            <h3 class="slds-section__title" id="shiptoHeader" style="font-size: inherit;border-radius: 0;">                               
+                                <span class="slds-truncate" title="Section Title" style="padding-left: 5px;font-size: 14px;">
+                                     {!v.mapAccFieldLables.BillingAddress}
+                                </span>&nbsp;
+                                <a href="javascript:void(0);" data-backdrop="static" onclick="{!c.applycss2}">
+                                    <img src="{!$Resource.LightningBoltSoln + '/Icons/EditIcon.png'}" alt="" style="width:20px;height:20px;"/>                        	
+                                </a>
+                            </h3>
+                            <div aria-hidden="false" class="slds-section__content" id="expando-unique-id" style="padding: 0;padding-left: 5px;">
+                                <ul>
+                                    <aura:if isTrue="{!v.selectedDealer != null}">
+                                    <li>{!v.selectedDealer.Name}</li>
+                                    <li>{!v.selectedDealer.BillingStreet},&nbsp;{!v.selectedDealer.BillingCity},&nbsp;
+                                        {!v.selectedDealer.BillingState},&nbsp;{!v.destributor.BillingPostalCode}</li>
+                                    <li>{!v.selectedDealer.BillingCountry}</li>
+                                    <li>Phone: {!v.selectedDealer.Phone}</li> 
+                                    </aura:if>
+                                </ul>                       
+                            </div>
+                        </div>
+                    </div>                                    
+                </div>
+            </div>
+            <aura:if isTrue="{!v.isExternalUser}"> 
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-size_1-of-1" id="shiptoHeader">
+                        <div class="slds-grid slds-wrap" style="padding-top: 3px;padding-bottom: 2px;">
+                            <div class="slds-size_1-of-2">
+                                <div class="slds-text-heading_small" style="padding-left:5px;float:left;width:20%;">
+                                    <strong><lightning:icon iconName="standard:shipment"/>&nbsp;{!$Label.c.SOCustomers}</strong>
+                                </div> 
+                                <div style="padding-left:5px;float:left;width:79%;">
+                                    <ui:inputText aura:id="searchKey" value="{!v.searchKey}" change="{!c.filterRecords}" class="slds-input slds-lookup__search-input" placeholder="Search Customer"/>
+                                </div>
+                            </div>
+                            <div class="slds-size_1-of-2">
+                            </div>
+                        </div>                   
+                    </div>
+                    <aura:if isTrue="{!v.isDealerError}"> 
+                        <div class="slds-size_3-of-3">
+                            <div class="slds-box_x-small slds-text-align_left slds-m-around_x-small">
+                                <div style="color:red;">
+                                    {!v.dealerErrorMsg}
+                                </div> 
+                            </div>
+                        </div>            
+                        <aura:set attribute="else">
+                            <table class="slds-table slds-table_bordered slds-max-medium-table_stacked-horizontal">
+                                <thead>
+                                    <tr class="slds-text-title_caps">
+                                        <th class="slds-cell-shrink" scope="col">
+                                            <label class="slds-checkbox">                                              
+                                                <!-- span class="slds-checkbox_faux"></span>
+                                                <span class="slds-assistive-text">Select All</span -->
+                                            </label>
+                                        </th>
+                                        <th scope="col">
+                                            <div class="slds-truncate" title="Customer Name">
+                                            	{!$Label.c.SOCustomerName}
+                                            </div>
+                                        </th>
+                                        <th scope="col">
+                                            <div class="slds-truncate" title="Address">
+                                            	{!$Label.c.SOAddress}
+                                            </div>
+                                        </th>
+                                        <th scope="col">
+                                            <div class="slds-truncate" title="Country">
+                                            	{!$Label.c.SOCountry}
+                                            </div>
+                                        </th>
+                                        <th scope="col">
+                                            <div class="slds-truncate" title="Phone Number">
+                                            	{!$Label.c.SOPhone}
+                                            </div>
+                                        </th>                                       
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <aura:iteration items="{!v.dealerList}" var="dealer" indexVar="idx">
+                                        <tr class="slds-hint-parent">
+                                            <td class="slds-cell-shrink" data-label="Select Row">
+                                                <label class="slds-checkbox">
+                                                    <input type="checkbox" name="options" value="on" checked="{!v.selectedDealer.Id == dealer.Id ? true : false}" data-record="{!idx}" onclick="{!c.onSelect}" />
+                                                    <span class="slds-checkbox_faux"></span>
+                                                    <span class="slds-assistive-text">Select Row</span>
+                                                </label>
+                                            </td>
+                                      <!--  <th scope="row" data-label="Select Customer">
+                                            <div class="slds-truncate" title="Select Customer">
+                                                <div style="float:left; height:20px;width:20px" data-record="{!idx}" onclick="{!c.onSelect}">
+                                                    <input type="radio" name="optionsRadios" id="optionsRadios2"  checked="{!v.selectedDealer.Id == dealer.Id ? true : false}" /> 
+                                                </div> 
+                                            </div>
+                                        </th> -->
+                                        <td data-label="Customer Name">
+                                            <div class="slds-truncate" title="{!dealer.Name}">{!dealer.Name}</div>
+                                        </td>
+                                        <td data-label="Address">
+                                            <div class="slds-truncate" title="Address">
+                                                {!dealer.ShippingStreet},&nbsp;{!dealer.ShippingCity},&nbsp;
+                                                {!dealer.ShippingState},&nbsp;{!dealer.ShippingPostalCode}
+                                            </div>
+                                        </td>
+                                        <td data-label="Country">
+                                            <div class="slds-truncate" title="{!dealer.ShippingCountry}">{!dealer.ShippingCountry}</div>
+                                        </td>
+                                        <td data-label="Phone Number">
+                                            <div class="slds-truncate" title="{!dealer.Phone}">{!dealer.Phone}</div>
+                                        </td>               
+                                    </tr>
+                                    </aura:iteration>
+                                </tbody>
+                            </table>    
+                        </aura:set>
+                    </aura:if> 
+                </div>              
+                <div class="slds-grid slds-wrap" style="padding:0;margin: 5px;">
+                    <div class="slds-size_1-of-1">
+                        <div class="slds-box_x-small slds-text-align_left slds-m-around_x-small">
+                            <button type="button" class="slds-button slds-button_neutral" onclick="{!c.applycss3}">
+                                    <lightning:icon class="slds-button__icon slds-button__icon_left" iconName="utility:adduser" size="x-small" alternativeText="{!$Label.c.SOAddNewCustomer}"/>
+                                {!$Label.c.SOAddNewCustomer} 
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <aura:set attribute="else">
+                    <div class="slds-grid slds-wrap" style="padding:0;margin: 5px;">
+                        <div class="slds-size_1-of-1">
+                            <div class="slds-box_x-small slds-text-align_left slds-m-around_x-small">
+                                <button type="button" class="slds-button slds-button_neutral" onclick="{!c.applycss4}">
+                                    <lightning:icon class="slds-button__icon slds-button__icon_left" iconName="utility:adduser" size="x-small" alternativeText="{!$Label.c.SOAddNewCustomer}"/>
+                                    {!$Label.c.SOAddNewCustomer}
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </aura:set>
+            </aura:if>            
+        </div>
+    </div>
+    <div class="slds-card slds-has-top-magnet">
+        <div class="slds-p-around_medium">
+            <div class="slds-clearfix">
+                <div class="slds-float_left">
+                    <aura:if isTrue="{!v.currentStageNumber == 1}">
+                       <!-- <button type="button" class="slds-button slds-button_neutral" onclick="{!c.CancelButton}"> Cancel Order</button> -->
+                    </aura:if>
+                </div>
+                <div class="slds-float_right">
+                    <aura:if isTrue="{!v.currentStageNumber != 1}">
+                        <button type="button" class="slds-button slds-button_brand" onclick="{!c.backButton}">
+                            <lightning:icon variant="inverse" class="slds-button__icon slds-button__icon_left" iconName="utility:back" size="x-small" alternativeText="{!$Label.c.SOBack}"/>
+                            {!$Label.c.SOBack}
+                        </button>&nbsp;&nbsp;
+                    </aura:if>
+                    <button type="button" class="slds-button slds-button_brand" onclick="{!c.ContinueButton}">{!$Label.c.SOContinue}&nbsp; {!v.nextStageName}
+                        <lightning:icon variant="inverse" class="slds-button__icon slds-button__icon_right" iconName="utility:forward" size="x-small" alternativeText="{!$Label.c.SOContinue}"/>
+                    </button>
+                </div>
+            </div>                            
+        </div>
+    </div>
+    <!-- POP UP START-->
+    <div role="dialog" tabindex="-1" aura:id="Modalbox1" aria-labelledby="header43" class="slds-modal" style="background-color: rgba(0,0,0,0.4) !important;">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header" id="shiptoHeader">
+                <button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.removecss1}">
+                    <span class="slds-text-heading_medium">X
+                        <span class="slds-assistive-text">Close</span>
+                    </span>                 
+                </button>
+                <h2 id="header43" class="slds-text-heading--medium" style="font-size: medium; font-family: sans-serif;"><b>{!$Label.c.SOEdit}&nbsp;{!v.mapAccFieldLables.ShippingAddress}</b></h2>
+            </div>
+            <div class="slds-modal__content slds-p-around--medium">
+                <div class="modal-body">
+                    <div>
+                        <aura:if isTrue="{!v.isReqMissing}"> 
+                            <div style="color:red;">
+                                {!v.reqErrorMsg}
+                            </div>
+                        </aura:if>
+                    </div>
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-size_1-of-2">
+                            <div class="slds-box_x-small slds-text-align_center slds-m-around_x-small">
+                                <div class="slds-text-body_regular slds-float_left" style="margin: 10px;margin-left: 0px;">
+                                    <abbr class="slds-required" title="required">*</abbr>{!$Label.c.SOStreet}</div>
+                                <ui:inputText class="slds-input" value="{!v.selectedDealer.ShippingStreet}" />
+                                <div class="slds-text-body_regular slds-float_left" style="margin: 10px;margin-left: 0px;">
+                                    <abbr class="slds-required" title="required">*</abbr>{!$Label.c.SOState}</div>
+                                <ui:inputText class="slds-input" value="{!v.selectedDealer.ShippingState}" />
+                                <div class="slds-text-body_regular slds-float_left" style="margin: 10px;margin-left: 0px;">
+                                    <abbr class="slds-required" title="required">*</abbr>{!$Label.c.SOPostalCode}</div>
+                                <ui:inputText class="slds-input" value="{!v.selectedDealer.ShippingPostalCode}" />
+                            </div>
+                        </div>
+                        <div class="slds-size_1-of-2">
+                            <div class="slds-box_x-small slds-text-align_center slds-m-around_x-small">
+                                <div class="slds-text-body_regular slds-float_left" style="margin: 10px;margin-left: 0px;">
+                                    <abbr class="slds-required" title="required">*</abbr>{!$Label.c.SOCity}</div>
+                                <ui:inputText class="slds-input" value="{!v.selectedDealer.ShippingCity}" />
+                                <div class="slds-text-body_regular slds-float_left" style="margin: 10px;margin-left: 0px;">
+                                    <abbr class="slds-required" title="required">*</abbr>{!$Label.c.SOCountry}</div>
+                                <ui:inputText class="slds-input" value="{!v.selectedDealer.ShippingCountry}" />
+                            </div>
+                        </div>
+                    </div>                      
+                </div>
+            </div>
+            <div class="slds-modal__footer">
+                <button class="slds-button slds-button_brand" onclick="{!c.removecss1}">
+                    <lightning:icon variant="inverse" class="slds-button__icon slds-button__icon_left" iconName="utility:back" size="x-small" alternativeText="{!$Label.c.SOCancel}"/>
+                    {!$Label.c.SOCancel}
+                </button>&nbsp;
+                <button class="slds-button slds-button_brand" data-from="s" onclick="{!c.editShipAdd}">{!$Label.c.SOSave}
+                    <lightning:icon variant="inverse" class="slds-button__icon slds-button__icon_right" iconName="utility:forward" size="x-small" alternativeText="{!$Label.c.SOSave}"/>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div role="dialog" tabindex="-1" aura:id="Modalbox2" aria-labelledby="header44" class="slds-modal" style="background-color: rgba(0,0,0,0.4) !important;">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header" id="shiptoHeader">
+                <button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.removecss2}">
+                    <span class="slds-text-heading_medium">
+                        X<span class="slds-assistive-text" >Close</span>
+                    </span>                 
+                </button>
+                <h2 id="header43" class="slds-text-heading--medium" style="font-size: medium; font-family: sans-serif;"><b>{!$Label.c.SOEdit}&nbsp;{!v.mapAccFieldLables.BillingAddress}</b></h2>
+            </div>
+            <div class="slds-modal__content slds-p-around--medium">
+                <div class="modal-body">
+                    <div>
+                        <aura:if isTrue="{!v.isReqMissing}"> 
+                            <div style="color:red;">
+                                {!v.reqErrorMsg}
+                            </div>
+                        </aura:if>
+                    </div>
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-size_1-of-2">
+                            <div class="slds-box_x-small slds-text-align_center slds-m-around_x-small">
+                                <div class="slds-text-body_regular slds-float_left" style="margin: 10px;margin-left: 0px;">
+                                    <abbr class="slds-required" title="required">*</abbr>{!$Label.c.SOStreet}</div>
+                                <ui:inputText class="slds-input" value="{!v.selectedDealer.BillingStreet}" />
+                                <div class="slds-text-body_regular slds-float_left" style="margin: 10px;margin-left: 0px;">
+                                    <abbr class="slds-required" title="required">*</abbr>{!$Label.c.SOState}</div>
+                                <ui:inputText class="slds-input" value="{!v.selectedDealer.BillingState}" />
+                                <div class="slds-text-body_regular slds-float_left" style="margin: 10px;margin-left: 0px;">
+                                    <abbr class="slds-required" title="required">*</abbr>{!$Label.c.SOPostalCode}</div>
+                                <ui:inputText class="slds-input" value="{!v.selectedDealer.BillingPostalCode}" />
+                            </div>
+                        </div>
+                        <div class="slds-size_1-of-2">
+                            <div class="slds-box_x-small slds-text-align_center slds-m-around_x-small">
+                                <div class="slds-text-body_regular slds-float_left" style="margin: 10px;margin-left: 0px;">
+                                    <abbr class="slds-required" title="required">*</abbr>{!$Label.c.SOCity}</div>
+                                <ui:inputText class="slds-input" value="{!v.selectedDealer.BillingCity}" />
+                                <div class="slds-text-body_regular slds-float_left" style="margin: 10px;margin-left: 0px;">
+                                    <abbr class="slds-required" title="required">*</abbr>{!$Label.c.SOCountry}</div>
+                                <ui:inputText class="slds-input" value="{!v.selectedDealer.BillingCountry}" />
+                            </div>
+                        </div>
+                    </div> 
+                </div>
+            </div>
+            <div class="slds-modal__footer">
+                <button class="slds-button slds-button_brand" onclick="{!c.removecss2}">
+                    <lightning:icon variant="inverse" class="slds-button__icon slds-button__icon_left" iconName="utility:back" size="x-small" alternativeText="{!$Label.c.SOCancel}"/>
+                    {!$Label.c.SOCancel}
+                </button>&nbsp;
+                <button class="slds-button slds-button_brand"  data-from="b" onclick="{!c.editBillAdd}">{!$Label.c.SOSave} 
+                    <lightning:icon variant="inverse" class="slds-button__icon slds-button__icon_right" iconName="utility:forward" size="x-small" alternativeText="{!$Label.c.SOSave}"/>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div role="dialog" tabindex="-1" aura:id="Modalbox3" aria-labelledby="header45" class="slds-modal" style="background-color: rgba(0,0,0,0.4) !important;">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header" id="shiptoHeader">
+                <button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.removecss3}">
+                    <span class="slds-text-heading_medium">X
+                        <span class="slds-assistive-text">Close</span>
+                    </span>                 
+                </button>
+                <h2 id="header43" class="slds-text-heading--medium" style="font-size: medium; font-family: sans-serif;"><b>{!$Label.c.SOEnterNewAddressDetails}</b></h2>
+            </div>
+            <div class="slds-modal__content slds-p-around--medium">
+                <div class="modal-body">
+                    <div>
+                        <aura:if isTrue="{!v.isReqMissing}"> 
+                            <div style="color:red;">
+                                {!v.reqErrorMsg}
+                            </div>
+                        </aura:if>
+                    </div>
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-size_1-of-2">
+                            <div class="slds-box_x-small slds-text-align_center slds-m-around_x-small">
+                                <div class="slds-text-body_regular slds-float_left" style="margin: 10px;margin-left: 0px;">
+                                    <abbr class="slds-required" title="required">*</abbr>{!$Label.c.SOName}</div>
+                                <ui:inputText class="slds-input" value="{!v.newDealer.Name}" />
+                                <div class="slds-text-body_regular slds-float_left" style="margin: 10px;margin-left: 0px;">
+                                    <abbr class="slds-required" title="required">*</abbr>{!$Label.c.SOCity}</div>
+                                <ui:inputText class="slds-input" value="{!v.newDealer.ShippingCity}" />
+                                <div class="slds-text-body_regular slds-float_left" style="margin: 10px;margin-left: 0px;">
+                                    <abbr class="slds-required" title="required">*</abbr>{!$Label.c.SOCountry}</div>
+                                <ui:inputText class="slds-input" value="{!v.newDealer.ShippingCountry}" />
+                                <div class="slds-text-body_regular slds-float_left" style="margin: 10px;margin-left: 0px;">
+                                    <abbr class="slds-required" title="required">*</abbr>{!$Label.c.SOPhone}</div>
+                                <ui:inputText class="slds-input" value="{!v.newDealer.Phone}" />
+                            </div>
+                        </div>
+                        <div class="slds-size_1-of-2">
+                            <div class="slds-box_x-small slds-text-align_center slds-m-around_x-small">
+                                <div class="slds-text-body_regular slds-float_left" style="margin: 10px;margin-left: 0px;">
+                                    <abbr class="slds-required" title="required">*</abbr>Street</div>
+                                <ui:inputText class="slds-input" value="{!v.newDealer.ShippingStreet}" />
+                                <div class="slds-text-body_regular slds-float_left" style="margin: 10px;margin-left: 0px;">
+                                    <abbr class="slds-required" title="required">*</abbr>{!$Label.c.SOState}</div>
+                                <ui:inputText class="slds-input" value="{!v.newDealer.ShippingState}" />
+                                <div class="slds-text-body_regular slds-float_left" style="margin: 10px;margin-left: 0px;">
+                                    <abbr class="slds-required" title="required">*</abbr>{!$Label.c.SOPostalCode}</div>
+                                <ui:inputText class="slds-input" value="{!v.newDealer.ShippingPostalCode}" />
+                            </div>                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-modal__footer">
+                <button class="slds-button slds-button_brand" onclick="{!c.removecss3}">
+                    <lightning:icon variant="inverse" class="slds-button__icon slds-button__icon_left" iconName="utility:back" size="x-small" alternativeText="{!$Label.c.SOCancel}"/>
+                    {!$Label.c.SOCancel}
+                </button>&nbsp;
+                <button class="slds-button slds-button_brand" data-from="n" onclick="{!c.saveNewDealerAcc}">{!$Label.c.SOSave}
+                    <lightning:icon variant="inverse" class="slds-button__icon slds-button__icon_right" iconName="utility:forward" size="x-small" alternativeText="{!$Label.c.SOSave}"/>
+                </button>
+            </div>
+        </div>
+    </div> 
+    <div role="dialog" tabindex="-1" aura:id="Modalbox4" aria-labelledby="header45" class="slds-modal" style="background-color: rgba(0,0,0,0.4) !important;">
+        <div class="slds-modal__container">
+            <div class="slds-modal__header" id="shiptoHeader">
+                <button class="slds-button slds-button--icon-inverse slds-modal__close" onclick="{!c.removecss4}">
+                    <span class="slds-text-heading_medium">X
+                        <span class="slds-assistive-text">Close</span>
+                    </span>                 
+                </button>
+                <h2 id="header43" class="slds-text-heading--medium" style="font-size: medium; font-family: sans-serif;"><b>{!$Label.c.SOEnterNewAddressDetails}</b></h2>
+            </div>
+            <div class="slds-modal__content slds-p-around--medium">
+                <div class="modal-body">
+                    <div>
+                        <aura:if isTrue="{!v.isReqMissing}"> 
+                            <div style="color:red;">
+                                {!v.reqErrorMsg}
+                            </div>
+                        </aura:if>
+                    </div>
+                    <div class="slds-grid slds-wrap">
+                        <div class="slds-size_1-of-2">
+                            <div class="slds-box_x-small slds-text-align_center slds-m-around_x-small">
+                                <div class="slds-text-body_regular slds-float_left" style="margin: 10px;margin-left: 0px;">
+                                    <abbr class="slds-required" title="required">*</abbr>{!$Label.c.SOName}</div>
+                                <ui:inputText class="slds-input" value="{!v.newDealer.Name}" />
+                                <div class="slds-text-body_regular slds-float_left" style="margin: 10px;margin-left: 0px;">
+                                    <abbr class="slds-required" title="required">*</abbr>{!$Label.c.SOCity}</div>
+                                <ui:inputText class="slds-input" value="{!v.newDealer.ShippingCity}" />
+                                <div class="slds-text-body_regular slds-float_left" style="margin: 10px;margin-left: 0px;">
+                                    <abbr class="slds-required" title="required">*</abbr>{!$Label.c.SOCountry}</div>
+                                <ui:inputText class="slds-input" value="{!v.newDealer.ShippingCountry}" />
+                                <div class="slds-text-body_regular slds-float_left" style="margin: 10px;margin-left: 0px;">
+                                    <abbr class="slds-required" title="required">*</abbr>{!$Label.c.SOPhone}</div>
+                                <ui:inputText class="slds-input" value="{!v.newDealer.Phone}" />
+                            </div>
+                        </div>
+                        <div class="slds-size_1-of-2">
+                            <div class="slds-box_x-small slds-text-align_center slds-m-around_x-small">
+                                <div class="slds-text-body_regular slds-float_left" style="margin: 10px;margin-left: 0px;">
+                                    <abbr class="slds-required" title="required">*</abbr>{!$Label.c.SOStreet}</div>
+                                <ui:inputText class="slds-input" value="{!v.newDealer.ShippingStreet}" />
+                                <div class="slds-text-body_regular slds-float_left" style="margin: 10px;margin-left: 0px;">
+                                    <abbr class="slds-required" title="required">*</abbr>{!$Label.c.SOState}</div>
+                                <ui:inputText class="slds-input" value="{!v.newDealer.ShippingState}" />
+                                <div class="slds-text-body_regular slds-float_left" style="margin: 10px;margin-left: 0px;">
+                                    <abbr class="slds-required" title="required">*</abbr>{!$Label.c.SOPostalCode}</div>
+                                <ui:inputText class="slds-input" value="{!v.newDealer.ShippingPostalCode}" />
+                            </div>                            
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="slds-modal__footer">
+                <button class="slds-button slds-button_brand" onclick="{!c.removecss4}">
+                    <lightning:icon variant="inverse" class="slds-button__icon slds-button__icon_left" iconName="utility:back" size="x-small" alternativeText="{!$Label.c.SOCancel}"/>
+                    {!$Label.c.SOCancel}
+                </button>&nbsp;
+                <button class="slds-button slds-button_brand" data-from="n" onclick="{!c.saveNewAcc}">{!$Label.c.SOSave}
+                    <lightning:icon variant="inverse" class="slds-button__icon slds-button__icon_right" iconName="utility:forward" size="x-small" alternativeText="{!$Label.c.SOSave}"/>
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- POP UP END-->
+</aura:component>

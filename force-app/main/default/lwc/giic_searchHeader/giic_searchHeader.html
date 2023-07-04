@@ -1,0 +1,133 @@
+<template>
+    <div class="container">
+        <div class="slds-page-header" style="height:310px; padding: 7px;">
+            <!-- HEADING AREA -->
+            <div class="slds-line-height_reset">
+                <div style="text-align: center;font-size: 23px;font-weight: bold;">Supply Plan</div>
+                <div style="float: left; width: 200px;">
+                    <lightning-input type="text" label={planname} style="color: rgb(1, 118, 211);font-weight: bold;" value={cyclename} read-only="true"></lightning-input>
+                </div>
+                <div style="float: left; width: 100%;">
+                    <lightning-layout multiple-rows="true">
+                        <lightning-layout-item size="3">
+                            <lightning-dual-listbox name="Region"
+                                label="Region"
+                                source-label="Available"
+                                selected-label="Selected"
+                                field-level-help="Select your preferred regions"
+                                options={regiondata}
+                                size="3"
+                                onchange={handleRegionChange}
+                                value={lstRegionSelected}></lightning-dual-listbox>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="3">
+                            <lightning-dual-listbox name="Country"
+                                label="Country"
+                                source-label="Available"
+                                selected-label="Selected"
+                                field-level-help="Select your preferred countries"
+                                options={countriesList}
+                                size="3"
+                                onchange={handleCountryChange}
+                                value={lstCountrySelected}></lightning-dual-listbox>
+                        </lightning-layout-item>
+                        <lightning-layout-item size="3">
+                            <lightning-dual-listbox name="Legal Entity"
+                                label="Legal Entity"
+                                source-label="Available"
+                                selected-label="Selected"
+                                field-level-help="Select your preferred legal entities"
+                                options={legalEntitiesList}
+                                size="3"
+                                onchange={handleLegalEntitiesChange}
+                                value={lstLegalEntitySelected}></lightning-dual-listbox>
+                        </lightning-layout-item>&nbsp;&nbsp;&nbsp;&nbsp;
+                        <lightning-layout-item size="2" style="padding-top: 52px">
+                            <c-giic_reusable-custom-lookup lookup-label="Warehouse" icon-name="standard:product" object-api-name="gii__Warehouse__c" onrecordselection={onWareSelection}></c-giic_reusable-custom-lookup>
+                        </lightning-layout-item> 
+                        <lightning-layout-item size="2">
+                            <div class="slds-p-top_medium" style="padding-left: 5px;">
+                                <lightning-button icon-name="utility:search" label="Search" name="Search" variant="brand" onclick={searchPlan}></lightning-button>
+                                &nbsp;&nbsp;
+                                <lightning-button-icon icon-name="utility:filterList" variant="brand" onclick={handleClick} alternative-text="Close window"> </lightning-button-icon>
+                            </div>
+                        </lightning-layout-item>
+                    </lightning-layout>
+                </div>
+            </div>
+        </div>
+
+        <template if:true={isModalOpen}>
+            <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" aria-describedby="modal-content-id-1" class="slds-modal slds-fade-in-open">
+                <div class="slds-modal__container">
+                    <!-- Modal/Popup Box LWC header here -->
+                    <header class="slds-modal__header">
+                        <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={closeModal}>
+                            <lightning-icon icon-name="utility:close" alternative-text="close" variant="inverse" size="small"></lightning-icon>
+                            <span class="slds-assistive-text">Close</span>
+                        </button>
+                        <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Advance Search</h2>
+                    </header>
+                    <!-- Modal/Popup Box LWC body starts here -->
+                    <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+                        <lightning-layout multiple-rows="true" horizontal-align="spread">
+                            <lightning-layout-item size="5" padding="around-small">
+                                <c-giic_reusable-custom-lookup lookup-label="Product" icon-name="standard:product" object-api-name="gii__Product2Add__c" selectedvalue={productValue} onrecordselection={onProdSelection}></c-giic_reusable-custom-lookup>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="2" padding="around-small"></lightning-layout-item>
+                            <lightning-layout-item size="5" padding="around-small">
+                                <lightning-input type="text" label="SKU" onchange={getSKUValue} value={skuVal}></lightning-input>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="5" padding="around-small">
+                                <lightning-input type="text" label="SubCategory2" onchange={getSubCat2Value} value={subCategory2Value}></lightning-input>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="2" padding="around-small"></lightning-layout-item>
+                            <lightning-layout-item size="5" padding="around-small">
+                                <lightning-input type="text" label="SubCategory1" onchange={getSubCat1Value} value={subCategory1Value}></lightning-input>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="5" padding="around-small">
+                                <lightning-input type="text" label="Number of Period" onchange={getPeriodValue} value={noOfPeriod}></lightning-input>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="2" padding="around-small"></lightning-layout-item>
+                            <lightning-layout-item size="5" padding="around-small">
+                                <lightning-input type="date" name="input2" label="As of Date" value={asofdateVal} onchange={getAsofDate}></lightning-input>
+                            </lightning-layout-item>
+                            <lightning-layout-item size="10" padding="around-small">
+                                <lightning-dual-listbox name="Supplier"
+                                    label="Supplier"
+                                    source-label="Available"
+                                    selected-label="Selected"
+                                    field-level-help="Select your preferred Supplier"
+                                    options={supplierGroups}
+                                    size="3"
+                                    value={lstSupplierSelected}
+                                    onchange={onSupplierSelection}></lightning-dual-listbox>
+                                <!--<c-giic_reusable-custom-lookup lookup-label="Supplier" icon-name="standard:product" object-api-name="Account" selectedvalue={supplierValue} onrecordselection={onSupplierSelection}></c-giic_reusable-custom-lookup>-->
+                            </lightning-layout-item>
+                            <lightning-layout-item size="2" padding="around-small"></lightning-layout-item>
+                            <lightning-layout-item size="10" padding="around-small">
+                                <lightning-dual-listbox name="Product Category"
+                                    label="Product Category"
+                                    source-label="Available"
+                                    selected-label="Selected"
+                                    field-level-help="Select your preferred category"
+                                    options={productGroups}
+                                    size="3"
+                                    value={lstProductGroupSelected}
+                                    onchange={onCategotySelection}></lightning-dual-listbox>
+                            </lightning-layout-item>
+                        </lightning-layout>
+                    </div>
+                    <!-- Modal/Popup Box LWC footer starts here -->
+                    <footer class="slds-modal__footer">
+                        <button class="slds-button slds-button_neutral" onclick={resetModal} title="Reset">Reset</button>
+                        <button class="slds-button slds-button_neutral" onclick={closeModal} title="Cancel">Cancel</button>
+                        <button class="slds-button slds-button_brand" onclick={submitDetails} title="Apply">Apply</button>
+                    </footer>
+                </div>
+            </section>
+            <div class="slds-backdrop slds-backdrop_open"></div>
+        </template>
+
+    </div>
+</template>

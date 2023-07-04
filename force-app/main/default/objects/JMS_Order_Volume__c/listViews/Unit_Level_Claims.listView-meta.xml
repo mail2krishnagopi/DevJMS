@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ListView xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Unit_Level_Claims</fullName>
+    <columns>NAME</columns>
+    <columns>JMS_Operator_Id__c</columns>
+    <columns>JMS_Product__c</columns>
+    <columns>JMS_Quantity_Current_Year__c</columns>
+    <columns>JMS_Quantity_Previous_Year__c</columns>
+    <columns>JMS_Operator_Org_Level_1__c</columns>
+    <columns>JMS_Type__c</columns>
+    <filterScope>Everything</filterScope>
+    <filters>
+        <field>JMS_Type__c</field>
+        <operation>equals</operation>
+        <value>Unit Level Claims</value>
+    </filters>
+    <label>Unit Level Claims</label>
+</ListView>

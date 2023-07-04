@@ -1,0 +1,45 @@
+<aura:component >
+    
+    <aura:attribute name="stages" type="ProcessStepsWrapper[]"/>
+    <aura:attribute name="currentStageNumber" type="Integer"/>
+    <aura:attribute name="isExternalUser" type="Boolean" default="false"/>
+    <!-- aura:handler name="init" value="{!this}" action="{!c.init}"/ -->
+    
+    <div class="slds-col--padded slds-size--1-of-2 slds-medium-size--5-of-6 slds-large-size--1-of-2 progressPath" style="min-width:100% !important;"> 
+        <div class="slds-grid">
+            <div class="slds-tabs--path" role="application">
+                <ol class="slds-tabs--path__nav" role="tablist">                  
+                    <aura:iteration items="{!v.stages}" var="stage"> 
+                       
+                        <aura:if isTrue="{!greaterthan(v.currentStageNumber, stage.Step_Number)}">
+                            <!-- Has been Completed -->
+                            <li class="slds-tabs--path__item slds-is-complete slds-cell-wrap completedstage" role="presentation">
+                                <a class="slds-tabs--path__link" id="tabs-path-1" aria-controls="content-path-1" aria-selected="false" tabindex="-1" role="tab" href="javascript:void(0);" aria-live="assertive">
+                                    <span class="" style="font-family: Maven Pro;font-weight: 400;">
+                                        <lightning:icon variant="inverse" class="slds-button__icon slds-button__icon_right" iconName="utility:check" size="x-small" alternativeText="{!$Label.c.SOSave}"/>
+                                        &nbsp;{!stage.Step_Name} 
+                                    </span>
+                                </a>
+                            </li> 
+                        </aura:if>
+                        <aura:if isTrue="{!(stage.Step_Number == v.currentStageNumber)}">                           
+                            <!-- Current Step -->
+                            <li class="currentstage slds-tabs--path__item slds-is-current slds-cell-wrap" role="presentation">
+                                <a class="slds-tabs--path__link" id="tabs-path-1" aria-controls="content-path-1" aria-selected="false" tabindex="-1" role="tab" href="javascript:void(0);" aria-live="assertive">
+                                    <span class="">{!stage.Step_Name}</span>
+                                </a>
+                            </li>
+                        </aura:if>
+                        <aura:if isTrue="{!lessthan(v.currentStageNumber, stage.Step_Number)}">
+                            <li class="remainingstage slds-tabs--path__item slds-is-incomplete slds-cell-wrap" role="presentation">
+                                <a class="slds-tabs--path__link" id="tabs-path-1" aria-controls="content-path-1" aria-selected="false" tabindex="-1" role="tab" href="javascript:void(0);" aria-live="assertive">
+                                    <span class="">{!stage.Step_Name}</span>
+                                </a>
+                            </li>
+                        </aura:if>
+                    </aura:iteration>
+                </ol>
+            </div>    
+        </div> 
+    </div>
+</aura:component>

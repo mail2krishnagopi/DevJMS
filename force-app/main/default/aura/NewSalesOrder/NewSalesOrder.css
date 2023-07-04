@@ -1,0 +1,8 @@
+.THIS .slds-global-header{background: t(colorBorder) !important;}/**Search bar Background Color -> Apply from Border Color of Branding**/
+.THIS #FavProducts{background: t(colorBorder) !important;}/**FavProducts Background Color -> Apply from Border Color of Branding**/
+.THIS #TopProducts{background: t(colorBorder) !important;}/**TopProducts Background Color -> Apply from Border Color of Branding**/
+.THIS .slds-form-element__label { color : t(colorTextButtonBrand) !important; }/**Text Color for above three -> Apply from Overlay Text Color of Branding**/
+.THIS #shiptoHeader{background: t(colorBorder) !important;color : t(colorTextDefault) !important;}/**Customer Search bar Background Color -> Apply from Overlay Text Color of Branding**/
+.THIS .slds-icon-text-default {
+   fill:  t(colorTextLink) !important; 
+} /** change color of icons**/

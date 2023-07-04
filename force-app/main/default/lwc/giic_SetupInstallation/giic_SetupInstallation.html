@@ -1,0 +1,117 @@
+<!--
+  @description       : 
+  @author            : ChangeMeIn@UserSettingsUnder.SFDoc
+  @group             : 
+  @last modified on  : 03-16-2023
+  @last modified by  : ChangeMeIn@UserSettingsUnder.SFDoc
+-->
+<template>
+    <div class="spinner">
+        <template if:true={isLoading}>
+             <lightning-spinner alternative-text="Loading" variant="brand" size="large">
+            </lightning-spinner>
+        </template>
+    </div>
+    <lightning-card class="topNav">            
+           
+        <div class="slds-page-header__title  slds-m-right--small slds-text-align_center">
+        <h1> 
+            Setup Installation
+        </h1>
+        </div>        
+</lightning-card>
+
+<lightning-card class="topNav">
+        <div class="slds-p-bottom_medium" style="color:green ; margin-left: 9px;">
+           <p><lightning-formatted-text  value="Sales Order Lines created for equipment whose Line Status is Open and Open Quantity is greater than zero are eligible for Installation Service Ticket creation process."></lightning-formatted-text></p>
+                    
+           <p><lightning-formatted-text  value="Please enter the due date and select the appropriate Sales order lines and the Site associated to the Account to create an Installation Service Ticket."></lightning-formatted-text></p>
+      
+           <p><lightning-formatted-text  value="Please note that Asset Reference will be created after the quick ship if the Update Asset is checked."></lightning-formatted-text>  </p>
+        </div> 
+</lightning-card>
+
+<lightning-card class="topNav">
+    <div class="slds-media__body">
+        <h1>    
+        <div class="slds-page-header__title slds-m-right--small slds-align-middle" style="margin-left: 9px;">
+           Please select the Service Due Date
+        </div>
+        </h1>
+    </div>
+
+    <div class="nav_item slds-grid slds-wrap" role="list">
+    <div class="slds-col slds-size_1-of-3  slds-large-size_1-of-6 slds-p-around_x-small">
+                <lightning-input type="date" name="input2" label="Service Due Date" value= {dateValue} onchange = {changedate} >
+                </lightning-input>
+          </div>
+          </div>
+    </lightning-card>
+    <lightning-card class="topNav">
+        <div class="slds-media__body">
+            <h1>    
+            <div class="slds-page-header__title  slds-m-right--small slds-align-middle" style="margin-left: 9px;">
+               Select Sales Order Lines to Create Installation Service Ticket
+            </div>
+            </h1>
+        </div>
+        <!-- template if:true={isLoading} added this logic for is site is null then we can not 
+        show the table  -->
+     <template if:true={isSiteAttached}>
+    <div class="border cm-scrollbar cm-table-w-scroll table-responsive">
+    <table class="table table-sm table-bordered"> 
+    
+        <thead>
+            <tr>
+                <th><input type="checkbox" onchange={handleSelectAll}/> </th>
+                <th>Line Number</th>
+                <th>Product</th>
+                <th>Site</th>
+                <th>Update Asset</th>
+                
+                
+            </tr>
+        </thead>   
+        <tbody>
+            <!-- <template if:true={empty}> -->
+            <template for:each={sollist} for:item="sol" for:index="index">
+                <tr key={sol.key}>
+                    <!-- <td><input type="checkbox" />  </td> -->
+                    <td><input type="checkbox"  value = {sol.isSelected} onchange={changeHandler} data-rowindex={index} data-column="isSelected" data-id="toggle" /></td>
+                    <td>{sol.objSOLine.Name}</td>
+                    <td>{sol.objSOLine.giic_Product__c}</td>
+
+                    <td>
+
+                      {sol.objSOLine.gii__SalesOrder__r.giic_Site__r.Name}
+                    
+  
+                      <!--  <c-custom-lookup-l-w-c icon-name="standard:user"
+                        s-object-api-name="gii__Site__c"
+                        label=""
+                        onlookupupdate={lookupRecord}
+                        default-record-id={sol.objSOLine.gii__SalesOrder__r.giic_Site__c}
+                        placeholder="type here..."
+                        onchange={changeHandler} data-rowindex={index} data-column="Site">
+                        </c-custom-lookup-l-w-c>
+
+-->
+                    </td>
+                    <td><input type="checkbox"  value = {sol.objSOLine.gii__UpdateAsset__c}  onchange={changeHandler} data-rowindex={index} data-column="UpdateAsset"/> </td>
+                </tr>
+            </template>
+            <!-- </template> -->
+        </tbody>
+    </table>
+    </div>
+         </template>
+         <template if:false={isSiteAttached}>
+           <div class="slds-text-color_error slds-text-align_center slds-m-top_large slds-text-title_bold">Please update the site in Sales Order inorder to create an Installation Service Ticket!</div>
+         </template>
+    <div class="slds-m-top_small slds-m-bottom_medium slds-text-align_right">
+        <lightning-button variant="success" label="Create Service Ticket" disabled = "{isChecked}" title="Create Service Ticket" onclick={handleCreateServiceTicket} class="slds-m-right_x-small"  > </lightning-button>
+        <lightning-button variant="destructive-text" label= "Cancel" title="Cancel" onclick={handleCancel} class="slds-m-right_x-small"></lightning-button>
+      
+    </div>
+</lightning-card>
+</template>

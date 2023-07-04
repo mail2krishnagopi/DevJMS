@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CompactLayout xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>Equipment_Request</fullName>
+    <fields>Name</fields>
+    <fields>JMS_Opportunity__c</fields>
+    <fields>JMS_Account__c</fields>
+    <label>Equipment Request Layout</label>
+</CompactLayout>

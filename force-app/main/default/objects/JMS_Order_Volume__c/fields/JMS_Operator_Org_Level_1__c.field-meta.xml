@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>JMS_Operator_Org_Level_1__c</fullName>
+    <description>Additional Levels for the customer, may also be refered to as control points.</description>
+    <externalId>false</externalId>
+    <label>Operator Org Level 1</label>
+    <length>255</length>
+    <required>false</required>
+    <trackHistory>false</trackHistory>
+    <trackTrending>false</trackTrending>
+    <type>Text</type>
+    <unique>false</unique>
+</CustomField>

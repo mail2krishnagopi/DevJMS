@@ -1,0 +1,39 @@
+<aura:component >
+    
+    <aura:attribute name="totalResultSize" type="Integer" default="0" description="Total Record Number of Search Result"/>
+    <aura:attribute name="pageSize" type="Integer" default="1" description="Pass LIMIT Value for pageSize"/>
+    <aura:attribute name="pageArray" type="Integer[]" description="It will contains PageNumber List" />
+    <aura:attribute name="currentPageIndex" type="Integer" default="1" description="Contains the current page index"/>
+    <aura:attribute name="lastPageIndex" type="Integer" default="1" description="Contains the last page index"/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    <aura:registerEvent name="fromPagination" type="c:PaginationEvent" /> 
+    <aura:handler event="c:PaginationEvent" action="{!c.doReset}" />
+    
+    <aura:if isTrue="{!v.currentPageIndex > 1}">
+        <button class="slds-button slds-button_stateful slds-button_neutral slds-not-selected" aria-live="assertive" onclick="{!c.doPagination}" data-pageindex="Prev">{!$Label.c.Prev}       
+        </button>
+        <aura:set attribute="else">
+            <button class="slds-button slds-button_stateful slds-button_neutral slds-not-selected" aria-live="assertive">{!$Label.c.Prev}       
+            </button>
+        </aura:set>
+    </aura:if>
+    <aura:iteration items="{!v.pageArray}" var="i">                        
+        <aura:if isTrue="{!v.currentPageIndex != i}">
+            <button class="slds-button slds-button_stateful slds-button_neutral slds-not-selected" aria-live="assertive" onclick="{!c.doPagination}" data-pageindex="{!i}"> {!i}       
+            </button>
+            <aura:set attribute="else">
+                <button class="slds-button slds-button_stateful slds-is-selected slds-button_brand" aria-live="assertive"> {!i}       
+                </button>
+            </aura:set>
+        </aura:if>                        
+    </aura:iteration>
+    <aura:if isTrue="{!v.lastPageIndex > v.currentPageIndex}">
+        <button class="slds-button slds-button_stateful slds-button_neutral slds-not-selected" aria-live="assertive" onclick="{!c.doPagination}" data-pageindex="Next">{!$Label.c.Next}     
+        </button>
+        <aura:set attribute="else">
+            <button class="slds-button slds-button_stateful slds-button_neutral slds-not-selected" aria-live="assertive"> {!$Label.c.Next}        
+            </button>
+        </aura:set>
+    </aura:if> 
+</aura:component>

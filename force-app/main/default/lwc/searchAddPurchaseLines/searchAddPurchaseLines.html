@@ -1,0 +1,46 @@
+<template>
+    <div class="outter_container slds-m-top_x-small">
+        <lightning-card class="topNav">
+            <div class="border cm-scrollbar cm-table-w-scroll table-responsive" if:true={finallist}>
+                <table  class="table table-sm table-bordered">
+                       <thead>
+                    <tr>
+                        
+                        <th class="widthth_six"> </th>
+                        <th class="widthth_four">Quantity</th>
+                        <th class="widthth_first">Unit Price</th>
+                        <th class="widthth_four">Product Name</th>
+                        <th class="widthth_four">Product Code</th>
+                        <th class="widthth_first">Product Description</th>              
+                      
+                       
+                    </tr>
+                </thead>
+                <tbody>
+                
+                    <template for:each={finallist} for:item="prod" for:index="index" >
+                        <tr key={prod.objProdRef.Id} class="bg-primary">
+                
+            
+                    <td> <lightning-button  variant="base" label= "Del"  icon-name="utility:del" onclick={handleDeleteRow} data-rowindex={index} class="slds-m-left_x-small"></lightning-button></td>
+                    <td><lightning-input value="1" name={prod.prodQty}  onchange={handleQuantityChange} data-rowindex={index} data-column="quantity"></lightning-input></td>
+                    <td><lightning-formatted-text value={prod.objProdRef.gii__MaterialCost__c}></lightning-formatted-text></td>
+                    <td><lightning-formatted-text value={prod.objProdRef.Name}></lightning-formatted-text></td>
+                    <td><lightning-formatted-text value={prod.objProdRef.gii__ProductCode__c}></lightning-formatted-text></td>
+                    <td><lightning-formatted-text value={prod.objProdRef.gii__Description__c}></lightning-formatted-text></td>
+              
+            </tr>
+            </template>
+            </tbody>
+            </table>
+            </div>
+            
+            <div class="slds-docked-form-footer">
+                    
+                <button type="button" class="slds-button slds-button_neutral" onclick={handleBack}>Cancel</button>
+                <button type="button" class="slds-button slds-button_brand" onclick={handleSave}>Save</button>
+                </div>
+    
+        </lightning-card>
+        </div>
+</template>

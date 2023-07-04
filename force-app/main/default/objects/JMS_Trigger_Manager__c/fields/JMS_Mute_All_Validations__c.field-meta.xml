@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CustomField xmlns="http://soap.sforce.com/2006/04/metadata">
+    <fullName>JMS_Mute_All_Validations__c</fullName>
+    <defaultValue>false</defaultValue>
+    <description>This checkbox is used for muting validation rules.</description>
+    <externalId>false</externalId>
+    <label>Mute All Validations</label>
+    <trackTrending>false</trackTrending>
+    <type>Checkbox</type>
+</CustomField>

@@ -1,0 +1,142 @@
+<template>
+    <template if:true={forecastplan}>
+        <div if:true={frozenZone} class="slds-truncate" >
+            <template if:false={showHistroy}>
+                <lightning-input type="number" value={prodValue} read-only={isProdEditable} variant="label-hidden"
+                    onchange={getProdValue} style="color: red;width:70px;"></lightning-input>
+            </template>
+            <template if:true={showHistroy}>
+                <div style="width:107%;">
+                    <div style="float:left;width:75%;">
+                        <lightning-input type="number" value={prodValue} read-only={isProdEditable} variant="label-hidden"
+                            onchange ={getProdValue} style="color: red;width:70px;"></lightning-input>
+                    </div>
+                    <div style="float:left;width:25%;">
+                        <lightning-helptext content={hoverText} icon-name={iconName} icon-variant={iconVariant}>
+                        </lightning-helptext>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <div if:true ={slushyZone} class="slds-truncate" >
+            <template if:false={showHistroy}>
+                <lightning-input type="number" value={prodValue} read-only={isProdEditable} variant="label-hidden"
+                    onchange={getProdValue} style="color:green;width: 70px;"></lightning-input>
+            </template>
+            <template if:true={showHistroy}>
+                <div style="width:107%;">
+                    <div style="float:left;width:75%;">
+                    <lightning-input type="number" value={prodValue} read-only={isProdEditable} variant="label-hidden"
+                        onchange={getProdValue} style="color: green;width: 70px;"></lightning-input>
+                    </div>
+                    <div style="float:left;width:25%;">
+                        <lightning-helptext content={hoverText} icon-name={iconName} icon-variant={iconVariant}>
+                        </lightning-helptext>
+                    </div>
+                </div>
+            </template>
+        </div>
+
+        <div if:true ={noZone} class="slds-truncate" >
+            <template if:false={showHistroy}>
+                <lightning-input type="number" value={prodValue}  style="width: 70px;" read-only={isProdEditable} variant="label-hidden"
+                    onchange={getProdValue}></lightning-input>
+            </template>
+            <template if:true={showHistroy}>
+                <div style="width:109%;">
+                    <div style="float:left;width:75%;">
+                        <lightning-input type="number" value={prodValue}  style="width: 70px;" read-only={isProdEditable} variant="label-hidden"
+                            onchange={getProdValue}></lightning-input>
+                    </div>
+                    <div style="float:left;width:25%;">
+                        <lightning-helptext content={hoverText} icon-name={iconName} icon-variant={iconVariant}>
+                        </lightning-helptext>
+                    </div>
+                </div>
+            </template>
+        </div>
+    </template>
+
+    <template if:true={showdemanddata}>
+        <template if:false={showHistroy}>
+            <div style="font-size: 10px;">
+                <div>Forecast Qty: {forecastQuantity}<br/></div>
+                <div>Available + InTransite Qty: {avalDO}<br/></div>
+                <div>Safety + ROP Qty: {safetyROP}<br/></div>
+                <div>Available for DO: {avalQty}<br/></div>
+            </div>
+            {DemandPlan}<lightning-input type="number" style="width: 75px;" value={prodValue} read-only={isProdEditable} variant="label-hidden"
+                onchange={getProdValue}></lightning-input>  
+        </template>
+        <template if:true={showHistroy}>
+            <div style="width:100%;">
+                <div style="float:left;width:85%;">
+                    <div style="font-size: 10px;">
+                        <div>Forecast Qty: {forecastQuantity}<br/></div>
+                        <div>Available + InTransite Qty: {avalQty}<br/></div>
+                        <div>Safety + ROP Qty: {safetyROP}<br/></div>
+                        <div>Available for DO: {avalDO}<br/></div>
+                    </div>
+                    {DemandPlan}<lightning-input type="number" style="width: 75px;" id="myID" value={prodValue} read-only={isProdEditable} variant="label-hidden"
+                        onchange={getProdValue} min="0" ></lightning-input>
+                </div>
+                <div style="float:left;width:15%;">
+                    <lightning-helptext content={hoverText} icon-name={iconName} icon-variant={iconVariant}>
+                    </lightning-helptext>
+                </div>
+            </div>
+        </template>
+    </template>
+
+    <template if:true={showsparepartdata}>
+        <template if:false={showHistroy}> 
+            <div style="font-size: 10px;">
+                <div>Minimum Order qty: {minOrderQuantity}</div>
+                <div>Shelf Time: {shelfTime}</div>
+               <!-- <div>Lead Time (Year): {leadTimeYear}</div>-->
+                <div>Lead Time (Month): {leadTimeMonth}</div>
+                <div>Failure Rate: {failureRate}%</div>
+                <div>Available Quantity: {avalQty}</div>
+                <br/>
+                <div>Station: {station}</div>
+                <div>Number of installed stations: {noOfInstalledStations}</div>
+                <div>Annual Demand: {annDemand}<br/></div>
+                <div>Avg Demand during lead time: {avgLeadTime}<br/></div>
+                <div>Safety stock: {safeStock}<br/></div>
+                <div>Maximum Level: {maxLevel}
+                    <!--<label for="max">Maximum Level</label>
+                    <input type="number" id="max" readonly value={maxLevel} step="0.01">-->
+                </div>
+            </div>
+            {sparedata}<lightning-input type="number" style="width: 75px;" value={prodValue} read-only={isProdEditable} variant="label-hidden"
+                onchange={getProdValue}></lightning-input> 
+        </template>
+        <template if:true={showHistroy}>
+            <div style="width:100%;">
+                <div style="float:left;width:85%;">
+                    <div style="font-size: 10px;">
+                        <div>Minimum Order qty: {minOrderQuantity}</div>
+                        <div>Shelf Time: {shelfTime}</div>
+                        <div>Lead Time (Year): {leadTimeYear}</div>
+                        <div>Lead Time (Month): {leadTimeMonth}</div>
+                        <div>Failure Rate: {failureRate}%</div>
+                        <div>Available Quantity: {avalQty}</div>
+                        <br/>
+                        <div>Station: {station}</div>
+                        <div>Number of installed stations: {noOfInstalledStations}</div>
+                        <div>Annual Demand: {annDemand}<br/></div>
+                        <div>Avg Demand during lead time: {avgLeadTime}<br/></div>
+                        <div>Safety stock: {safeStock}<br/></div>
+                        <div>Maximum Level: {maxLevel}</div>
+                    </div>
+                    {sparedata}<lightning-input type="number" style="width: 75px;" value={prodValue} read-only={isProdEditable} variant="label-hidden"
+                        onchange={getProdValue} min="0" ></lightning-input>
+                </div>
+                <div style="float:left;width:15%;">
+                    <lightning-helptext content={hoverText} icon-name={iconName} icon-variant={iconVariant}></lightning-helptext>
+                </div>
+            </div>
+        </template>
+    </template>
+</template>
